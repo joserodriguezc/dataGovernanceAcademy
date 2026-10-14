@@ -1,0 +1,25 @@
+# El libro no se puede reproducir: solo se referencia. Cada persona usa su propia copia.
+docs/*.pdf
+docs/*.epub
+docs/*.mobi
+docs/book/
+
+# Estado local de la app (progreso, warehouses DuckDB)
+data/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Frontend
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Editor y sistema
+.vscode/
+.idea/
+.DS_Store

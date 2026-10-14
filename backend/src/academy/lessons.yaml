@@ -1,0 +1,165 @@
+# Catálogo de lecciones: una por capítulo de *Data Governance Handbook* (W. S. Batchelder,
+# Packt 2024). Los resúmenes son propios: el libro no se reproduce, solo se referencia.
+# `recommended` son las lecciones que conviene completar antes; no bloquean el acceso.
+# `status`: available (lección interactiva lista) o planned (pendiente de migrar del laboratorio).
+
+parts:
+  1: Diseñar el camino hacia datos confiables
+  2: Las capacidades de gobierno de datos en profundidad
+  3: Generar confianza con entregas basadas en valor
+  4: Caso de estudio
+
+lessons:
+  - number: 1
+    slug: que-es-gobierno-datos
+    title: ¿Qué es el gobierno de datos?
+    book_title: What Is Data Governance?
+    part: 1
+    kind: gestion
+    project: Charter del programa y caso de negocio
+    summary: Por qué una empresa necesita gobernar sus datos, qué componentes tiene un programa y cómo se justifica su inversión con un caso de negocio.
+    recommended: []
+  - number: 2
+    slug: coalicion-defensores
+    title: Construir una coalición de defensores
+    book_title: How to Build a Coalition of Advocates
+    part: 1
+    kind: gestion
+    project: Mapa de stakeholders y evaluación del sponsor
+    summary: Identificar a quién importa el programa, cuánto poder e interés tiene cada persona y quién puede patrocinarlo.
+    recommended: []
+  - number: 3
+    slug: equipo-alto-rendimiento
+    title: Construir un equipo de alto rendimiento
+    book_title: Building a High-Performing Team
+    part: 1
+    kind: gestion
+    project: Diseño organizativo del equipo de datos
+    summary: Elegir el modelo organizativo, definir los roles y repartir responsabilidades con una matriz RACI.
+    recommended: [2]
+  - number: 4
+    slug: linea-base-madurez
+    title: Establecer la línea base de la organización
+    book_title: Baseline Your Organization
+    part: 1
+    kind: gestion
+    project: Evaluación de madurez de gestión de datos
+    summary: Medir dónde está la organización hoy, por dimensiones, para poder demostrar el avance después.
+    recommended: [2]
+  - number: 5
+    slug: exito-y-resultados
+    title: Definir el éxito y alinearse en resultados
+    book_title: Defining Success and Aligning on Outcomes
+    part: 1
+    kind: gestion
+    project: Árbol de resultados y medidas de valor
+    summary: Conectar cada capacidad de datos con un resultado de negocio medible y acordado con su responsable.
+    recommended: [2]
+  - number: 6
+    slug: gestion-metadatos
+    title: Gestión de metadatos
+    book_title: Metadata Management
+    part: 2
+    kind: tecnico
+    project: Glosario de negocio y catálogo de datos
+    summary: Documentar qué significa cada dato, dónde está y cuán sensible es, con un glosario, un catálogo y la clasificación de datos personales.
+    recommended: []
+  - number: 7
+    slug: metadatos-tecnicos-linaje
+    title: Metadatos técnicos y linaje de datos
+    book_title: Technical Metadata and Data Lineage
+    part: 2
+    kind: tecnico
+    project: Linaje de datos a nivel de columna
+    summary: Trazar de dónde sale cada columna analizando el SQL de las transformaciones, y saber qué se rompe si algo cambia.
+    recommended: [6]
+  - number: 8
+    slug: calidad-datos
+    title: Calidad de datos
+    book_title: Data Quality
+    part: 2
+    kind: tecnico
+    project: Calidad de datos y certificación
+    summary: Definir reglas de calidad por dimensión, registrar las incidencias y certificar solo los datos que cumplen.
+    recommended: [6, 7]
+  - number: 9
+    slug: arquitectura-datos
+    title: Arquitectura de datos
+    book_title: Data Architecture
+    part: 2
+    kind: tecnico
+    project: Principios de arquitectura y linter de estándares
+    summary: Convertir los principios de arquitectura en estándares que se comprueban automáticamente sobre el warehouse.
+    recommended: [7]
+  - number: 10
+    slug: datos-primarios-mdm
+    title: Gestión de datos primarios (maestros)
+    book_title: Primary Data Management
+    part: 2
+    kind: tecnico
+    project: Golden record de cliente
+    summary: Encontrar los clientes duplicados entre sistemas y construir un registro único con reglas de supervivencia.
+    recommended: [8]
+  - number: 11
+    slug: operaciones-datos
+    title: Operaciones de datos
+    book_title: Data Operations
+    part: 2
+    kind: tecnico
+    project: Operaciones de datos con SLAs
+    summary: Ejecutar los procesos de datos como un servicio, con registro de ejecuciones, acuerdos de nivel de servicio e incidentes.
+    recommended: [6, 8, 10]
+  - number: 12
+    slug: lanzamiento
+    title: Lanzar con fuerza
+    book_title: Launch Powerfully
+    part: 3
+    kind: gestion
+    project: Kit de lanzamiento del programa
+    summary: Comprobar que el programa está listo y contarlo con un mensaje claro, sin jerga, para cada audiencia.
+    recommended: [1, 3, 4, 5]
+  - number: 13
+    slug: quick-wins
+    title: Quick wins con impacto
+    book_title: Delivering Quick Wins with Impact
+    part: 3
+    kind: gestion
+    project: Backlog priorizado de quick wins
+    summary: Priorizar por valor y esfuerzo para entregar pronto resultados visibles que generen confianza.
+    recommended: [4, 5]
+  - number: 14
+    slug: automatizacion
+    title: Automatización de datos para el impacto
+    book_title: Data Automation for Impact and More Powerful Results
+    part: 3
+    kind: tecnico
+    project: Automatizar un proceso manual con ROI medido
+    summary: Elegir un proceso manual, automatizarlo y medir el retorno frente a la situación de partida.
+    recommended: [8, 11]
+  - number: 15
+    slug: adopcion
+    title: Adopción que impulsa el negocio
+    book_title: Adoption That Drives Business Success
+    part: 3
+    kind: tecnico
+    project: Medición de la adopción
+    summary: Medir si la gente usa de verdad las soluciones de datos, cuánto cuesta que no las use y cómo recuperarlas.
+    recommended: [6]
+  - number: 16
+    slug: resultados-confiables
+    title: Resultados confiables con resultados que importan
+    book_title: Delivering Trusted Results with Outcomes That Matter
+    part: 3
+    kind: gestion
+    project: Revisión de capacidades y reporte ejecutivo
+    summary: Revisar cada capacidad con evidencia, comparar lo prometido con lo entregado y comunicar los desvíos con transparencia.
+    recommended: [5, 9, 11]
+  - number: 17
+    slug: caso-estudio-novapay
+    title: "Caso de estudio: institución financiera"
+    book_title: Case Study – Financial Institution
+    part: 4
+    kind: caso
+    project: NovaPay de punta a punta
+    summary: Aplicar todo el programa a una entidad financiera regulada con problemas en su informe de liquidez.
+    recommended: [12, 13, 14, 15, 16]
