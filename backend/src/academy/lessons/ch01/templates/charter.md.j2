@@ -1,0 +1,70 @@
+# Charter del programa de gobierno de datos de {{ company }}
+
+> Generado por `chapters/ch01_que_es_gobierno_datos`. No editar a mano: se cambian los inputs y se vuelve a ejecutar.
+
+## Visión (why statement)
+
+> **{{ vision.statement }}**
+
+| Pregunta | Respuesta |
+|---|---|
+| ¿Qué aspiramos a hacer? | {{ vision.aspire }} |
+| ¿Quién nos ayudará a conseguirlo? | {{ vision.who }} |
+| ¿Cómo sabremos que hemos llegado? | {{ vision.arrival }} |
+
+{% if vision_issues %}
+**⚠️ Revisar la visión antes de presentarla:**
+{% for issue in vision_issues %}
+- {{ issue }}
+{% endfor %}
+{% else %}
+✅ La visión es breve y no usa jerga de datos.
+{% endif %}
+
+Siguiente paso: compartirla uno a uno con los líderes de negocio, incorporar su feedback, explicar a cada uno qué se cambió y qué no, y llevarla a aprobación en el comité empresarial de datos.
+
+## Misión de la oficina del CDAO
+
+{{ cdao_mission }}
+
+**Principios:**
+{% for p in cdao_principles %}
+- {{ p }}
+{% endfor %}
+
+## Misión del programa de gobierno de datos
+
+> {{ program_mission }}
+
+## Componentes del programa
+
+| Componente | Qué aporta | Entregable |
+|---|---|---|
+| Política y estándares | Define qué se exige, por qué y quién responde. Es la base de los demás componentes. | [data_governance_policy.md](data_governance_policy.md) |
+| Roles y responsabilidades | Hay un ejecutivo por dominio que responde de sus datos, y unos stewards que los gestionan en el día a día. | Sección 6 de la política; se desarrolla en el capítulo 3 |
+| Foros de gobierno | Un comité empresarial de datos para priorizar y escalar, con consejos y grupos de trabajo por debajo. | Se desarrolla en el capítulo 3 |
+| Reporting del avance | El EDG Scorecard muestra de forma transparente cómo avanza la implantación. | [edg_scorecard.md](edg_scorecard.md) |
+
+## ¿Lanzar ahora o esperar?
+
+**Decisión: {{ launch.verdict | upper }}.** {{ launch.rationale }}
+
+| Impulsor | Presente | Evidencia |
+|---|---|---|
+{% for s in drivers %}
+| {{ s.name }} | {{ "✅ Sí" if s.present else "No" }} | {{ s.evidence }} |
+{% endfor %}
+
+| Señal de alerta | Presente | Evidencia |
+|---|---|---|
+{% for s in warning_signs %}
+| {{ s.name }} | {{ "⚠️ Sí" if s.present else "No" }} | {{ s.evidence }} |
+{% endfor %}
+
+## Guía rápida de términos
+
+| Término | Definición |
+|---|---|
+{% for g in glossary %}
+| **{{ g.term }}** | {{ g.definition }} |
+{% endfor %}

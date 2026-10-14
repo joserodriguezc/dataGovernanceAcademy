@@ -1,0 +1,59 @@
+# {{ bc.title }}
+
+| | |
+|---|---|
+| **Owner** | {{ bc.owner }} |
+| **Autores** | {{ bc.authors | join(", ") }} |
+| **Contribuidores** | {{ bc.contributors | join(", ") }} |
+| **Revisores** | {{ bc.reviewers | join(", ") }} |
+
+## Propósito
+
+{{ bc.purpose }}
+
+## Resumen ejecutivo y petición
+
+Recomendamos la opción **{{ rec.option.name }}**: una inversión de **{{ rec.option.build_cost_usd | money }}** en {{ rec.option.duration_months }} meses, con un VAN de **{{ rec.npv | money }}** a {{ bc.horizon_months }} meses{% if rec.payback_month %} y recuperación de la inversión en el **mes {{ rec.payback_month }}**{% else %}, aunque no se recupera dentro del horizonte{% endif %}.
+El programa mejora la data equity de la empresa en **{{ annual_benefit | money }} al año**{% if not bc.include_unvetted_benefits %}, contando solo los beneficios validados por el negocio{% endif %}.
+
+**Lo que pedimos:** {{ bc.ask }}
+
+## Caso de negocio
+
+**Qué entregaremos.** Programas de capacidades, desarrollados en la Parte 2 del laboratorio:
+
+| Capítulo | Programa | Descripción |
+|---:|---|---|
+{% for p in bc.programs %}
+| {{ p.chapter }} | {{ p.name }} | {{ p.description }} |
+{% endfor %}
+
+**Por qué importa.** Mejoras de data equity con mayor impacto (detalle en [data_equity.md](data_equity.md)):
+
+| Línea | Tipo | Mejora anual | Validado por |
+|---|---|---:|---|
+{% for ln in top_lines %}
+| {{ ln.name }} | {{ "Activo" if ln.kind == "asset" else "Pasivo" }} | {{ ln.benefit | money }} | {{ ln.vetted_by or "⚠️ pendiente" }} |
+{% endfor %}
+
+## Financieros: tres opciones de timeline
+
+| Opción | Duración | Construcción | Operación/año | Coste total ({{ bc.horizon_months }} m) | Beneficio total | VAN ({{ bc.discount_rate_annual | pct }}) | ROI | Payback |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+{% for r in results %}
+| {{ "**" ~ r.option.name ~ "** (recomendada)" if r.option.id == bc.recommended_option else r.option.name }} | {{ r.option.duration_months }} meses | {{ r.option.build_cost_usd | money }} | {{ r.option.run_cost_annual_usd | money }} | {{ r.total_cost | money }} | {{ r.total_benefit | money }} | {{ r.npv | money }} | {{ r.roi | pct }} | {{ ("mes " ~ r.payback_month) if r.payback_month else "fuera del horizonte" }} |
+{% endfor %}
+
+{% for r in results %}
+- **{{ r.option.name }}:** {{ r.option.description }}
+{% endfor %}
+
+{% if chart_name %}![Flujo de caja neto acumulado por opción]({{ chart_name }}){% endif %}
+
+*Supuestos:* la construcción se paga a partes iguales durante la duración de cada opción y la operación empieza al terminarla. El beneficio crece de forma lineal mientras se construye, porque se entrega de forma iterativa, y es pleno al acabar. El VAN se calcula con flujos mensuales.
+
+## Medidas de éxito
+
+{% for m in bc.measures_of_success %}
+- {{ m }}
+{% endfor %}

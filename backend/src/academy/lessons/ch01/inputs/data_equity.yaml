@@ -1,0 +1,64 @@
+# Valoración anual de activos y pasivos de datos de NovaMercado (USD/año).
+# "current" es la situación actual y "target" la esperada tras el programa.
+# Una línea solo cuenta en el caso de negocio conservador si el negocio la validó ("vetted_by").
+hourly_rate_usd: 45  # coste medio cargado de una hora de trabajo
+
+assets:
+  - id: A1
+    name: Vista única de cliente para campañas
+    domain: customer
+    description: Segmentación y personalización con un cliente unificado entre canales.
+    vetted_by: CMO
+    current: {revenue_usd: 200000}
+    target: {revenue_usd: 1200000, customer_value_usd: 250000}
+  - id: A2
+    name: Reporting de ventas certificado
+    domain: sales
+    description: Una sola versión de las ventas por canal para el comité de dirección.
+    vetted_by: CFO
+    current: {hours_saved: 0}
+    target: {hours_saved: 6000}
+  - id: A3
+    name: Surtido basado en datos de producto curados
+    domain: product
+    description: Decisiones de surtido por tienda con atributos de producto completos.
+    vetted_by: null  # pendiente de validar con Comercial
+    current: {revenue_usd: 0}
+    target: {revenue_usd: 600000}
+  - id: A4
+    name: Catálogo de proveedores fiable
+    domain: supplier
+    description: Datos de proveedor y contacto reutilizables por Compras y Finanzas.
+    vetted_by: Director de Compras
+    current: {hours_saved: 0}
+    target: {hours_saved: 2500}
+
+liabilities:
+  - id: L1
+    name: PII de clientes sin clasificar
+    domain: customer
+    description: Datos personales repartidos por sistemas sin clasificar ni proteger.
+    vetted_by: DPO
+    current: {fine_probability: 0.08, fine_amount_usd: 4000000, customer_impact_usd: 150000}
+    target: {fine_probability: 0.02, fine_amount_usd: 4000000, customer_impact_usd: 40000}
+  - id: L2
+    name: Métricas de ventas inconsistentes entre informes
+    domain: sales
+    description: Horas de conciliación manual cada cierre y en cada comité.
+    vetted_by: CFO
+    current: {hours_lost: 9000}
+    target: {hours_lost: 1500}
+  - id: L3
+    name: Clientes duplicados entre CRM, e-commerce y tiendas
+    domain: customer
+    description: Envíos duplicados, mala experiencia y trabajo manual de depuración.
+    vetted_by: CMO
+    current: {hours_lost: 3000, customer_impact_usd: 200000}
+    target: {hours_lost: 500, customer_impact_usd: 50000}
+  - id: L4
+    name: Datos de proveedores sin responsable
+    domain: supplier
+    description: Nadie responde de la calidad de los datos de proveedor.
+    vetted_by: null  # pendiente de validar con Compras
+    current: {hours_lost: 1500}
+    target: {hours_lost: 300}

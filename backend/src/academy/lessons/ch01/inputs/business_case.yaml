@@ -1,0 +1,51 @@
+# Caso de negocio según la plantilla del capítulo y las tres opciones de timeline.
+title: Programa de Gobierno de Datos de NovaMercado 2027-2029
+owner: Chief Data & Analytics Officer (CDAO)
+authors: [Head of Data Governance]
+contributors: [CMO, CFO, CIO, DPO, Director de Compras, Director de Operaciones]
+reviewers: [CFO, CIO]
+purpose: >-
+  Obtener el patrocinio y la financiación del comité de dirección para lanzar el programa de
+  gobierno de datos y acordar los hitos de entrega.
+ask: >-
+  Aprobar la opción recomendada, nombrar a los ejecutivos de dominio pendientes y constituir
+  el comité empresarial de datos en el primer trimestre.
+
+horizon_months: 36
+discount_rate_annual: 0.08
+include_unvetted_benefits: false  # conservador: solo beneficios validados por el negocio
+recommended_option: preferred
+
+programs:
+  - {chapter: 6, name: Gestión de metadatos, description: "Glosario de negocio y catálogo de datos con clasificación de PII."}
+  - {chapter: 7, name: Linaje de datos, description: "Trazabilidad de las métricas de ventas desde su origen."}
+  - {chapter: 8, name: Calidad de datos, description: "Reglas, scorecards y certificación de datos críticos."}
+  - {chapter: 9, name: Arquitectura de datos, description: "Principios y estándares para el modelo de datos objetivo."}
+  - {chapter: 10, name: Datos primarios, description: "Golden record de cliente y de proveedor."}
+  - {chapter: 11, name: Operaciones de datos, description: "SLAs, monitorización e incidencias de los procesos de datos."}
+
+measures_of_success:
+  - Ingresos incrementales atribuibles a la vista única de cliente
+  - Horas de conciliación manual eliminadas en el cierre y en el comité
+  - Reducción de la exposición regulatoria por PII sin clasificar
+  - Avance del EDG Scorecard hasta el 100 % de los dominios con ejecutivo y stewards
+
+options:
+  - id: preferred
+    name: Timeline preferido
+    description: Ritmo sostenible con el equipo propio y apoyo puntual externo.
+    duration_months: 18
+    build_cost_usd: 2400000
+    run_cost_annual_usd: 500000
+  - id: fast
+    name: Rápido y caro
+    description: Más equipo y consultoría para llegar antes al valor.
+    duration_months: 12
+    build_cost_usd: 3300000
+    run_cost_annual_usd: 550000
+  - id: slow
+    name: Lento y barato
+    description: Solo con el equipo actual, con entregas espaciadas.
+    duration_months: 30
+    build_cost_usd: 1900000
+    run_cost_annual_usd: 450000

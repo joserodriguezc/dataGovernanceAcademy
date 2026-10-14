@@ -1,0 +1,66 @@
+# {{ p.title }} (v{{ p.version }})
+
+## 1. {{ sections[0] }}
+
+{{ p.purpose }}
+
+**Alcance:** {{ p.scope }}
+
+**Resultados que persigue:**
+{% for o in p.outcomes %}
+- {{ o }}
+{% endfor %}
+
+## 2. {{ sections[1] }}
+
+**Owner:** {{ p.owner }}. **Responsable de la política:** {{ p.policy_leader }}.
+
+## 3. {{ sections[2] }}
+
+{{ p.contributors | join(", ") }}.
+
+## 4. {{ sections[3] }}
+
+**Aprobada por** {{ p.approvers | join(" y ") }} el {{ p.last_approval.strftime("%d/%m/%Y") }}. Se revisa y reaprueba con frecuencia {{ p.review_frequency }}.
+
+## 5. {{ sections[4] }}
+
+Requisitos mínimos de cumplimiento. Cada dominio desarrolla su plan para cumplirlos.
+
+{% for r in p.requirements %}
+### 5.{{ loop.index }} {{ r.name }}
+
+{{ r.purpose }}
+
+{% for item in r.items %}
+{{ loop.index }}. {{ item }}
+{% endfor %}
+
+{% endfor %}
+## 6. {{ sections[5] }}
+
+| Rol | Responsabilidades |
+|---|---|
+{% for r in p.roles %}
+| **{{ r.name }}** | {{ r.responsibilities }} |
+{% endfor %}
+
+## 7. {{ sections[6] }}
+
+{{ p.feedback }}
+
+## 8. {{ sections[7] }}
+
+{{ p.measures_of_success }} Ver [edg_scorecard.md](edg_scorecard.md).
+
+## 9. {{ sections[8] }}
+
+{{ p.compliance }}
+
+## 10. {{ sections[9] }}
+
+| Término | Definición |
+|---|---|
+{% for g in glossary %}
+| **{{ g.term }}** | {{ g.definition }} |
+{% endfor %}

@@ -1,0 +1,41 @@
+# EDG Scorecard de {{ company }}
+
+**Owner:** Chief Data & Analytics Officer. **Contacto:** Head of Data Governance. **Fecha de corte:** {{ as_of.strftime("%d/%m/%Y") }}.
+
+Este scorecard mide el avance en la implantación de los requisitos de la política de gobierno de datos, sobre {{ corporate[0].denominator }} dominios.
+
+Estados: 🟢 En plazo · 🟡 En riesgo (vence en {{ at_risk_days }} días o menos) · 🔴 Vencido.
+
+## Scorecard corporativo (oficina del CDAO)
+
+| Métrica | Avance | % | Fecha comprometida | Estado |
+|---|---:|---:|---|---|
+{% for m in corporate %}
+| {{ m.label }} | {{ m.numerator }} de {{ m.denominator }} dominios | {{ m.pct | pct }} | {{ m.due.strftime("%d/%m/%Y") }} | {{ m.status_label }} |
+{% endfor %}
+
+{% if updates %}
+### Novedades
+{% for u in updates %}
+- {{ u }}
+{% endfor %}
+{% endif %}
+
+## Scorecards por dominio
+
+{% for d in domains %}
+### {{ d.name }}
+
+**Ejecutivo de dominio:** {{ d.executive or "⚠️ sin asignar" }}. **Data stewards:** {{ (d.stewards | join(", ")) if d.stewards else "⚠️ sin asignar" }}.
+
+{% if d.metrics[0].denominator %}
+| Métrica | Sistemas | % | Estado |
+|---|---:|---:|---|
+{% for m in d.metrics %}
+| {{ m.label }} | {{ m.numerator }} de {{ m.denominator }} | {{ m.pct | pct }} | {{ m.status_label }} |
+{% endfor %}
+{% else %}
+⚠️ Todavía no hay sistemas de registro identificados.
+{% endif %}
+
+{% endfor %}

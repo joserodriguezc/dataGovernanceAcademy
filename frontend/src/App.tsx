@@ -1,11 +1,18 @@
+import { lazy, Suspense } from 'react'
 import { Link, Route, Routes, useParams } from 'react-router-dom'
 import Home from './pages/Home.tsx'
-import LessonPage from './pages/Lesson.tsx'
+
+// La lección trae formularios y gráficos: se carga solo al abrir una lección.
+const LessonPage = lazy(() => import('./pages/Lesson.tsx'))
 
 // La key hace que cada lección empiece con su propio estado al navegar entre capítulos.
 function LessonRoute() {
   const number = Number(useParams().number)
-  return <LessonPage key={number} number={number} />
+  return (
+    <Suspense fallback={<p className="muted">Cargando lección…</p>}>
+      <LessonPage key={number} number={number} />
+    </Suspense>
+  )
 }
 
 export default function App() {

@@ -1,0 +1,76 @@
+# Contenido de la política de gobierno de datos (esquema de 10 secciones del capítulo).
+title: Política Corporativa de Gobierno de Datos
+version: "0.1"
+owner: Chief Data & Analytics Officer (CDAO)
+policy_leader: Head of Data Governance
+contributors: [CIO, CHRO, CMO, CFO, DPO, Director de Compras, Data stewards de dominio]
+approvers: [CEO, CFO]
+last_approval: 2026-12-15
+review_frequency: anual
+
+purpose: >-
+  Convertir los datos de NovaMercado en una palanca de crecimiento y eficiencia y, al mismo
+  tiempo, reducir el riesgo asociado a su uso.
+scope: >-
+  Todos los datos que NovaMercado y sus filiales generan, procesan o adquieren: datos de
+  clientes, transacciones de venta, producto, proveedores, información financiera e informes
+  regulatorios, sean propios, derivados o de terceros.
+outcomes:
+  - Reducir el riesgo
+  - Abrir nuevas oportunidades de ingresos
+  - Ganar eficiencia operativa
+
+roles:
+  - name: Comité empresarial de datos
+    responsibilities: >-
+      Lo preside el CDAO y en él tiene asiento cada ejecutivo de dominio. Supervisa y prioriza
+      las iniciativas de datos y escala la resolución de incidencias.
+  - name: CIO
+    responsibilities: >-
+      Junto con el CDAO, asegura los sistemas y requisitos técnicos que necesitan la oficina del
+      CDAO y todos los dominios.
+  - name: Ejecutivo de dominio
+    responsibilities: >-
+      Asegura el foco, la financiación y los recursos para gestionar los datos de su dominio
+      según esta política. Designa a los data stewards.
+  - name: Data steward
+    responsibilities: >-
+      Ejecuta en el día a día los requisitos de la política en su dominio e informa del avance
+      a la oficina del CDAO.
+  - name: Steward técnico
+    responsibilities: >-
+      Implementa en los sistemas los requisitos técnicos de la política.
+
+requirements:
+  - name: Gobierno de datos
+    purpose: Cada dominio tiene un plan para cumplir esta política.
+    items:
+      - Inventariar los activos de datos y sistemas del dominio
+      - Designar un data steward y un steward técnico para cada activo y sistema
+      - Asignar cada activo y sistema a un único dominio
+      - Mantener un plan de cumplimiento por activo y sistema
+  - name: Catálogo de datos
+    purpose: >-
+      Publicar de forma centralizada los metadatos de negocio y técnicos para que cualquiera
+      encuentre los datos disponibles, y reducir duplicidades.
+    items:
+      - Descripción del activo o sistema
+      - Metadatos técnicos, esquemas y tablas
+      - Identificación de los elementos de dato críticos (CDE) y su definición de negocio
+      - Clasificación de todos los elementos según la política de clasificación
+  - name: Calidad de datos
+    purpose: Asegurar que los datos son aptos para su uso.
+    items:
+      - Definir reglas de calidad para cada CDE y monitorizarlas
+      - Publicar cuadros de mando con el nivel de calidad actual
+      - Registrar las incidencias materiales con su plan de remediación
+
+feedback: >-
+  Las dudas y propuestas de mejora se envían a la persona que lidera la política, que las
+  revisa en cada comité empresarial de datos.
+measures_of_success: >-
+  Se mantiene un EDG Scorecard corporativo y uno por dominio. El avance se reporta
+  quincenalmente a la oficina del CDAO y mensualmente al comité empresarial de datos.
+compliance: >-
+  Auditoría interna, auditoría externa y los reguladores pueden revisar el cumplimiento de
+  esta política. Las peticiones se coordinan a través de la oficina del CDAO.

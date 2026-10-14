@@ -1,0 +1,120 @@
+# Visión, misiones y momento de lanzamiento del programa de gobierno de datos de NovaMercado.
+company: NovaMercado
+
+# Why statement: responde a las tres preguntas del capítulo y se resume en una frase sin jerga.
+vision:
+  aspire: >-
+    Que cada decisión comercial, de surtido y de servicio al cliente se tome con datos en los
+    que todo el mundo confía, sin discusiones sobre qué cifra es la buena.
+  who: >-
+    Los líderes de cada área de negocio como responsables de sus datos, con el apoyo de la
+    oficina del CDAO y de Tecnología.
+  arrival: >-
+    Cuando el comité de dirección use una única versión de las ventas y del cliente, y los
+    equipos encuentren por sí mismos los datos que necesitan en minutos y no en semanas.
+  statement: >-
+    En NovaMercado decidimos con datos fiables, disponibles en el momento justo, para
+    sorprender a cada cliente en cada canal. Confiamos en nuestros datos y nuestros clientes
+    confían en nosotros.
+
+cdao_mission: >-
+  La oficina del CDAO acelera los resultados de NovaMercado: impulsa el crecimiento de las
+  ventas, gana eficiencia y reduce el riesgo regulatorio poniendo datos e información fiables
+  al servicio de cada área de negocio.
+
+cdao_principles:
+  - Pensar en la empresa completa, no en silos
+  - Entregar resultados de negocio apoyados en información fiable
+  - Gobierno desde el diseño, integrado en los procesos del día a día
+  - Automatizar para ganar eficiencia operativa
+  - Acelerar la generación de ingresos
+  - Reducir el riesgo y resolver los incumplimientos
+
+# Plantilla del capítulo: "Hacemos X para Y mediante A, B y C".
+program_mission:
+  what: capacidades de gobierno de datos para toda la empresa
+  for_whom: todas las áreas de negocio y funciones corporativas de NovaMercado
+  how:
+    - integrando el gobierno en nuestras plataformas desde el diseño
+    - habilitando la gestión de los datos de cada dominio
+    - entregando datos curados y fiables cuando más importan
+
+# ¿Lanzar ahora o esperar? Impulsores y señales de alerta.
+launch:
+  drivers:
+    - id: regulatory
+      name: Regulatorio
+      present: true
+      evidence: >-
+        El RGPD y la entrada en el negocio de pagos con NovaPay exigen saber dónde está la
+        PII y cómo se protege.
+    - id: crisis
+      name: Crisis
+      present: false
+      evidence: No ha habido brechas de datos recientes.
+    - id: executive_request
+      name: Petición ejecutiva
+      present: true
+      evidence: >-
+        El CEO pidió en el comité de dirección una única cifra de ventas por canal y
+        financia el programa en el presupuesto de 2027.
+    - id: business_request
+      name: Petición de negocio
+      present: true
+      evidence: >-
+        Marketing necesita una vista única del cliente para la nueva estrategia de
+        fidelización.
+    - id: experimental
+      name: Experimental
+      present: false
+      evidence: No hay un fondo de experimentación asignado.
+  warning_signs:
+    - id: executive_request_unclear
+      name: La dirección no entiende qué hace falta para transformar
+      present: false
+      evidence: El caso de negocio y el plan de 3 opciones se presentaron al comité.
+    - id: business_request_unfunded
+      name: Necesidad de negocio sin definir ni financiar
+      present: false
+      evidence: La necesidad de Marketing tiene sponsor y partida asignada.
+    - id: experimental_unaware
+      name: Se quiere explorar sin saber lo que cuesta obtener resultados
+      present: false
+      evidence: No aplica.
+    - id: undefined_function
+      name: Se quiere una función de datos pero sin completarla
+      present: false
+      evidence: La oficina del CDAO tiene plantilla aprobada.
+    - id: major_distraction
+      name: La dirección está absorbida por otra gran transformación (p. ej., una fusión)
+      present: false
+      evidence: No hay operaciones corporativas en curso.
+
+# Guía rápida de términos, accesible a toda la organización.
+glossary:
+  - term: Dato
+    definition: >-
+      Hecho registrado por un proceso o sistema de NovaMercado (una venta, un cliente, un
+      precio). En este programa "dato" incluye también las métricas derivadas de él.
+  - term: Gobierno de datos
+    definition: >-
+      Coordinación formal de personas, procesos y tecnología para que la empresa disponga del
+      dato correcto, en el momento correcto y con los controles adecuados.
+  - term: Activo de datos
+    definition: Dato que genera valor para la empresa (ingresos, tiempo ahorrado, clientes más satisfechos).
+  - term: Pasivo de datos
+    definition: Dato que genera riesgo o coste para la empresa (multas, ineficiencias, brechas).
+  - term: Data equity
+    definition: Valor neto de los datos, es decir, los activos de datos menos los pasivos de datos.
+  - term: Dominio de datos
+    definition: Agrupación lógica de datos de un área de negocio (cliente, producto, ventas...).
+  - term: Ejecutivo de dominio
+    definition: Directivo (CEO-1 o CEO-2) que responde en última instancia de los datos de su dominio.
+  - term: Data steward
+    definition: Persona designada por el ejecutivo de dominio que gestiona el día a día de sus datos.
+  - term: Sistema de registro (SOR)
+    definition: Sistema que actúa como fuente oficial de un conjunto de datos.
+  - term: Elemento de dato crítico (CDE)
+    definition: Dato cuya calidad es imprescindible para una decisión, un informe regulatorio o un proceso clave.
+  - term: Metadatos
+    definition: Datos que describen otros datos, como su significado, origen, responsable y clasificación.

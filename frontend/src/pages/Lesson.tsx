@@ -1,35 +1,90 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { api, KIND_LABEL, type LessonOut } from '../api.ts'
-import { ApiError } from './Home.tsx'
+import { Link, useSearchParams } from 'react-router-dom'
+import {
+  api, KIND_LABEL, type LessonContent, type LessonInput, type LessonOut, type LessonResult,
+} from '../api.ts'
+import InputsPanel from '../components/InputsPanel.tsx'
+import ResultView from '../components/ResultView.tsx'
+import { ApiDown } from './Home.tsx'
 
-// Secciones de cada lección. Se activan a medida que cada capítulo se migra del laboratorio.
 const SECTIONS = [
-  { id: 'conceptos', title: 'Conceptos', text: 'Las ideas del capítulo, explicadas con nuestras palabras, y cómo se aplican a NovaMercado.' },
-  { id: 'entradas', title: 'Entradas', text: 'Los datos de partida de la lección, editables desde formularios, con la opción de volver a los valores originales.' },
-  { id: 'ejecutar', title: 'Ejecutar', text: 'Lanza el microproyecto del capítulo y sigue su progreso.' },
-  { id: 'resultados', title: 'Resultados', text: 'Tablas, gráficos e informes interactivos generados con tus entradas.' },
-  { id: 'probar', title: 'Qué probar', text: 'Retos guiados: cambia una entrada, vuelve a ejecutar y explica qué ha cambiado.' },
+  { id: 'conceptos', title: 'Conceptos' },
+  { id: 'entradas', title: 'Entradas' },
+  { id: 'ejecutar', title: 'Ejecutar' },
+  { id: 'resultados', title: 'Resultados' },
+  { id: 'probar', title: 'Qué probar' },
 ] as const
+type SectionId = (typeof SECTIONS)[number]['id']
+
+// Para las lecciones que aún no se han migrado del laboratorio.
+const PLANNED_TEXT: Record<SectionId, string> = {
+  conceptos: 'Las ideas del capítulo, explicadas con nuestras palabras, y cómo se aplican a NovaMercado.',
+  entradas: 'Los datos de partida de la lección, editables desde formularios, con la opción de volver a los valores originales.',
+  ejecutar: 'Lanza el microproyecto del capítulo con tus entradas.',
+  resultados: 'Tablas, gráficos e informes interactivos generados con tus entradas.',
+  probar: 'Retos guiados: cambia una entrada, vuelve a ejecutar y explica qué ha cambiado.',
+}
+
+interface Interactive {
+  content: LessonContent
+  inputs: LessonInput[]
+  result: LessonResult | null
+}
 
 export default function LessonPage({ number }: { number: number }) {
   const [data, setData] = useState<LessonOut | null>(null)
+  const [live, setLive] = useState<Interactive | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [section, setSection] = useState<string>(SECTIONS[0].id)
+  // La sección activa vive en la URL (?seccion=...): se puede enlazar y volver atrás.
+  const [params, setParams] = useSearchParams()
+  const requested = params.get('seccion')
+  const section: SectionId = SECTIONS.some((s) => s.id === requested)
+    ? (requested as SectionId) : 'conceptos'
+  const setSection = (id: SectionId) => setParams(id === 'conceptos' ? {} : { seccion: id })
+  const [running, setRunning] = useState(false)
+  const [runError, setRunError] = useState<string | null>(null)
+  const [stale, setStale] = useState(false) // hay entradas guardadas después del último resultado
 
   useEffect(() => {
-    api.lesson(number).then(setData).catch((e: Error) => setError(e.message))
+    api.lesson(number)
+      .then(async (out) => {
+        setData(out)
+        if (out.lesson.status !== 'available') return
+        const [content, inputs, result] = await Promise.all(
+          [api.content(number), api.inputs(number), api.result(number)])
+        setLive({ content, inputs, result })
+      })
+      .catch((e: Error) => setError(e.message))
   }, [number])
 
-  if (error) return <ApiError message={error} />
+  if (error) return <ApiDown message={error} />
   if (!data) return <p className="muted">Cargando lección…</p>
 
   const { lesson, state } = data
-  const current = SECTIONS.find((s) => s.id === section) ?? SECTIONS[0]
 
   async function toggle() {
     const states = await api.setCompleted(lesson.number, !state.completed)
     setData((d) => (d ? { ...d, state: states.find((s) => s.number === lesson.number)! } : d))
+  }
+
+  async function run() {
+    setRunning(true)
+    setRunError(null)
+    try {
+      const result = await api.run(lesson.number)
+      setLive((l) => (l ? { ...l, result } : l))
+      setStale(false)
+      setSection('resultados')
+    } catch (e) {
+      setRunError((e as Error).message)
+    } finally {
+      setRunning(false)
+    }
+  }
+
+  function inputChanged(input: LessonInput) {
+    setLive((l) => (l ? { ...l, inputs: l.inputs.map((i) => (i.id === input.id ? input : i)) } : l))
+    setStale(true)
   }
 
   return (
@@ -65,14 +120,47 @@ export default function LessonPage({ number }: { number: number }) {
         ))}
       </div>
       <section className="panel" role="tabpanel">
-        <h2>{current.title}</h2>
-        <p>{current.text}</p>
-        {lesson.status === 'planned' && (
-          <p className="muted">
-            Esta lección todavía se está migrando del laboratorio. Mientras tanto puedes seguirla
-            en el repositorio <em>dataGovernanceLab</em>, en la carpeta del capítulo {lesson.number}.
-          </p>
-        )}
+        {lesson.status !== 'available' || !live
+          ? <Planned section={section} number={lesson.number} loading={lesson.status === 'available'} />
+          : section === 'conceptos' ? <Concepts content={live.content} />
+          : section === 'entradas' ? <InputsPanel lesson={lesson.number} inputs={live.inputs} onChange={inputChanged} />
+          : section === 'ejecutar' ? (
+            <div className="run">
+              <p>
+                Ejecuta el microproyecto con las entradas actuales
+                {live.inputs.some((i) => i.custom) ? ' (incluye tus cambios)' : ' (valores originales)'}.
+              </p>
+              <button className="button primary large" onClick={run} disabled={running}>
+                {running ? 'Ejecutando…' : '▶ Ejecutar la lección'}
+              </button>
+              {runError && <div className="notice bad" role="alert">{runError}</div>}
+              {live.result && (
+                <p className="muted">
+                  Última ejecución: {new Date(live.result.ran_at).toLocaleString('es-ES')}.{' '}
+                  <button className="link" onClick={() => setSection('resultados')}>Ver resultados</button>
+                </p>
+              )}
+            </div>
+          )
+          : section === 'resultados' ? (
+            live.result ? (
+              <>
+                {stale && (
+                  <div className="notice">
+                    Has cambiado entradas después de esta ejecución.{' '}
+                    <button className="link" onClick={run} disabled={running}>Volver a ejecutar</button>
+                  </div>
+                )}
+                <ResultView result={live.result} />
+              </>
+            ) : (
+              <p>
+                Todavía no hay resultados.{' '}
+                <button className="link" onClick={run} disabled={running}>Ejecuta la lección</button>.
+              </p>
+            )
+          )
+          : <Challenges content={live.content} />}
       </section>
 
       <footer className="lesson-foot">
@@ -87,5 +175,58 @@ export default function LessonPage({ number }: { number: number }) {
           : <span />}
       </footer>
     </article>
+  )
+}
+
+function Planned({ section, number, loading }: { section: SectionId; number: number; loading: boolean }) {
+  if (loading) return <p className="muted">Cargando…</p>
+  return (
+    <>
+      <p>{PLANNED_TEXT[section]}</p>
+      <p className="muted">
+        Esta lección todavía se está migrando del laboratorio. Mientras tanto puedes seguirla en el
+        repositorio <em>dataGovernanceLab</em>, en la carpeta del capítulo {number}.
+      </p>
+    </>
+  )
+}
+
+function Concepts({ content }: { content: LessonContent }) {
+  return (
+    <div className="concepts">
+      <p className="lead">{content.intro}</p>
+      <h3>Ideas del capítulo y cómo las aplicamos</h3>
+      <div className="table-scroll">
+        <table>
+          <thead><tr><th>Idea</th><th>En la lección</th></tr></thead>
+          <tbody>
+            {content.ideas.map((i) => (
+              <tr key={i.idea}><td>{i.idea}</td><td>{i.application}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {content.takeaways.length > 0 && (
+        <>
+          <h3>Qué te llevas</h3>
+          <ul>{content.takeaways.map((t) => <li key={t}>{t}</li>)}</ul>
+        </>
+      )}
+    </div>
+  )
+}
+
+function Challenges({ content }: { content: LessonContent }) {
+  return (
+    <div className="challenges">
+      <p className="muted">Cambia una entrada, vuelve a ejecutar y explica qué ha pasado.</p>
+      {content.challenges.map((c, n) => (
+        <div key={c.title} className="challenge">
+          <h3><span className="part-number">Reto {n + 1}</span> {c.title}</h3>
+          <ol>{c.steps.map((s) => <li key={s}>{s}</li>)}</ol>
+          <p><strong>Qué observar:</strong> {c.look_for}</p>
+        </div>
+      ))}
+    </div>
   )
 }

@@ -1,16 +1,23 @@
 """API de Data Governance Academy."""
 
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from fastapi import APIRouter, FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from academy import __version__
+from academy.blocks import LessonResult
 from academy.catalog import Catalog, Lesson, load_catalog
+from academy.lessons.base import InputSpec, LessonContent, LessonDef
+from academy.lessons.registry import LESSONS
 from academy.paths import DATA_DIR, FRONTEND_DIST
 from academy.progress import LessonState, ProgressStore, lesson_states
+from academy.schema import form_schema
+from academy.state import LessonStore
 
 
 class CatalogOut(BaseModel):
@@ -30,11 +37,51 @@ class CompletedIn(BaseModel):
     completed: bool
 
 
+class InputOut(BaseModel):
+    id: str
+    title: str
+    description: str
+    json_schema: dict[str, Any]
+    data: dict[str, Any]
+    custom: bool  # el alumno lo ha editado (si no, son los valores por defecto)
+
+
+class InputIn(BaseModel):
+    data: dict[str, Any]
+
+
+def _validation_detail(exc: ValidationError) -> list[dict[str, str]]:
+    return [{"loc": ".".join(str(x) for x in e["loc"]), "msg": e["msg"]} for e in exc.errors()]
+
+
 def create_app(data_dir: Path = DATA_DIR, catalog: Catalog | None = None,
-               frontend_dist: Path = FRONTEND_DIST) -> FastAPI:
-    catalog = catalog or load_catalog()
+               frontend_dist: Path = FRONTEND_DIST,
+               registry: dict[int, LessonDef] | None = None) -> FastAPI:
+    registry = LESSONS if registry is None else registry
+    base = catalog or load_catalog()
+    catalog = base.model_copy(update={"lessons": [
+        x.model_copy(update={"status": "available" if x.number in registry else "planned"})
+        for x in base.lessons]})
     store = ProgressStore(data_dir / "progress.json")
+    lessons_store = LessonStore(data_dir)
     api = APIRouter(prefix="/api")
+
+    def _def_or_404(number: int) -> LessonDef:
+        if number not in registry:
+            raise HTTPException(404, f"La lección {number} todavía no es interactiva")
+        return registry[number]
+
+    def _spec_or_404(lesson: LessonDef, input_id: str) -> InputSpec:
+        spec = lesson.input_spec(input_id)
+        if spec is None:
+            raise HTTPException(404, f"La lección {lesson.number} no tiene la entrada {input_id}")
+        return spec
+
+    def _input_out(lesson: LessonDef, spec: InputSpec) -> InputOut:
+        return InputOut(id=spec.id, title=spec.title, description=spec.description,
+                        json_schema=form_schema(spec.model, lesson.content().labels),
+                        data=lessons_store.get_input(lesson.number, spec),
+                        custom=lessons_store.is_custom(lesson.number, spec))
 
     def _lesson_or_404(number: int) -> Lesson:
         lesson = catalog.get(number)
@@ -60,6 +107,50 @@ def create_app(data_dir: Path = DATA_DIR, catalog: Catalog | None = None,
         return LessonOut(lesson=current, state=states[number],
                          previous=numbers[i - 1] if i > 0 else None,
                          next=numbers[i + 1] if i + 1 < len(numbers) else None)
+
+    @api.get("/lessons/{number}/content")
+    def content(number: int) -> LessonContent:
+        return _def_or_404(number).content()
+
+    @api.get("/lessons/{number}/inputs")
+    def inputs(number: int) -> list[InputOut]:
+        lesson = _def_or_404(number)
+        return [_input_out(lesson, spec) for spec in lesson.inputs]
+
+    @api.put("/lessons/{number}/inputs/{input_id}")
+    def save_input(number: int, input_id: str, body: InputIn) -> InputOut:
+        lesson = _def_or_404(number)
+        spec = _spec_or_404(lesson, input_id)
+        try:
+            lessons_store.save_input(number, spec, body.data)
+        except ValidationError as exc:
+            raise HTTPException(422, _validation_detail(exc)) from exc
+        return _input_out(lesson, spec)
+
+    @api.delete("/lessons/{number}/inputs/{input_id}")
+    def reset_input(number: int, input_id: str) -> InputOut:
+        lesson = _def_or_404(number)
+        spec = _spec_or_404(lesson, input_id)
+        lessons_store.reset_input(number, spec)
+        return _input_out(lesson, spec)
+
+    @api.post("/lessons/{number}/run")
+    def run(number: int) -> LessonResult:
+        lesson = _def_or_404(number)
+        models = {spec.id: spec.model.model_validate(lessons_store.get_input(number, spec))
+                  for spec in lesson.inputs}
+        try:
+            sections = lesson.compute(models)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        result = LessonResult(lesson=number, ran_at=datetime.now(UTC), sections=sections)
+        lessons_store.save_result(result)
+        return result
+
+    @api.get("/lessons/{number}/result")
+    def last_result(number: int) -> LessonResult | None:
+        _def_or_404(number)
+        return lessons_store.load_result(number)
 
     @api.put("/progress/{number}")
     def set_progress(number: int, body: CompletedIn) -> list[LessonState]:

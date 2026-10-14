@@ -13,6 +13,17 @@
   --kind-gestion: #7a4cc2;
   --kind-tecnico: #0f7c8c;
   --kind-caso: #b4541a;
+  --bad: #b42323;
+  --bad-soft: #fbe9e9;
+  --good-soft: #e6f4ea;
+  --info-soft: #e8eefc;
+  /* Gráficos: paleta categórica validada (orden fijo), rejilla y ejes discretos */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
   --radius: 10px;
   color-scheme: light;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -35,6 +46,16 @@
     --kind-gestion: #b69af0;
     --kind-tecnico: #5cc4d1;
     --kind-caso: #f0a070;
+    --bad: #f08a8a;
+    --bad-soft: #3a1a1a;
+    --good-soft: #17301f;
+    --info-soft: #1f2a44;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --grid: #2c2c2a;
+    --axis: #383835;
     color-scheme: dark;
   }
 }
@@ -123,6 +144,102 @@ code { font-size: 0.9em; background: var(--accent-soft); padding: 0.1em 0.35em; 
   border-radius: 0 0 var(--radius) var(--radius); min-height: 180px;
 }
 .lesson-foot { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 2rem; flex-wrap: wrap; }
+
+/* --- Lección interactiva ------------------------------------------------------------ */
+.button.small { padding: 0.3rem 0.7rem; font-size: 0.85rem; }
+.button.large { padding: 0.8rem 1.4rem; font-size: 1.05rem; }
+.button:disabled { opacity: 0.55; cursor: default; }
+.notice.bad { background: var(--bad-soft); border-color: var(--bad); }
+.notice ul { margin: 0.35rem 0 0; padding-left: 1.2rem; }
+.tag-line { font-size: 0.9rem; color: var(--text-muted); }
+.panel h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+.panel table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.panel th, .panel td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; text-align: left; }
+.panel th { font-size: 0.8rem; color: var(--text-muted); font-weight: 650; }
+.panel th.right, .panel td.right { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.table-scroll { overflow-x: auto; }
+
+.subtabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+.subtab {
+  display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--bg);
+  color: var(--text); font: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.subtab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--kind-caso); }
+
+/* Formularios generados desde el JSON Schema (react-jsonschema-form) */
+.inputs fieldset { border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; margin: 0.5rem 0; min-width: 0; }
+.inputs > form > fieldset { border: 0; padding: 0; }
+.inputs legend { font-weight: 650; padding: 0 0.35rem; }
+.inputs .form-group { margin-bottom: 0.75rem; }
+.inputs label, .inputs .control-label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.2rem; }
+.inputs input[type=text], .inputs input[type=number], .inputs input[type=date], .inputs textarea, .inputs select {
+  width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg); color: var(--text); font: inherit;
+}
+.inputs textarea { resize: vertical; }
+.inputs input:focus, .inputs textarea:focus, .inputs select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.inputs .checkbox label { display: flex; align-items: center; gap: 0.5rem; color: var(--text); font-weight: 500; }
+.inputs .field-description { font-size: 0.85rem; color: var(--text-muted); }
+.inputs .rjsf-array-item { gap: 0.5rem; margin-bottom: 0.5rem; }
+.inputs .rjsf-array-item > .col-xs-9, .inputs .rjsf-array-item > .col-xs-12 { flex: 1; min-width: 0; }
+.inputs .rjsf-array-item > .col-xs-9 > .form-group { margin-bottom: 0; }
+.inputs .array-item-toolbox { flex: none; }
+.inputs .array-item-toolbox .btn-group { gap: 0.25rem; }
+.inputs .btn {
+  min-width: 2rem; padding: 0.3rem 0.55rem; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface); color: var(--text); cursor: pointer; font: inherit; font-size: 0.85rem;
+}
+.inputs .btn:hover:not(:disabled) { border-color: var(--accent); }
+.inputs .btn:disabled { opacity: 0.4; cursor: default; }
+.inputs .btn-danger:hover:not(:disabled) { border-color: var(--bad); color: var(--bad); }
+.inputs .btn-add { margin-top: 0.25rem; }
+/* rjsf usa iconos de Bootstrap (glyphicons): se sustituyen por caracteres */
+.glyphicon { font-style: normal; }
+.glyphicon-arrow-up::before { content: "↑"; }
+.glyphicon-arrow-down::before { content: "↓"; }
+.glyphicon-remove::before { content: "✕"; }
+.glyphicon-copy::before { content: "⧉"; }
+.glyphicon-plus::before { content: "+ Añadir"; }
+.form-actions { display: flex; gap: 0.5rem; position: sticky; bottom: 0; padding: 0.75rem 0; background: var(--surface); border-top: 1px solid var(--border); margin-top: 1rem; }
+
+/* Resultados */
+.result-section { margin-bottom: 2rem; }
+.result-section > h3 { font-size: 1.15rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+.kpi { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); }
+.kpi-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+.kpi-value { font-size: 1.45rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.kpi-detail { font-size: 0.82rem; }
+.kpi.tone-good { border-left: 4px solid var(--good); }
+.kpi.tone-bad { border-left: 4px solid var(--bad); }
+.kpi.tone-warning { border-left: 4px solid var(--warn-border); }
+.callout { padding: 0.75rem 1rem; margin: 0.75rem 0; border-radius: var(--radius); border-left: 4px solid var(--accent); background: var(--info-soft); }
+.callout p { margin: 0.25rem 0 0; }
+.callout.tone-good { border-left-color: var(--good); background: var(--good-soft); }
+.callout.tone-warning { border-left-color: var(--warn-border); background: var(--warn-soft); }
+.callout.tone-bad { border-left-color: var(--bad); background: var(--bad-soft); }
+.callout.tone-good strong::before { content: "✓ "; }
+.callout.tone-warning strong::before, .callout.tone-bad strong::before { content: "⚠ "; }
+.table-block { margin: 1rem 0; }
+.table-block h4 { margin: 0 0 0.25rem; }
+.table-block p { margin: 0 0 0.5rem; font-size: 0.9rem; }
+.chart { margin: 0 0 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); }
+.chart figcaption { display: flex; flex-direction: column; margin-bottom: 0.5rem; }
+.chart figcaption span { font-size: 0.85rem; }
+.chart-notes { list-style: none; padding: 0; margin: 0.25rem 0 0; display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; font-size: 0.85rem; color: var(--text-muted); }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.35rem; }
+.document { border: 1px solid var(--border); border-radius: var(--radius); margin: 0.5rem 0; }
+.document-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; padding: 0.6rem 0.9rem; }
+.document-head .link { font-weight: 600; }
+.markdown { padding: 0 1.25rem 1rem; border-top: 1px solid var(--border); overflow-x: auto; }
+.markdown h1 { font-size: 1.4rem; margin-top: 1rem; }
+.markdown h2 { font-size: 1.15rem; margin-top: 1.25rem; }
+.run { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+.challenge { padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: var(--radius); margin: 0.75rem 0; background: var(--bg); }
+.challenge h3 { margin-top: 0; }
+.concepts .lead { margin-top: 0; }
 
 @media (max-width: 700px) {
   .content { padding: 1.25rem 1rem 3rem; }

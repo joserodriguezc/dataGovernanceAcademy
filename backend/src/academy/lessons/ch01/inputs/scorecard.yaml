@@ -1,0 +1,62 @@
+# Estado de implantación de la política por dominio: es la base del EDG Scorecard.
+as_of: 2026-10-12
+at_risk_days: 30  # "en riesgo" si quedan menos días que estos para la fecha comprometida
+
+# Fecha comprometida para que cada métrica llegue al 100 %.
+due_dates:
+  domain_executive: 2026-09-30
+  data_stewards: 2026-11-15
+  systems_identified: 2026-12-31
+  system_owners: 2026-10-31
+  cdes: 2027-03-31
+  dq_rules: 2027-06-30
+  business_glossary: 2027-03-31
+  data_dictionary: 2027-06-30
+  reference_data: 2027-12-31
+
+domains:
+  - id: customer
+    executive: CMO
+    stewards: [Responsable de CRM]
+    systems:
+      - {name: crm, owner: Responsable de CRM, cdes: true, glossary: true}
+      - {name: ecom, owner: Director de E-commerce, cdes: true}
+      - {name: pos, owner: null}
+  - id: product
+    executive: Director Comercial
+    stewards: []
+    systems:
+      - {name: erp, owner: Responsable de ERP}
+  - id: supplier
+    executive: null
+    stewards: []
+    systems: []
+  - id: sales
+    executive: CFO
+    stewards: [Controller de ventas]
+    systems:
+      - {name: pos, owner: Director de Operaciones, cdes: true, dq_rules: true, glossary: true}
+      - {name: ecom, owner: Director de E-commerce, cdes: true, glossary: true}
+  - id: store
+    executive: Director de Operaciones
+    stewards: [Responsable de red de tiendas]
+    systems:
+      - {name: erp, owner: Responsable de ERP, cdes: true, glossary: true, dictionary: true}
+  - id: finance
+    executive: CFO
+    stewards: [Controller financiero]
+    systems:
+      - {name: erp, owner: Responsable de ERP, cdes: true, dq_rules: true, glossary: true, dictionary: true}
+
+updates:
+  - >-
+    Ejecutivos de dominio: el dominio de proveedores sigue sin ejecutivo; se ha propuesto al
+    Director de Compras. Fecha estimada: 2 semanas.
+  - >-
+    Data stewards: Producto y Proveedores siguen pendientes, a la espera de su ejecutivo de
+    dominio.
+  - >-
+    Sistemas de registro: falta asignar el owner del POS en el dominio de cliente.
+  - >-
+    Datos de referencia: esta línea aún no vence. Se planificará cuando estén identificados
+    todos los sistemas de registro.

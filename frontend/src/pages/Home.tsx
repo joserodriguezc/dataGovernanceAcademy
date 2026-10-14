@@ -10,7 +10,7 @@ export default function Home() {
     api.catalog().then(setCatalog).catch((e: Error) => setError(e.message))
   }, [])
 
-  if (error) return <ApiError message={error} />
+  if (error) return <ApiDown message={error} />
   if (!catalog) return <p className="muted">Cargando lecciones…</p>
 
   const states = new Map(catalog.states.map((s) => [s.number, s]))
@@ -79,7 +79,7 @@ export default function Home() {
   )
 }
 
-export function ApiError({ message }: { message: string }) {
+export function ApiDown({ message }: { message: string }) {
   return (
     <div className="notice">
       <strong>No se puede conectar con la API</strong> ({message}). Arranca el backend con{' '}

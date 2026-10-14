@@ -1,0 +1,158 @@
+# Contenido de la lección 1. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  El gobierno de datos no es un fin en sí mismo: existe para que la empresa gane valor con sus
+  datos y reduzca el riesgo que hoy le generan. En esta lección preparas el arranque del
+  programa de NovaMercado: mides cuánto valen sus datos hoy, justificas la inversión ante el
+  comité de dirección, escribes el charter y la política, y montas el cuadro de mando con el
+  que se seguirá su implantación.
+
+ideas:
+  - idea: "Los datos se pueden valorar como un balance: data equity = activos de datos − pasivos de datos."
+    application: "Cada activo (ingresos, horas ahorradas, valor de cliente) y cada pasivo (multas esperadas, horas perdidas, clientes perdidos) de NovaMercado se valora hoy y en la situación objetivo."
+  - idea: "Una valoración que el negocio no ha validado no es creíble."
+    application: "Las líneas sin «validado por» quedan fuera del caso de negocio conservador."
+  - idea: "El caso de negocio sigue una plantilla fija y presenta varias opciones de calendario."
+    application: "Se comparan tres opciones (preferida, rápida y lenta) con VAN, ROI y mes de payback."
+  - idea: "La visión del programa debe ser breve, memorable y sin jerga técnica."
+    application: "Un revisor automático avisa si la visión pasa de 40 palabras o usa términos como «linaje» o «pipeline»."
+  - idea: "La misión del programa responde a qué se hace, para quién y cómo."
+    application: "Se genera con la plantilla «Desarrollamos X para Y, mediante A, B y C»."
+  - idea: "Hay momentos para lanzar y momentos para esperar."
+    application: "Se lanza solo si hay al menos un impulsor (regulatorio, petición ejecutiva o de negocio) y ninguna señal de alerta."
+  - idea: "La política es el primer bloque del programa y tiene una estructura conocida."
+    application: "La política se genera con sus 10 secciones, del propósito al glosario."
+  - idea: "El avance se sigue con un cuadro de mando corporativo y por dominio, en verde, amarillo o rojo."
+    application: "El EDG Scorecard calcula cada métrica a partir del estado real de cada dominio y sus sistemas."
+
+takeaways:
+  - "Hoy los pasivos de datos de NovaMercado pesan más que sus activos: la data equity es negativa."
+  - "Presentar tres opciones demuestra que se han tenido en cuenta las expectativas de la dirección, aunque se recomiende una."
+  - "El scorecard ya señala las primeras conversaciones: dominios sin ejecutivo y sistemas sin owner."
+
+challenges:
+  - title: Cuenta también los beneficios sin validar
+    steps:
+      - "En Entradas → Caso de negocio, activa «Incluir beneficios sin validar» y guarda."
+      - "Vuelve a ejecutar la lección."
+    look_for: "Sube el beneficio anual y con él el VAN de todas las opciones. ¿Defenderías esa cifra ante el CFO sin que el negocio la haya validado?"
+  - title: Haz que la visión falle la revisión
+    steps:
+      - "En Entradas → Programa, añade la palabra «pipeline» o «metadatos» a la declaración de la visión."
+      - "Ejecuta de nuevo y mira el resumen."
+    look_for: "Aparece el aviso de jerga de datos. Reescríbela para que la entienda cualquier persona del comité."
+  - title: Cambia de opinión sobre el lanzamiento
+    steps:
+      - "En Entradas → Programa, marca como presente alguna señal de alerta."
+      - "Ejecuta de nuevo."
+    look_for: "La decisión pasa a «esperar» y el motivo nombra la señal. ¿Qué harías para mitigarla?"
+  - title: Encarece el dinero
+    steps:
+      - "En Entradas → Caso de negocio, sube la tasa de descuento de 0,08 a 0,20."
+      - "Ejecuta de nuevo y compara el VAN y la recomendación."
+    look_for: "Las opciones que tardan más en dar valor pierden más VAN. Si la recomendada deja de ser la de mayor VAN, la lección te avisa."
+
+labels:
+  # ProgramInput
+  company: Empresa
+  vision: Visión
+  aspire: ¿Qué aspiramos a hacer?
+  who: ¿Quién nos ayudará?
+  arrival: ¿Cómo sabremos que hemos llegado?
+  statement: Declaración de la visión
+  cdao_mission: Misión del CDAO
+  cdao_principles: Principios del CDAO
+  program_mission: Misión del programa
+  what: Qué desarrollamos
+  for_whom: Para quién
+  how: Cómo (al menos dos medios)
+  launch: Señales de lanzamiento
+  drivers: Impulsores
+  warning_signs: Señales de alerta
+  present: Presente
+  evidence: Evidencia
+  ProgramInput.glossary: Glosario
+  term: Término
+  definition: Definición
+  Vision: Visión
+  ProgramMission: Misión del programa
+  LaunchInput: Señales de lanzamiento
+  Signal: Señal
+  GlossaryTerm: Término
+  # DataEquityInput
+  hourly_rate_usd: Coste de una hora de trabajo (US$)
+  assets: Activos de datos
+  liabilities: Pasivos de datos
+  domain: Dominio
+  vetted_by: Validado por
+  current: Hoy
+  target: Objetivo
+  revenue_usd: Ingresos anuales (US$)
+  hours_saved: Horas ahorradas al año
+  customer_value_usd: Valor de cliente anual (US$)
+  fine_probability: Probabilidad de multa (0 a 1)
+  fine_amount_usd: Importe de la multa (US$)
+  hours_lost: Horas perdidas al año
+  customer_impact_usd: Impacto en clientes anual (US$)
+  DataAsset: Activo
+  DataLiability: Pasivo
+  AssetValue: Valor del activo
+  LiabilityValue: Coste del pasivo
+  # BusinessCaseInput
+  title: Título
+  owner: Responsable
+  authors: Autores
+  contributors: Contribuidores
+  reviewers: Revisores
+  purpose: Propósito
+  ask: Qué se pide
+  horizon_months: Horizonte (meses)
+  discount_rate_annual: Tasa de descuento anual (0 a 1)
+  include_unvetted_benefits: Incluir beneficios sin validar
+  recommended_option: Opción recomendada (id)
+  programs: Programas
+  chapter: Capítulo
+  measures_of_success: Medidas de éxito
+  options: Opciones de timeline
+  duration_months: Duración (meses)
+  build_cost_usd: Coste de construcción (US$)
+  run_cost_annual_usd: Coste de operación anual (US$)
+  TimelineOption: Opción
+  Program: Programa
+  name: Nombre
+  description: Descripción
+  # PolicyInput
+  version: Versión
+  policy_leader: Líder de la política
+  approvers: Aprobadores
+  last_approval: Última aprobación
+  review_frequency: Frecuencia de revisión
+  scope: Alcance
+  outcomes: Resultados esperados
+  roles: Roles
+  responsibilities: Responsabilidades
+  requirements: Requisitos
+  items: Requisitos concretos
+  feedback: Bucles de feedback
+  compliance: Cumplimiento y auditoría
+  Role: Rol
+  RequirementGroup: Grupo de requisitos
+  PolicyInput.measures_of_success: Medidas de éxito
+  # ScorecardInput
+  as_of: Fecha del scorecard
+  at_risk_days: Días para considerar una métrica en riesgo
+  due_dates: Fechas comprometidas por métrica
+  domains: Dominios
+  DomainStatus.id: Dominio
+  executive: Ejecutivo de dominio
+  stewards: Data stewards
+  systems: Sistemas de registro
+  SystemStatus.owner: Owner del sistema
+  cdes: CDE identificados
+  dq_rules: Reglas de calidad
+  SystemStatus.glossary: Glosario de negocio
+  dictionary: Diccionario de datos
+  reference_data: Datos de referencia
+  updates: Novedades
+  DomainStatus: Dominio
+  SystemStatus: Sistema
