@@ -69,6 +69,26 @@ class LineChartBlock(BaseModel):
     reference_y: float | None = None  # línea horizontal de referencia (p. ej., 0)
 
 
+class BarItem(BaseModel):
+    label: str
+    value: float
+    display: str  # valor ya formateado
+    target: float | None = None  # umbral u objetivo, dibujado como una marca
+    ok: bool | None = None  # cumple el objetivo (se muestra con icono y texto, no solo color)
+    detail: str | None = None
+
+
+class BarListBlock(BaseModel):
+    """Barras horizontales con su objetivo: p. ej., registros válidos de cada regla."""
+
+    type: Literal["bar_list"] = "bar_list"
+    title: str
+    subtitle: str | None = None
+    items: list[BarItem]
+    min_value: float = 0.0
+    max_value: float = 1.0
+
+
 class DocumentBlock(BaseModel):
     type: Literal["document"] = "document"
     title: str
@@ -76,8 +96,8 @@ class DocumentBlock(BaseModel):
     markdown: str
 
 
-Block = Annotated[KpisBlock | CalloutBlock | TableBlock | LineChartBlock | DocumentBlock,
-                  Field(discriminator="type")]
+Block = Annotated[KpisBlock | CalloutBlock | TableBlock | LineChartBlock | BarListBlock
+                  | DocumentBlock, Field(discriminator="type")]
 
 
 class ResultSection(BaseModel):

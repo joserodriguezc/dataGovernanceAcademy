@@ -1,0 +1,69 @@
+# Diseño de la oficina del CDAO de NovaMercado.
+# function: leadership | office | governance_strategy | data_solutions | architecture_engineering | data_operations | analytics
+# status: filled | open | planned
+# book_priority: orden de contratación de los líderes que recomienda el capítulo (1 = primero)
+roles:
+  - {id: cdao, title: Chief Data & Analytics Officer, function: leadership, reports_to: null, status: filled, start: 2026-06-01, headcount: 1, annual_cost_usd: 320000}
+  - {id: chief_of_staff, title: Chief of Staff y responsable del portfolio de datos, function: office, reports_to: cdao, status: open, start: 2027-01-15, headcount: 1, annual_cost_usd: 160000}
+  - {id: dg_leader, title: Líder de gobierno y estrategia de datos, function: governance_strategy, reports_to: cdao, status: open, start: 2026-12-01, headcount: 1, annual_cost_usd: 210000, book_priority: 1}
+  - {id: dg_analysts, title: Analistas de gobierno de datos, function: governance_strategy, reports_to: dg_leader, status: planned, start: 2027-02-01, headcount: 2, annual_cost_usd: 110000}
+  - {id: solutions_leader, title: Líder de soluciones de datos, function: data_solutions, reports_to: cdao, status: planned, start: 2027-02-01, headcount: 1, annual_cost_usd: 190000, book_priority: 2}
+  - {id: metadata_lead, title: Responsable de metadatos, function: data_solutions, reports_to: solutions_leader, status: planned, start: 2027-04-01, headcount: 1, annual_cost_usd: 140000}
+  - {id: dq_lead, title: Responsable de calidad de datos, function: data_solutions, reports_to: solutions_leader, status: planned, start: 2027-04-01, headcount: 1, annual_cost_usd: 140000}
+  - {id: mdm_lead, title: Responsable de datos maestros y de referencia, function: data_solutions, reports_to: solutions_leader, status: planned, start: 2027-05-01, headcount: 1, annual_cost_usd: 150000}
+  - {id: info_architect, title: Arquitecto de información, function: architecture_engineering, reports_to: cdao, status: planned, start: 2027-03-01, headcount: 1, annual_cost_usd: 185000, book_priority: 3}
+  - {id: de_leader, title: Líder de ingeniería de datos, function: architecture_engineering, reports_to: cdao, status: filled, start: 2025-03-01, headcount: 1, annual_cost_usd: 180000, book_priority: 4}
+  - {id: data_engineers, title: Ingenieros de datos, function: architecture_engineering, reports_to: de_leader, status: filled, start: 2025-03-01, headcount: 4, annual_cost_usd: 130000}
+  - {id: dataops_leader, title: Líder de operaciones de datos, function: data_operations, reports_to: cdao, status: planned, start: 2027-06-01, headcount: 1, annual_cost_usd: 160000, book_priority: 5}
+  - {id: analytics_leader, title: Líder de analítica de cliente y ventas, function: analytics, reports_to: cdao, status: filled, start: 2024-09-01, headcount: 1, annual_cost_usd: 175000}
+  - {id: analysts, title: Analistas de datos, function: analytics, reports_to: analytics_leader, status: filled, start: 2024-09-01, headcount: 3, annual_cost_usd: 95000}
+
+# Roles funcionales por dominio: responsabilidad ejecutiva, de negocio y técnica.
+functional_roles:
+  - {domain: customer, executive: CMO, business_stewards: [Responsable de CRM], technical_stewards: [Ingeniero de datos de CRM]}
+  - {domain: product, executive: Director Comercial, business_stewards: [], technical_stewards: [Ingeniero de datos de ERP]}
+  - {domain: supplier, executive: Director de Compras, business_stewards: [], technical_stewards: []}
+  - {domain: sales, executive: CFO, business_stewards: [Controller de ventas], technical_stewards: [Ingeniero de datos de POS]}
+  - {domain: store, executive: Director de Operaciones, business_stewards: [Responsable de red de tiendas], technical_stewards: [Ingeniero de datos de ERP]}
+  - {domain: finance, executive: CFO, business_stewards: [Controller financiero], technical_stewards: [Ingeniero de datos de ERP]}
+
+# Matriz de habilidades: nivel objetivo del equipo (0-4) y nivel actual de cada persona.
+skills:
+  required:
+    Gobierno de datos: 3
+    Gestión de metadatos: 3
+    Calidad de datos: 3
+    Datos maestros (MDM): 3
+    Modelado de datos: 3
+    Ingeniería de datos: 3
+    Product management: 2
+    Privacidad y seguridad: 2
+    Comunicación con negocio: 3
+  members:
+    - name: CDAO
+      role: cdao
+      levels: {Gobierno de datos: 3, Gestión de metadatos: 2, Calidad de datos: 2, Datos maestros (MDM): 1, Modelado de datos: 2, Ingeniería de datos: 1, Product management: 3, Privacidad y seguridad: 2, Comunicación con negocio: 4}
+    - name: Líder de ingeniería
+      role: de_leader
+      levels: {Gobierno de datos: 1, Gestión de metadatos: 2, Calidad de datos: 2, Datos maestros (MDM): 1, Modelado de datos: 3, Ingeniería de datos: 4, Product management: 1, Privacidad y seguridad: 2, Comunicación con negocio: 2}
+    - name: Ingeniera de datos A
+      role: data_engineers
+      levels: {Gobierno de datos: 0, Gestión de metadatos: 1, Calidad de datos: 2, Datos maestros (MDM): 0, Modelado de datos: 2, Ingeniería de datos: 3, Product management: 0, Privacidad y seguridad: 1, Comunicación con negocio: 1}
+    - name: Ingeniero de datos B
+      role: data_engineers
+      levels: {Gobierno de datos: 0, Gestión de metadatos: 2, Calidad de datos: 1, Datos maestros (MDM): 1, Modelado de datos: 2, Ingeniería de datos: 3, Product management: 0, Privacidad y seguridad: 1, Comunicación con negocio: 1}
+    - name: Líder de analítica
+      role: analytics_leader
+      levels: {Gobierno de datos: 1, Gestión de metadatos: 1, Calidad de datos: 2, Datos maestros (MDM): 0, Modelado de datos: 2, Ingeniería de datos: 1, Product management: 2, Privacidad y seguridad: 1, Comunicación con negocio: 3}
+    - name: Analista de datos A
+      role: analysts
+      levels: {Gobierno de datos: 0, Gestión de metadatos: 1, Calidad de datos: 2, Datos maestros (MDM): 0, Modelado de datos: 1, Ingeniería de datos: 1, Product management: 0, Privacidad y seguridad: 0, Comunicación con negocio: 2}
+
+# Plan de talento: atraer, hacer crecer la cantera y formar.
+talent_plan:
+  - {lever: Atraer talento, action: "Charlas en universidades locales y mentoría en un meetup de datos de la ciudad.", owner: CDAO, due: 2027-03-31}
+  - {lever: Atraer talento, action: "Programa de prácticas de verano con 2 plazas en calidad de datos.", owner: Líder de gobierno y estrategia, due: 2027-06-30}
+  - {lever: Hacer crecer la cantera, action: "Rotación de 6 meses: un analista al equipo de CRM de Marketing y un steward de Marketing al equipo de datos.", owner: CHRO, due: 2027-09-30}
+  - {lever: Hacer crecer la cantera, action: "Revisar los requisitos de las ofertas: aceptar certificaciones y experiencia en lugar de un grado universitario.", owner: CHRO, due: 2027-01-31}
+  - {lever: Hacer crecer la cantera, action: "Cubrir la posición de Chief of Staff desde la PMO corporativa.", owner: CDAO, due: 2027-01-15}
+  - {lever: Formar al equipo, action: "Formación en gobierno de datos y MDM para los ingenieros antes de cambiar de plataforma.", owner: Líder de ingeniería de datos, due: 2027-05-31}

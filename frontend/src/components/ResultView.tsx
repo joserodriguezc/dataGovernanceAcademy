@@ -98,6 +98,39 @@ function DocumentView({ block }: { block: Extract<Block, { type: 'document' }> }
   )
 }
 
+function BarList({ block }: { block: Extract<Block, { type: 'bar_list' }> }) {
+  const span = block.max_value - block.min_value || 1
+  const pos = (v: number) => `${Math.min(100, Math.max(0, ((v - block.min_value) / span) * 100))}%`
+  return (
+    <figure className="bar-list">
+      <figcaption>
+        <strong>{block.title}</strong>
+        {block.subtitle && <span className="muted">{block.subtitle}</span>}
+      </figcaption>
+      <ul>
+        {block.items.map((item) => (
+          <li key={item.label} title={item.detail ?? undefined}>
+            <span className="bar-label">{item.label}</span>
+            <span className="bar-track">
+              <span className={`bar-fill${item.ok === false ? ' bad' : item.ok ? ' good' : ''}`}
+                    style={{ width: pos(item.value) }} />
+              {item.target !== null && <span className="bar-target" style={{ left: pos(item.target) }} />}
+            </span>
+            <span className="bar-value">
+              {item.display}
+              {item.ok !== null && <span className={item.ok ? 'ok' : 'ko'}>{item.ok ? ' ✓' : ' ✗'}</span>}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="muted bar-legend">
+        Escala de {Math.round(block.min_value * 100)} % a {Math.round(block.max_value * 100)} % ·
+        la marca vertical es el umbral · ✓ cumple · ✗ no cumple
+      </p>
+    </figure>
+  )
+}
+
 function BlockView({ block }: { block: Block }) {
   switch (block.type) {
     case 'kpis':
@@ -142,6 +175,8 @@ function BlockView({ block }: { block: Block }) {
       )
     case 'line_chart':
       return <ChartBlock block={block} />
+    case 'bar_list':
+      return <BarList block={block} />
     case 'document':
       return <DocumentView block={block} />
   }

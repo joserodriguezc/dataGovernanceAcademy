@@ -31,9 +31,9 @@ navegador (React) ──/api──▶ FastAPI ──▶ lecciones (lógica del l
 |---|---|---|---|
 | 1 | Esqueleto: monorepo, catálogo, progreso, API, inicio y ficha de lección | Tests de la API en verde, el frontend compila y `uv run academy` sirve la app | ✅ hecho |
 | 2 | Infraestructura de lecciones: registro de lecciones, entradas con JSON Schema, ejecución y resultados; piloto con el capítulo 1 | La lección 1 se edita, se ejecuta y muestra sus resultados con los mismos números que el laboratorio | ✅ hecho |
-| 3 | Datos compartidos: generador sintético y warehouse de NovaMercado desde la app; piloto técnico con el capítulo 8 (y lo que necesita del 6 y el 7) | La lección 8 construye su warehouse y muestra reglas, incidencias y certificación | ⬜ |
+| 3 | Datos compartidos: generador sintético y warehouse de NovaMercado desde la app; piloto técnico con el capítulo 8 (y lo que necesita del 6 y el 7) | La lección 8 construye su warehouse y muestra reglas, incidencias y certificación | ✅ hecho |
 | 4 | Capítulos 2 a 5 (gestión) | Cada lección con sus cinco secciones y sus tests | ⬜ |
-| 5 | Capítulos 6, 7, 9, 10 y 11 (técnicos), con el grafo de linaje interactivo | Ídem | ⬜ |
+| 5 | Capítulos 6, 7, 9, 10 y 11 (técnicos), con el grafo de linaje interactivo | Ídem; con 6 y 7 ejecutadas, la lección 8 certifica `curated.dim_store` como en el laboratorio | ⬜ |
 | 6 | Capítulos 12 a 16 | Ídem | ⬜ |
 | 7 | Capítulo 17: caso NovaPay de punta a punta | Ídem | ⬜ |
 | 8 | Pulido: retos de "Qué probar" con comprobación automática y descarga de informes | — | ⬜ |
@@ -45,5 +45,7 @@ navegador (React) ──/api──▶ FastAPI ──▶ lecciones (lógica del l
 3. Escribir `content.yaml`: introducción, ideas (idea → cómo se aplica), qué te llevas, retos y etiquetas en español de los campos.
 4. Registrar la lección en `lessons/registry.py`.
 5. Traer los tests del laboratorio a `backend/tests/lessons/` y añadir uno que compruebe que `compute` da los mismos números que el laboratorio.
+
+Si la lección usa el warehouse, se marca con `requires_warehouse=True` y su `compute` recibe un `LessonContext` con `db_path` y `raw_dir`. La API responde 409 si el warehouse no está construido. En los tests se usa el fixture `small_workspace` (tests/conftest.py).
 
 Cada paso termina con un commit, su entrada en el "Paso a paso" del README y su estado actualizado en esta tabla.

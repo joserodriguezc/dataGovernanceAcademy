@@ -13,6 +13,7 @@ export interface Lesson {
   summary: string
   recommended: number[]
   status: 'available' | 'planned'
+  requires_warehouse: boolean
 }
 
 export interface LessonState {
@@ -80,12 +81,35 @@ export type Block =
       markers: { series: string; x: number; y: number; label: string }[]
       reference_y: number | null
     }
+  | {
+      type: 'bar_list'
+      title: string
+      subtitle: string | null
+      min_value: number
+      max_value: number
+      items: { label: string; value: number; display: string; target: number | null; ok: boolean | null; detail: string | null }[]
+    }
   | { type: 'document'; title: string; filename: string; markdown: string }
 
 export interface LessonResult {
   lesson: number
   ran_at: string
   sections: { title: string; blocks: Block[] }[]
+}
+
+export interface WorkspaceStatus {
+  built: boolean
+  built_at: string | null
+  built_with: Record<string, unknown> | null
+  settings: Record<string, unknown>
+  pending_changes: boolean
+  tables: { table: string; layer: string; rows: number }[]
+  seeded_defects: Record<string, number>
+}
+
+export interface WorkspaceOut {
+  status: WorkspaceStatus
+  json_schema: Record<string, unknown>
 }
 
 /** Error de la API con el detalle de validación de pydantic (422) cuando lo hay. */
@@ -139,4 +163,10 @@ export const api = {
     request<LessonInput>(`/lessons/${n}/inputs/${id}`, { method: 'DELETE' }),
   run: (n: number) => request<LessonResult>(`/lessons/${n}/run`, { method: 'POST' }),
   result: (n: number) => request<LessonResult | null>(`/lessons/${n}/result`),
+  workspace: () => request<WorkspaceOut>('/workspace'),
+  saveWorkspaceSettings: (data: unknown) =>
+    request<WorkspaceOut>('/workspace/settings', { method: 'PUT', body: JSON.stringify({ data }) }),
+  resetWorkspaceSettings: () => request<WorkspaceOut>('/workspace/settings', { method: 'DELETE' }),
+  buildWorkspace: () => request<WorkspaceOut>('/workspace/build', { method: 'POST' }),
+  resetWorkspace: () => request<WorkspaceOut>('/workspace', { method: 'DELETE' }),
 }

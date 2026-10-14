@@ -22,7 +22,7 @@ from academy.blocks import (
 )
 from academy.core.company import CURRENCY_SYMBOL, DOMAIN_NAMES
 from academy.core.reporting import fmt_money, fmt_pct, render_template
-from academy.lessons.base import InputSpec, LessonDef
+from academy.lessons.base import InputSpec, LessonContext, LessonDef
 
 from .business_case import BusinessCaseInput, evaluate_business_case
 from .charter import ProgramInput, assess_launch, lint_vision
@@ -53,7 +53,7 @@ INPUT_SPECS = [
 TONE = {"green": "good", "yellow": "warning", "red": "bad"}
 
 
-def compute(inputs: dict[str, BaseModel]) -> list[ResultSection]:
+def compute(inputs: dict[str, BaseModel], ctx: LessonContext | None = None) -> list[ResultSection]:
     program: ProgramInput = inputs["program"]
     equity_in: DataEquityInput = inputs["data_equity"]
     bc: BusinessCaseInput = inputs["business_case"]

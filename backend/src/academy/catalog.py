@@ -21,6 +21,7 @@ class Lesson(BaseModel):
     summary: str
     recommended: list[int] = []
     status: Literal["available", "planned"] = "planned"
+    requires_warehouse: bool = False  # necesita los datos de NovaMercado construidos
 
 
 class Catalog(BaseModel):

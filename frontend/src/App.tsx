@@ -1,9 +1,10 @@
 import { lazy, Suspense } from 'react'
-import { Link, Route, Routes, useParams } from 'react-router-dom'
+import { Link, NavLink, Route, Routes, useParams } from 'react-router-dom'
 import Home from './pages/Home.tsx'
 
 // La lección trae formularios y gráficos: se carga solo al abrir una lección.
 const LessonPage = lazy(() => import('./pages/Lesson.tsx'))
+const WorkspacePage = lazy(() => import('./pages/Workspace.tsx'))
 
 // La key hace que cada lección empiece con su propio estado al navegar entre capítulos.
 function LessonRoute() {
@@ -23,6 +24,10 @@ export default function App() {
           <img src="/favicon.svg" alt="" width={24} height={24} />
           Data Governance Academy
         </Link>
+        <nav className="topnav">
+          <NavLink to="/" end>Lecciones</NavLink>
+          <NavLink to="/datos">Datos de NovaMercado</NavLink>
+        </nav>
         <span className="topbar-note">
           Basada en <em>Data Governance Handbook</em> (W. S. Batchelder, Packt 2024)
         </span>
@@ -31,6 +36,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/leccion/:number" element={<LessonRoute />} />
+          <Route path="/datos" element={
+            <Suspense fallback={<p className="muted">Cargando…</p>}><WorkspacePage /></Suspense>
+          } />
           <Route path="*" element={<p>Página no encontrada. <Link to="/">Volver al inicio</Link></p>} />
         </Routes>
       </main>

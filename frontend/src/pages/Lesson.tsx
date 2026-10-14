@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
   api, KIND_LABEL, type LessonContent, type LessonInput, type LessonOut, type LessonResult,
+  type WorkspaceStatus,
 } from '../api.ts'
 import InputsPanel from '../components/InputsPanel.tsx'
 import ResultView from '../components/ResultView.tsx'
@@ -29,6 +30,7 @@ interface Interactive {
   content: LessonContent
   inputs: LessonInput[]
   result: LessonResult | null
+  workspace: WorkspaceStatus | null // solo si la lección usa el warehouse
 }
 
 export default function LessonPage({ number }: { number: number }) {
@@ -50,9 +52,11 @@ export default function LessonPage({ number }: { number: number }) {
       .then(async (out) => {
         setData(out)
         if (out.lesson.status !== 'available') return
-        const [content, inputs, result] = await Promise.all(
-          [api.content(number), api.inputs(number), api.result(number)])
-        setLive({ content, inputs, result })
+        const [content, inputs, result, workspace] = await Promise.all([
+          api.content(number), api.inputs(number), api.result(number),
+          out.lesson.requires_warehouse ? api.workspace().then((w) => w.status) : null,
+        ])
+        setLive({ content, inputs, result, workspace })
       })
       .catch((e: Error) => setError(e.message))
   }, [number])
@@ -130,7 +134,26 @@ export default function LessonPage({ number }: { number: number }) {
                 Ejecuta el microproyecto con las entradas actuales
                 {live.inputs.some((i) => i.custom) ? ' (incluye tus cambios)' : ' (valores originales)'}.
               </p>
-              <button className="button primary large" onClick={run} disabled={running}>
+              {live.workspace && !live.workspace.built && (
+                <div className="notice">
+                  Esta lección trabaja sobre el warehouse de NovaMercado y todavía no está construido.{' '}
+                  <Link to="/datos">Constrúyelo en «Datos de NovaMercado»</Link> y vuelve.
+                </div>
+              )}
+              {live.workspace?.pending_changes && (
+                <div className="notice">
+                  Has cambiado los parámetros de los datos sin reconstruir: la lección usará los datos anteriores.{' '}
+                  <Link to="/datos">Reconstruir</Link>
+                </div>
+              )}
+              {live.workspace?.built && live.workspace.built_with && (
+                <p className="muted">
+                  Datos: {String(live.workspace.built_with.persons)} clientes, semilla {String(live.workspace.built_with.seed)}.{' '}
+                  <Link to="/datos">Cambiar</Link>
+                </p>
+              )}
+              <button className="button primary large" onClick={run}
+                      disabled={running || (live.workspace !== null && !live.workspace.built)}>
                 {running ? 'Ejecutando…' : '▶ Ejecutar la lección'}
               </button>
               {runError && <div className="notice bad" role="alert">{runError}</div>}

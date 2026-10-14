@@ -12,12 +12,14 @@ from pydantic import BaseModel, ValidationError
 from academy import __version__
 from academy.blocks import LessonResult
 from academy.catalog import Catalog, Lesson, load_catalog
-from academy.lessons.base import InputSpec, LessonContent, LessonDef
+from academy.lessons.base import InputSpec, LessonContent, LessonContext, LessonDef
 from academy.lessons.registry import LESSONS
 from academy.paths import DATA_DIR, FRONTEND_DIST
 from academy.progress import LessonState, ProgressStore, lesson_states
 from academy.schema import form_schema
 from academy.state import LessonStore
+from academy.workspace import LABELS as WORKSPACE_LABELS
+from academy.workspace import Workspace, WorkspaceSettings, WorkspaceStatus
 
 
 class CatalogOut(BaseModel):
@@ -50,6 +52,11 @@ class InputIn(BaseModel):
     data: dict[str, Any]
 
 
+class WorkspaceOut(BaseModel):
+    status: WorkspaceStatus
+    json_schema: dict[str, Any]
+
+
 def _validation_detail(exc: ValidationError) -> list[dict[str, str]]:
     return [{"loc": ".".join(str(x) for x in e["loc"]), "msg": e["msg"]} for e in exc.errors()]
 
@@ -60,10 +67,13 @@ def create_app(data_dir: Path = DATA_DIR, catalog: Catalog | None = None,
     registry = LESSONS if registry is None else registry
     base = catalog or load_catalog()
     catalog = base.model_copy(update={"lessons": [
-        x.model_copy(update={"status": "available" if x.number in registry else "planned"})
-        for x in base.lessons]})
+        x.model_copy(update={
+            "status": "available" if x.number in registry else "planned",
+            "requires_warehouse": x.number in registry and registry[x.number].requires_warehouse,
+        }) for x in base.lessons]})
     store = ProgressStore(data_dir / "progress.json")
     lessons_store = LessonStore(data_dir)
+    workspace = Workspace(data_dir)
     api = APIRouter(prefix="/api")
 
     def _def_or_404(number: int) -> LessonDef:
@@ -139,8 +149,12 @@ def create_app(data_dir: Path = DATA_DIR, catalog: Catalog | None = None,
         lesson = _def_or_404(number)
         models = {spec.id: spec.model.model_validate(lessons_store.get_input(number, spec))
                   for spec in lesson.inputs}
+        if lesson.requires_warehouse and not workspace.built:
+            raise HTTPException(409, "Esta lección trabaja sobre el warehouse de NovaMercado: "
+                                     "constrúyelo antes en «Datos de NovaMercado».")
+        ctx = LessonContext(db_path=workspace.db_path, raw_dir=workspace.raw_dir)
         try:
-            sections = lesson.compute(models)
+            sections = lesson.compute(models, ctx)
         except ValueError as exc:
             raise HTTPException(400, str(exc)) from exc
         result = LessonResult(lesson=number, ran_at=datetime.now(UTC), sections=sections)
@@ -151,6 +165,37 @@ def create_app(data_dir: Path = DATA_DIR, catalog: Catalog | None = None,
     def last_result(number: int) -> LessonResult | None:
         _def_or_404(number)
         return lessons_store.load_result(number)
+
+    def _workspace_out() -> WorkspaceOut:
+        return WorkspaceOut(status=workspace.status(),
+                            json_schema=form_schema(WorkspaceSettings, WORKSPACE_LABELS))
+
+    @api.get("/workspace")
+    def get_workspace() -> WorkspaceOut:
+        return _workspace_out()
+
+    @api.put("/workspace/settings")
+    def save_workspace_settings(body: InputIn) -> WorkspaceOut:
+        try:
+            workspace.save_settings(body.data)
+        except ValidationError as exc:
+            raise HTTPException(422, _validation_detail(exc)) from exc
+        return _workspace_out()
+
+    @api.delete("/workspace/settings")
+    def reset_workspace_settings() -> WorkspaceOut:
+        workspace.save_settings(WorkspaceSettings().model_dump())
+        return _workspace_out()
+
+    @api.post("/workspace/build")
+    def build_workspace() -> WorkspaceOut:
+        workspace.build()
+        return _workspace_out()
+
+    @api.delete("/workspace")
+    def reset_workspace() -> WorkspaceOut:
+        workspace.reset()
+        return _workspace_out()
 
     @api.put("/progress/{number}")
     def set_progress(number: int, body: CompletedIn) -> list[LessonState]:

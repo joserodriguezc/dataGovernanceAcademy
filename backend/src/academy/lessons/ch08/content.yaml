@@ -1,0 +1,95 @@
+# Contenido de la lección 8. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  La pregunta que importa al negocio es sencilla: ¿puedo fiarme de este dato? En esta lección
+  la respondes con evidencia sobre el warehouse de NovaMercado. Primero perfilas las tablas
+  para conocerlas. Después ejecutas 17 reglas de calidad agrupadas por dimensión, abres una
+  incidencia por cada regla que no cumple, decides qué se remedia y qué se acepta, y solo
+  certificas los datos que lo merecen. Como los datos son sintéticos, puedes comprobar además
+  si las reglas encuentran todos los defectos que se sembraron.
+
+ideas:
+  - idea: "La calidad se mide por dimensiones: completitud, validez, consistencia, exactitud, unicidad, integridad y actualidad."
+    application: "Cada regla pertenece a una dimensión y los resultados se agregan por dimensión y por dominio."
+  - idea: "Antes de escribir reglas hay que conocer los datos."
+    application: "El perfilado mide nulos, valores distintos, rangos y la forma de los valores, y señala las columnas con formatos mezclados."
+  - idea: "Una regla útil dice qué registros fallan, no solo un porcentaje."
+    application: "Las reglas se ejecutan con pandera y devuelven las claves de los registros que no cumplen."
+  - idea: "No todos los problemas pesan igual: hay severidades."
+    application: "Cada regla tiene severidad 1, 2 o 3. Un incumplimiento de severidad 1 bloquea la certificación."
+  - idea: "Cada problema tiene un responsable y una decisión registrada."
+    application: "Se abre una incidencia por regla incumplida, asignada al steward del dominio. Las que se aceptan quedan firmadas en el registro de disposiciones."
+  - idea: "Lo mejor es corregir cerca del origen."
+    application: "Cada regla dice cómo se remedia: estandarizar, excluir, corregir en origen, enriquecer o aceptar."
+  - idea: "Un dato certificado se apoya en metadatos y linaje."
+    application: "Se certifica un dataset si él y sus fuentes cumplen las reglas bloqueantes, y además está documentado, tiene steward y se conoce su linaje (lecciones 6 y 7)."
+  - idea: "La transparencia genera confianza, incluso cuando el resultado es malo."
+    application: "Los resultados y las incidencias se publican en el warehouse (meta.dq_results y meta.dq_issues)."
+  - idea: "La calidad se justifica en términos de negocio."
+    application: "Se calcula cuántos clientes son aptos para marketing, cuánto valdría recuperar los demás y cuánto costaría corregir a mano."
+
+takeaways:
+  - "Con los datos por defecto, las reglas encuentran el 100 % de los defectos sembrados, pero solo 7 de 17 cumplen su umbral."
+  - "Los duplicados del CRM son de severidad 1: son la entrada natural de la lección 10 (cliente único)."
+  - "La mayoría de los clientes no aptos para marketing lo son por falta de consentimiento, no por un email mal escrito: corregir emails vale poco."
+  - "No toda regla incumplida merece remediarse: la tarjeta sin teléfono se acepta con una disposición firmada."
+
+challenges:
+  - title: Siembra más defectos
+    steps:
+      - "En «Datos de NovaMercado», sube «CRM: email vacío» de 0,05 a 0,20, guarda y reconstruye los datos."
+      - "Vuelve aquí y ejecuta la lección."
+    look_for: "DQ-01 cae mucho más lejos de su umbral y la incidencia sigue asignada al steward de cliente. La detección se mantiene en el 100 %: las reglas no dependen de cuántos defectos haya."
+  - title: Cambia de datos, no de reglas
+    steps:
+      - "En «Datos de NovaMercado», cambia la semilla (por ejemplo, a 7) y reconstruye."
+      - "Ejecuta de nuevo."
+    look_for: "Los números cambian, pero las reglas siguen encontrando todos los defectos sembrados. Así se comprueba que una regla no está hecha a medida de un conjunto de datos."
+  - title: ¿Bajar el umbral arregla algo?
+    steps:
+      - "En Entradas, baja el umbral de DQ-04 (fecha de alta en formato ISO) a 0,75 y guarda."
+      - "Ejecuta de nuevo."
+    look_for: "La regla pasa a cumplir y su incidencia desaparece, pero los datos son exactamente los mismos. Un umbral se acuerda con el negocio; bajarlo no mejora la calidad."
+  - title: Acepta un riesgo con firma
+    steps:
+      - "En Entradas, añade una disposición para DQ-12 (proveedores sin contacto): decisión «aceptar», quién la firma, fecha y motivo."
+      - "Ejecuta de nuevo y mira las incidencias."
+    look_for: "La incidencia pasa de abierta a aceptada y muestra quién lo decidió y por qué. Aceptar un riesgo es legítimo si queda registrado."
+
+labels:
+  as_of: Fecha de la medición
+  tables: Tablas medidas (clave y dominio)
+  key: Clave del registro
+  domain: Dominio
+  rules: Reglas
+  id: Id
+  table: Tabla
+  column: Columna
+  type: Tipo de regla
+  dimension: Dimensión
+  severity: Severidad (1 material, 3 menor)
+  threshold: Umbral (proporción mínima de registros válidos)
+  remediation: Remediación
+  description: Descripción
+  pattern: Patrón (expresión regular)
+  values: Valores permitidos
+  ref: Referencia (esquema.tabla.columna)
+  condition: Condición SQL
+  max_age_days: Antigüedad máxima (días)
+  seeded_defects: Defecto sembrado → regla que lo detecta
+  dispositions: Disposiciones (regla → decisión firmada)
+  decision: Decisión
+  by: Firmada por
+  date: Fecha
+  reason: Motivo
+  certification: Certificación
+  max_severity_blocking: Severidad que bloquea la certificación (hasta)
+  value: Valor de negocio
+  contacts_marketing_value: Venta anual por contacto apto para marketing (US$)
+  hours_manual_fix_per_issue: Horas para corregir a mano un registro
+  cost_per_hour: Coste de una hora (US$)
+  Rule: Regla
+  TableSpec: Tabla
+  Disposition: Disposición
+  Certification: Certificación
+  Value: Valor de negocio

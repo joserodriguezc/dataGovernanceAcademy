@@ -1,0 +1,67 @@
+# Reglas de calidad de NovaMercado. Las define el steward de negocio y las implementa el técnico.
+as_of: 2026-10-12   # fecha de la medición
+
+# Tablas medidas y su clave (para identificar los registros que fallan)
+tables:
+  raw.ecom_customers: {key: ecom_user_id, domain: customer}
+  staging.stg_crm_customers: {key: customer_id, domain: customer}
+  staging.stg_ecom_customers: {key: ecom_user_id, domain: customer}
+  staging.stg_pos_loyalty_cards: {key: card_id, domain: customer}
+  staging.stg_pos_sales: {key: line_id, domain: sales}
+  staging.stg_ecom_orders: {key: order_line_id, domain: sales}
+  staging.stg_products: {key: sku, domain: product}
+  staging.stg_suppliers: {key: supplier_id, domain: supplier}
+  curated.fct_sales: {key: sale_line_id, domain: sales}
+  curated.dim_store: {key: store_id, domain: store}
+  curated.agg_sales_daily_channel: {key: sale_date, domain: sales}
+
+# type: not_null | regex | positive | in_set | unique | references | condition | freshness
+# dimension: completitud | validez | consistencia | exactitud | unicidad | integridad | actualidad
+# severity: 1 (material, bloquea la certificación) | 2 | 3 (menor)
+# threshold: proporción mínima de registros que deben cumplir
+# remediation: estandarizar | excluir | corregir_en_origen | enriquecer | aceptar
+rules:
+  - {id: DQ-01, table: staging.stg_crm_customers, column: email, type: not_null, dimension: completitud, severity: 2, threshold: 0.99, remediation: corregir_en_origen, description: "El email de contacto es obligatorio en el alta del CRM."}
+  - {id: DQ-02, table: staging.stg_crm_customers, column: email, type: regex, pattern: "^[^@\\s]+@[^@\\s]+\\.[a-z]{2,}$", dimension: validez, severity: 2, threshold: 0.99, remediation: corregir_en_origen, description: "El email tiene un formato válido."}
+  - {id: DQ-03, table: staging.stg_crm_customers, column: phone, type: unique, dimension: unicidad, severity: 1, threshold: 0.995, remediation: corregir_en_origen, description: "Un teléfono identifica a un único cliente del CRM (no hay altas duplicadas)."}
+  - {id: DQ-04, table: raw.ecom_customers, column: created_at, type: regex, pattern: "^\\d{4}-\\d{2}-\\d{2}$", dimension: consistencia, severity: 3, threshold: 0.99, remediation: estandarizar, description: "La fecha de alta llega en formato ISO (aaaa-mm-dd)."}
+  - {id: DQ-05, table: staging.stg_ecom_customers, column: postal_code, type: regex, pattern: "^\\d{5}$", dimension: validez, severity: 2, threshold: 0.99, remediation: enriquecer, description: "El código postal del cliente tiene 5 dígitos."}
+  - {id: DQ-06, table: staging.stg_ecom_orders, column: shipping_postal_code, type: regex, pattern: "^\\d{5}$", dimension: validez, severity: 2, threshold: 0.99, remediation: enriquecer, description: "El código postal de envío tiene 5 dígitos."}
+  - {id: DQ-07, table: staging.stg_pos_loyalty_cards, column: phone, type: not_null, dimension: completitud, severity: 3, threshold: 0.95, remediation: aceptar, description: "La tarjeta de fidelización tiene teléfono."}
+  - {id: DQ-08, table: staging.stg_pos_sales, column: unit_price, type: positive, dimension: exactitud, severity: 1, threshold: 0.999, remediation: excluir, description: "El precio unitario de una venta es positivo."}
+  - {id: DQ-09, table: staging.stg_pos_sales, column: amount, type: condition, condition: "abs(amount - quantity * unit_price) < 0.01", dimension: exactitud, severity: 1, threshold: 0.999, remediation: corregir_en_origen, description: "El importe de la línea es cantidad por precio unitario."}
+  - {id: DQ-10, table: staging.stg_ecom_orders, column: status, type: in_set, values: [entregado, devuelto, cancelado], dimension: validez, severity: 1, threshold: 1.0, remediation: corregir_en_origen, description: "El estado del pedido es uno de los valores de referencia."}
+  - {id: DQ-11, table: staging.stg_products, column: category, type: not_null, dimension: completitud, severity: 2, threshold: 0.99, remediation: corregir_en_origen, description: "Todo producto tiene categoría."}
+  - {id: DQ-12, table: staging.stg_suppliers, column: contact_email, type: not_null, dimension: completitud, severity: 3, threshold: 0.95, remediation: corregir_en_origen, description: "Todo proveedor tiene un email de contacto de compras."}
+  - {id: DQ-13, table: curated.fct_sales, column: sku, type: references, ref: curated.dim_product.sku, dimension: integridad, severity: 1, threshold: 1.0, remediation: corregir_en_origen, description: "Toda venta apunta a un producto existente."}
+  - {id: DQ-14, table: curated.fct_sales, column: store_id, type: references, ref: curated.dim_store.store_id, dimension: integridad, severity: 1, threshold: 1.0, remediation: corregir_en_origen, description: "Toda venta de tienda apunta a una tienda existente."}
+  - {id: DQ-15, table: curated.fct_sales, column: net_amount, type: not_null, dimension: completitud, severity: 1, threshold: 1.0, remediation: corregir_en_origen, description: "Toda línea de venta tiene importe."}
+  - {id: DQ-16, table: curated.agg_sales_daily_channel, column: sale_date, type: freshness, max_age_days: 3, dimension: actualidad, severity: 1, threshold: 1.0, remediation: corregir_en_origen, description: "La cifra de ventas tiene datos de hace como mucho 3 días."}
+  - {id: DQ-17, table: curated.dim_store, column: store_id, type: unique, dimension: unicidad, severity: 1, threshold: 1.0, remediation: corregir_en_origen, description: "Cada tienda aparece una sola vez."}
+
+# Solucionario: qué regla debería detectar cada defecto sembrado (Fase 0)
+seeded_defects:
+  crm_null_email: DQ-01
+  crm_duplicates: DQ-03
+  ecom_bad_date_format: DQ-04
+  ecom_invalid_postal: DQ-05
+  order_invalid_postal: DQ-06
+  pos_missing_phone: DQ-07
+  pos_negative_price: DQ-08
+  product_missing_category: DQ-11
+  supplier_missing_contact: DQ-12
+
+# Registro de disposiciones: incidencias que el steward decide no remediar, con quién lo firma
+dispositions:
+  DQ-07: {decision: aceptar, by: Responsable de red de tiendas, date: 2026-10-05, reason: "El teléfono es opcional en la tarjeta de tienda: el cliente puede no querer darlo."}
+
+# Certificación: un dataset curado se certifica si cumple todas sus reglas de severidad 1, sus
+# fuentes (por linaje, capítulo 7) también, y está documentado y con steward (capítulo 6).
+certification:
+  max_severity_blocking: 1
+
+# Valor: el caso del libro, contactos aptos para marketing (email válido y consentimiento)
+value:
+  contacts_marketing_value: 60    # US$ de venta incremental anual por contacto apto
+  hours_manual_fix_per_issue: 0.25
+  cost_per_hour: 45

@@ -44,7 +44,15 @@ class LessonContent(BaseModel):
     labels: dict[str, str] = {}  # etiquetas de los campos del formulario
 
 
-Compute = Callable[[dict[str, BaseModel]], list[ResultSection]]
+@dataclass(frozen=True)
+class LessonContext:
+    """Lo que una lección necesita del entorno: el warehouse y los datos de NovaMercado."""
+
+    db_path: Path
+    raw_dir: Path
+
+
+Compute = Callable[[dict[str, BaseModel], LessonContext], list[ResultSection]]
 
 
 @dataclass(frozen=True)
@@ -53,6 +61,7 @@ class LessonDef:
     inputs: list[InputSpec]
     compute: Compute
     content_file: Path
+    requires_warehouse: bool = False
 
     def content(self) -> LessonContent:
         return LessonContent.model_validate(load_yaml(self.content_file))

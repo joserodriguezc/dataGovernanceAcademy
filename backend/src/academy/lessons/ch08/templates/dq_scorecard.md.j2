@@ -1,0 +1,84 @@
+# Calidad de datos de {{ company }} ({{ as_of.strftime("%d/%m/%Y") }})
+
+> ¿Puedo confiar en este dato? La respuesta se publica con transparencia, incluso cuando es "todavía no".
+
+**{{ meets }} de {{ results | length }} reglas cumplen su umbral.** {{ issues | length }} incidencias ({{ open_issues }} abiertas), {{ certified | length }} de {{ certs | length }} datasets curados certificados.
+
+{% if chart_name %}![Calidad por dimensión]({{ chart_name }}){% endif %}
+
+## Por dimensión
+
+| Dimensión | Reglas | Cumplen | Registros válidos (media) |
+|---|---:|---:|---:|
+{% for dim, row in by_dimension %}
+| {{ dim | capitalize }} | {{ row.rules | num }} | {{ row.meets | num }} | {{ row.pass_rate | pct(1) }} |
+{% endfor %}
+
+## Por dominio
+
+| Dominio | Reglas | Cumplen | Registros válidos (media) |
+|---|---:|---:|---:|
+{% for dom, row in by_domain %}
+| {{ domain_names[dom] }} | {{ row.rules | num }} | {{ row.meets | num }} | {{ row.pass_rate | pct(1) }} |
+{% endfor %}
+
+## Resultado de cada regla
+
+| Regla | Descripción | Tabla.columna | Dimensión | Sev. | Registros | Fallan | Válidos | Umbral | |
+|---|---|---|---|---:|---:|---:|---:|---:|---|
+{% for r in results %}
+| {{ r.rule.id }} | {{ r.rule.description }}{% if r.note %} *{{ r.note }}*{% endif %} | `{{ r.rule.table }}.{{ r.rule.column }}` | {{ r.rule.dimension }} | {{ r.rule.severity }} | {{ r.total | num }} | {{ r.failed | num }} | {{ r.pass_rate | pct(2) }} | {{ r.rule.threshold | pct(1) }} | {{ "✅" if r.meets_threshold else "❌" }} |
+{% endfor %}
+
+## Registro de incidencias
+
+| Incidencia | Severidad | Regla | Registros | Steward | Remediación | Estado |
+|---|---|---|---:|---|---|---|
+{% for i in issues %}
+| {{ i.id }} | {{ severity_labels[i.severity] }} | {{ i.result.rule.id }} · {{ i.result.rule.description }} | {{ i.result.failed | num }} | {{ i.steward }} | {{ remediation_labels[i.result.rule.remediation] }} | {{ "🟢 Aceptada" if i.status == "aceptada" else "🔴 Abierta" }} |
+{% endfor %}
+
+{% if dispositions %}
+**Registro de disposiciones** (incidencias que se deciden no remediar, con quién lo firma):
+{% for i in dispositions %}
+- {{ i.id }} ({{ i.result.rule.id }}): {{ i.disposition }}
+{% endfor %}
+{% endif %}
+
+**Proceso de remediación:** el steward de negocio detecta y valora el impacto → el líder de calidad valida la incidencia y la registra → si es Sev1 o afecta a varios dominios, se escala al consejo de datos → el steward técnico implementa la corrección → el steward de negocio la prueba → se cierra la incidencia y **se avisa a los usuarios del cambio**, porque un dato corregido sin aviso parece un error.
+
+Los registros concretos que fallan están en `dq_issues.csv`.
+
+## Certificación
+
+Un dataset curado se certifica si él y sus fuentes (según el linaje del capítulo 7) cumplen las reglas de severidad {{ blocking }}, y además está documentado y tiene steward (capítulo 6).
+
+| Dataset | Estado | Motivos |
+|---|---|---|
+{% for c in certs %}
+| `{{ c.table }}` | {{ "✅ Certificado" if c.certified else "❌ No certificado" }} | {{ c.reasons | join("; ") or "—" }} |
+{% endfor %}
+
+## Detección de los defectos sembrados
+
+Compara lo que encuentran las reglas con el solucionario de los datos sintéticos (Fase 0).
+
+| Defecto sembrado | Regla | Sembrados | Detectados | Aciertos | Recall | Fuera del solucionario |
+|---|---|---:|---:|---:|---:|---:|
+{% for d in detection %}
+| `{{ d.defect }}` | {{ d.rule_id }} | {{ d.seeded }} | {{ d.detected }} | {{ d.true_positives }} | {{ d.recall | pct }} | {{ d.detected - d.true_positives }} |
+{% endfor %}
+
+**Recall** es la parte de los defectos sembrados que la regla encuentra. "Fuera del solucionario" son registros que la regla marca y que no se sembraron directamente: hay que investigarlos antes de tratarlos como falsos positivos.
+{% for d in detection if d.detected > d.true_positives and d.defect in inherited %}
+- `{{ d.defect }}`: {{ inherited[d.defect] }}
+{% endfor %}
+
+## Valor
+
+| Medida | Valor |
+|---|---:|
+| Clientes del CRM aptos para marketing (email válido y consentimiento) | {{ marketable | num }} de {{ crm_total | num }} ({{ (marketable / crm_total) | pct }}) |
+| Clientes que serían aptos con el email corregido | +{{ fixable }} |
+| Venta incremental anual si se corrigen | {{ fixable_value | money }} |
+| Horas al año de corrección manual de los registros que fallan | {{ manual_hours | num }} h ({{ manual_cost | money }}) |

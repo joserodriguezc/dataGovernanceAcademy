@@ -1,0 +1,26 @@
+# Perfilado de datos de {{ company }}
+
+> Antes de escribir reglas hay que conocer los datos: nulos, cardinalidad, rangos y patrones de formato. Los patrones describen la forma del valor: cada secuencia de dígitos es `9` y cada secuencia de letras es `A` (`2025-03-12` → `9-9-9`).
+
+{% if mixed %}
+## ⚠️ Columnas con formatos mezclados
+
+Columnas con más de un patrón frecuente: son candidatas a una regla de consistencia y a estandarizar.
+
+| Columna | Patrones (% de valores) |
+|---|---|
+{% for p in mixed %}
+| `{{ p.table }}.{{ p.column }}` | {% for pat, share in p.top_patterns %}`{{ pat }}` {{ share | pct }}{{ " · " if not loop.last }}{% endfor %} |
+{% endfor %}
+{% endif %}
+
+{% for table, cols in tables %}
+## `{{ table }}` ({{ cols[0].rows | num }} filas)
+
+| Columna | Tipo | % nulos | Distintos | Mínimo | Máximo | Patrón principal |
+|---|---|---:|---:|---|---|---|
+{% for c in cols %}
+| `{{ c.column }}` | {{ c.data_type }} | {{ c.null_rate | pct(1) }} | {{ c.distinct | num }} | {{ (c.min_value or "—")[:24] }} | {{ (c.max_value or "—")[:24] }} | {{ ("`" ~ c.top_patterns[0][0][:24] ~ "` " ~ (c.top_patterns[0][1] | pct)) if c.top_patterns else "—" }} |
+{% endfor %}
+
+{% endfor %}
