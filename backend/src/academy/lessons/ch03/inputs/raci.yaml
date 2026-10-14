@@ -1,0 +1,75 @@
+# Matriz RACI del programa de gobierno de datos.
+# R = Responsable (ejecuta), A = Accountable (rinde cuentas; exactamente uno),
+# C = Consultado, I = Informado.
+roles:
+  cdao: CDAO
+  dg_leader: Líder de gobierno y estrategia
+  solutions_leader: Líder de soluciones de datos
+  dataops_leader: Líder de operaciones de datos
+  domain_exec: Ejecutivo de dominio
+  business_steward: Steward de negocio
+  technical_steward: Steward técnico
+  cio: CIO
+  committee: Comité empresarial de datos
+
+activities:
+  - name: Definir la estrategia de datos
+    A: cdao
+    R: [dg_leader]
+    C: [committee, domain_exec, cio]
+    I: [business_steward, technical_steward]
+  - name: Aprobar la estrategia y la política de gobierno de datos
+    A: committee
+    R: [cdao]
+    C: [domain_exec, cio]
+    I: [business_steward, technical_steward]
+  - name: Mantener la política y los estándares
+    A: dg_leader
+    R: [dg_leader]
+    C: [domain_exec, cio, solutions_leader]
+    I: [committee]
+  - name: Proveer las herramientas de gestión de datos
+    A: solutions_leader
+    R: [solutions_leader, cio]
+    C: [dg_leader, technical_steward]
+    I: [domain_exec]
+  - name: Designar a los stewards del dominio
+    A: domain_exec
+    R: [domain_exec]
+    C: [dg_leader]
+    I: [cdao]
+  - name: Asegurar la financiación del trabajo del dominio
+    A: domain_exec
+    R: [domain_exec]
+    C: [cdao]
+    I: [committee]
+  - name: Inventariar activos y sistemas del dominio
+    A: domain_exec
+    R: [business_steward, technical_steward]
+    C: [solutions_leader]
+    I: [dg_leader]
+  - name: Definir los CDE y el glosario de negocio
+    A: business_steward
+    R: [business_steward]
+    C: [technical_steward, dg_leader]
+    I: [domain_exec]
+  - name: Implementar reglas de calidad en los sistemas
+    A: technical_steward
+    R: [technical_steward]
+    C: [business_steward, solutions_leader]
+    I: [dataops_leader]
+  - name: Remediar las incidencias de calidad de datos
+    A: domain_exec
+    R: [business_steward, technical_steward, dataops_leader]
+    C: [solutions_leader]
+    I: [committee]
+  - name: Monitorizar el cumplimiento y publicar el EDG Scorecard
+    A: dg_leader
+    R: [dg_leader]
+    C: [business_steward]
+    I: [committee, domain_exec, cdao]
+  - name: Reportar el avance al CEO y al consejo
+    A: cdao
+    R: [cdao]
+    C: [committee]
+    I: [domain_exec]

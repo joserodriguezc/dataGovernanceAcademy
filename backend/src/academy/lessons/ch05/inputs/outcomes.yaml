@@ -1,0 +1,171 @@
+# Marco de resultados de NovaMercado: los 8 pasos del capítulo aplicados a tres resultados.
+# Fecha de corte del primer informe mensual de progreso.
+as_of: 2027-01-31
+
+outcomes:
+  # --- Paso 1: resultado de negocio, concreto y medible ------------------------------
+  - id: O1
+    stakeholder: cmo                     # grupo del registro del capítulo 2
+    goal: Conocer a cada cliente como una sola persona en todos los canales.
+    business_outcome: >-
+      Campañas personalizadas sobre un cliente único que generen US$ 1,2 M al año en ventas
+      atribuidas antes de diciembre de 2027.
+    deadline: 2027-12-31
+    # Paso 4: el valor sale de las líneas de data equity del capítulo 1 y lo firma el stakeholder
+    equity_lines: [A1, L3]
+    signoff: {by: CMO, date: 2026-11-20}
+    business_metric:
+      name: Ventas anuales atribuidas a campañas personalizadas
+      unit: usd
+      baseline: 200000
+      target: 1200000
+      actual: 260000
+      higher_is_better: true
+      owner: CMO
+    capabilities:
+      # --- Paso 2: capacidades de datos, explicando por qué son las adecuadas -------
+      - id: C1
+        name: Registro único de cliente (golden record) entre CRM, e-commerce y tiendas
+        why: Sin saber que tres registros son la misma persona, cada campaña llega duplicada o incompleta.
+        components:
+          skills: Responsable de datos maestros (contratación, capítulo 3)
+          processes: Reglas de matching y supervivencia aprobadas por la steward de cliente
+          technology: Motor de matching sobre el warehouse
+          resources: US$ 350.000 (plan del capítulo 4)
+          culture: Marketing usa el cliente único como fuente oficial para campañas
+        # --- Paso 3: entregables, con hitos [hecho de total] --------------------------
+        deliverables:
+          - {id: D1, name: Identificar los sistemas con datos de cliente, start: 2026-11-01, due: 2026-12-15, done: 3, total: 3, data_outcome: Inventario de sistemas de cliente completo}
+          - {id: D2, name: Definir reglas de matching y supervivencia, start: 2026-12-01, due: 2027-02-28, done: 1, total: 2, data_outcome: Reglas de cliente único aprobadas}
+          - {id: D3, name: Construir el golden record en las tiendas piloto, start: 2027-03-01, due: 2027-07-31, done: 0, total: 1, data_outcome: "Duplicados de cliente por debajo del 0,5 %"}
+      - id: C2
+        name: Calidad de los datos de contacto
+        why: Una campaña solo funciona si el email o el teléfono llegan al cliente.
+        components:
+          skills: Responsable de calidad de datos
+          processes: Reglas de validación en el alta de clientes
+          technology: Controles de calidad en las cargas
+          resources: Parte de los US$ 120.000 de reglas de calidad (capítulo 4)
+          culture: null
+        deliverables:
+          - {id: D4, name: "Reglas de calidad sobre email, teléfono y código postal", start: 2027-01-15, due: 2027-04-30, done: 0, total: 3, data_outcome: Contactos válidos por encima del 98 %}
+      - id: C3
+        name: Stewardship del dominio de cliente
+        why: Alguien de Marketing debe decidir qué es un cliente y responder de la calidad de sus datos.
+        components:
+          skills: Formación de la steward de negocio y del steward técnico
+          processes: RACI del capítulo 3
+          technology: null
+          resources: Steward de negocio a tiempo completo
+          culture: La CMO presenta a la steward en su comité de dirección
+        deliverables:
+          - {id: D5, name: Nombrar y formar a la steward de negocio y al técnico de cliente, start: 2026-11-01, due: 2026-12-31, done: 1, total: 2, data_outcome: Dominio de cliente con stewards activos}
+
+  - id: O2
+    stakeholder: dpo_legal
+    goal: Saber qué datos personales tenemos, dónde están y cómo se protegen.
+    business_outcome: >-
+      Localizar todos los datos personales de un cliente en menos de 24 horas cuando lo pida
+      él o el regulador, antes de septiembre de 2027.
+    deadline: 2027-09-30
+    equity_lines: [L1]
+    signoff: {by: DPO, date: 2026-12-02}
+    business_metric:
+      name: Horas para localizar los datos de un cliente
+      unit: hours
+      baseline: 120
+      target: 24
+      actual: 120
+      higher_is_better: false
+      owner: DPO
+    capabilities:
+      - id: C4
+        name: Catálogo de datos de los sistemas de cliente
+        why: No se puede proteger lo que no se sabe dónde está.
+        components:
+          skills: Responsable de metadatos
+          processes: Requisitos de catalogación de la política (capítulo 1)
+          technology: Catálogo sobre los metadatos del warehouse
+          resources: Parte de los US$ 180.000 del glosario y el catálogo (capítulo 4)
+          culture: Los stewards mantienen la descripción de sus tablas
+        deliverables:
+          - {id: D6, name: Documentar las tablas curated y de staging, start: 2027-01-15, due: 2027-05-31, done: 0, total: 1, data_outcome: Tablas curated documentadas al 100 %}
+      - id: C5
+        name: Clasificación de PII
+        why: Saber qué columnas son datos personales permite aplicar el control de acceso adecuado.
+        components:
+          skills: Responsable de metadatos y CISO
+          processes: Recertificación periódica de la clasificación por los stewards
+          technology: Detección automática de PII
+          resources: Parte de los US$ 180.000 del glosario y el catálogo (capítulo 4)
+          culture: null
+        deliverables:
+          - {id: D7, name: Clasificar las columnas de los sistemas de cliente, start: 2027-03-01, due: 2027-07-31, done: 0, total: 3, data_outcome: PII de clientes clasificada}
+
+  - id: O3
+    stakeholder: cfo
+    goal: Una sola versión de las ventas para toda la empresa.
+    business_outcome: >-
+      El comité de dirección usa una única cifra de ventas por canal y se eliminan 7.500 horas
+      al año de conciliación manual antes de junio de 2027.
+    deadline: 2027-06-30
+    equity_lines: [A2, L2]
+    signoff: null                        # el CFO aún no ha validado la valoración
+    business_metric:
+      name: Horas anuales de conciliación manual de ventas
+      unit: hours
+      baseline: 9000
+      target: 1500
+      actual: 9000
+      higher_is_better: false
+      owner: CFO
+    capabilities:
+      - id: C6
+        name: Linaje de la cifra de ventas
+        why: Saber de dónde sale cada cifra acaba con las discusiones sobre cuál es la buena.
+        components:
+          skills: Arquitecto de información
+          processes: Revisión de impacto antes de cambiar una transformación
+          technology: Linaje a nivel de columna sobre el SQL del warehouse
+          resources: US$ 90.000 (capítulo 4)
+          culture: Finanzas cita el linaje al presentar la cifra
+        deliverables:
+          - {id: D8, name: Documentar el linaje de las tablas curated de ventas, start: 2026-12-01, due: 2027-01-15, done: 0, total: 2, data_outcome: Linaje documentado de todas las tablas curated}
+      - id: C7
+        name: Reglas de calidad sobre los datos críticos de ventas
+        why: La cifra solo es confiable si se controla en cada carga.
+        components:
+          skills: Responsable de calidad de datos
+          processes: Gestión de incidencias de calidad con el steward de ventas
+          technology: Controles de calidad en las cargas
+          resources: Parte de los US$ 120.000 de reglas de calidad (capítulo 4)
+          culture: El controller de ventas revisa el cuadro de calidad antes de cada cierre
+        deliverables:
+          - {id: D9, name: Reglas de calidad sobre importes y precios de venta, start: 2027-01-15, due: 2027-04-30, done: 0, total: 2, data_outcome: Controles de calidad superados al 99 %}
+
+# Resultados de datos medidos en el warehouse (paso 7), con los indicadores del capítulo 4.
+data_outcome_metrics:
+  "Duplicados de cliente por debajo del 0,5 %": {indicator: crm_duplicate_phones, target: 0.005, higher_is_better: false}
+  "Tablas curated documentadas al 100 %": {indicator: documented_tables, target: 1.0, higher_is_better: true}
+  "Linaje documentado de todas las tablas curated": {indicator: lineage_coverage, target: 1.0, higher_is_better: true}
+  "Controles de calidad superados al 99 %": {indicator: dq_pass_rate, target: 0.99, higher_is_better: true}
+
+# Barreras para lograr valor de negocio (las seis del capítulo).
+# type: culture | funding | sponsor_turnover | lack_of_support | technical_expertise | regulatory_economic
+barriers:
+  - {type: sponsor_turnover, outcomes: [O1], description: "La CMO podría cambiar de rol antes de terminar 2027.", likelihood: 2, impact: 3, mitigation: "Asegurar el apoyo un nivel por debajo: directora de CRM y responsable de fidelización."}
+  - {type: funding, outcomes: [O1, O2], description: "El presupuesto se aprueba año a año.", likelihood: 3, impact: 3, mitigation: "Compromiso del CFO para todo el programa de 18 meses, no solo para 2027."}
+  - {type: technical_expertise, outcomes: [O1], description: "Nadie del equipo pasa del nivel 1 en datos maestros (capítulo 3).", likelihood: 3, impact: 2, mitigation: "Contratar al responsable de datos maestros antes de construir el golden record."}
+  - {type: lack_of_support, outcomes: [O3], description: "El CFO no ha validado aún el valor del resultado.", likelihood: 2, impact: 3, mitigation: "Revisar la valoración con el controller de ventas antes del comité de febrero."}
+  - {type: regulatory_economic, outcomes: [O2], description: "La licencia de NovaPay puede adelantar los requisitos de privacidad.", likelihood: 2, impact: 2, mitigation: "Priorizar la clasificación de PII si el regulador fija fecha."}
+  - {type: culture, outcomes: [O3], description: "Las regiones confían en sus propias hojas de cálculo.", likelihood: 3, impact: 2, mitigation: "Mostrar a los directores regionales el linaje de su cifra antes de retirar las hojas."}
+
+# Revisión trimestral de negocio (QBR) con cada stakeholder.
+qbr:
+  quarter_label: T1 2027
+  quarter_start: 2027-01-01
+  quarter_end: 2027-03-31
+  enterprise_services:
+    - Comité y consejo empresarial de datos
+    - EDG Scorecard y política de gobierno de datos
+    - Soporte de la oficina de datos a los stewards

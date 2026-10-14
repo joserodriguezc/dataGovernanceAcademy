@@ -1,0 +1,33 @@
+# Madurez por unidad {{ year }}: uso interno de la oficina de datos
+
+> ⚠️ **No distribuir.** Se ha decidido comunicar los resultados {{ "agregados" if communication == "aggregated" else "desagregados" }}. Publicar las notas por área fomenta los silos, la duplicación de capacidades y el incentivo a manipular la autoevaluación.
+
+## Puntuación de consenso (talleres)
+
+| Unidad | {% for d in dims %}{{ dim_short[d] }} | {% endfor %}Media |
+|---|{% for _ in dims %}---:|{% endfor %}---:|
+{% for unit, row in matrix %}
+| {{ unit_names[unit] }} | {% for d in dims %}{{ row[d] | num(1) }} | {% endfor %}**{{ row["_mean"] | num(1) }}** |
+{% endfor %}
+
+## Autoevaluación frente al consenso del taller
+
+{% if biases %}
+| Unidad | Autoevaluación | Taller | Diferencia | Lectura |
+|---|---:|---:|---:|---|
+{% for b in biases %}
+| {{ unit_names[b.unit] }} | {{ b.self_avg | num(2) }} | {{ b.workshop_avg | num(2) }} | {{ "%+.2f" | format(b.gap) | replace(".", ",") }} | {{ b.direction | capitalize }} |
+{% endfor %}
+
+Una unidad que se sobrevalora puede querer mostrar avance; una que se infravalora, conseguir más financiación. Por eso se reporta el consenso facilitado del taller y no la autoevaluación, y estas diferencias se contrastan con preguntas a sus pares.
+{% else %}
+✅ Ninguna unidad se aleja del consenso del taller más de {{ threshold | num(2) }} niveles.
+{% endif %}
+
+## Participación
+
+| Unidad | Participantes | Respuestas |
+|---|---:|---:|
+{% for unit, n_people, n_resp in participation %}
+| {{ unit_names[unit] }} | {{ n_people }} | {{ n_resp }} |
+{% endfor %}

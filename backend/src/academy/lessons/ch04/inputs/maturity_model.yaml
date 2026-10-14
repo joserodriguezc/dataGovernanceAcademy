@@ -1,0 +1,71 @@
+# Modelo de madurez propio de NovaMercado, con los seis niveles que describe el capítulo.
+# Es propio (y no DCAM u otro estándar) para poder publicarlo en el laboratorio; en una
+# empresa real el capítulo recomienda usar un modelo reconocido la primera vez.
+name: Modelo de madurez de gestión de datos de NovaMercado
+version: "1.0"
+
+levels:
+  1: {name: Ad hoc, description: "Los datos se gestionan de forma reactiva; no hay estrategia ni plan."}
+  2: {name: Básico, description: "Hay algo de estructura, pero ni estrategia ni plan formal."}
+  3: {name: Repetible, description: "Los procesos están documentados y se repiten; hay compromiso de mejorar, pero aún sin estrategia formal."}
+  4: {name: Definido, description: "Procesos bien definidos y documentados, con estrategia y plan formales."}
+  5: {name: Gestionado, description: "Los procesos se gestionan y monitorizan activamente."}
+  6: {name: Optimizado, description: "Mejora continua orientada a la eficiencia y la eficacia."}
+
+dimensions:
+  - id: strategy_governance
+    short: Gobierno
+    name: Estrategia y gobierno
+    chapter: 1
+    questions:
+      - ¿Existe una estrategia de datos aprobada y alineada con la del negocio?
+      - ¿Hay una política de gobierno con roles y foros que funcionan?
+  - id: metadata
+    short: Metadatos
+    name: Gestión de metadatos
+    chapter: 6
+    questions:
+      - ¿Hay un glosario de negocio con definiciones acordadas?
+      - ¿Los datos están catalogados, con responsable y clasificación?
+  - id: lineage
+    short: Linaje
+    name: Metadatos técnicos y linaje
+    chapter: 7
+    questions:
+      - ¿Se sabe de dónde viene cada métrica crítica?
+      - ¿Se puede analizar el impacto de un cambio antes de hacerlo?
+  - id: data_quality
+    short: Calidad
+    name: Calidad de datos
+    chapter: 8
+    questions:
+      - ¿Hay reglas de calidad sobre los datos críticos y se monitorizan?
+      - ¿Las incidencias de calidad se registran y se remedian?
+  - id: architecture
+    short: Arquitectura
+    name: Arquitectura de datos
+    chapter: 9
+    questions:
+      - ¿Hay principios y estándares de arquitectura de datos?
+      - ¿Se diseña la arquitectura de datos desde el inicio de los proyectos?
+  - id: master_data
+    short: D. maestros
+    name: Datos maestros y de referencia
+    chapter: 10
+    questions:
+      - ¿Hay un registro único y confiable de cliente, producto y proveedor?
+      - ¿Los datos de referencia son comunes en toda la empresa?
+  - id: data_operations
+    short: Operaciones
+    name: Operaciones de datos
+    chapter: 11
+    questions:
+      - ¿Los procesos de datos tienen SLAs y se monitorizan?
+      - ¿Hay un proceso de gestión de incidencias de datos?
+  - id: privacy_security
+    short: Privacidad
+    name: Privacidad y seguridad
+    chapter: 6
+    questions:
+      - ¿Los datos personales están identificados y clasificados?
+      - ¿El acceso a los datos se controla según su sensibilidad?

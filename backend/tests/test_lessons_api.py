@@ -11,8 +11,8 @@ def client(tmp_path):
 
 def test_lesson_1_is_available(client):
     lessons = client.get("/api/lessons").json()["lessons"]
-    assert lessons[0]["status"] == "available" and lessons[1]["status"] == "planned"
-    assert client.get("/api/lessons/2/content").status_code == 404
+    assert lessons[0]["status"] == "available" and lessons[5]["status"] == "planned"
+    assert client.get("/api/lessons/6/content").status_code == 404
 
 
 def test_content_has_ideas_and_challenges(client):
@@ -57,3 +57,30 @@ def test_invalid_input_is_rejected_with_details(client):
     locs = [d["loc"] for d in r.json()["detail"]]
     assert "horizon_months" in locs
     assert client.get("/api/lessons/1/result").json() is None
+
+
+def _unlabeled(model, labels: dict[str, str]) -> list[str]:
+    """Campos de un modelo (y de sus submodelos) sin etiqueta en español."""
+    schema = model.model_json_schema()
+    out = []
+    for obj_name, obj in [(model.__name__, schema), *schema.get("$defs", {}).items()]:
+        for name in obj.get("properties", {}):
+            if name not in labels and f"{obj_name}.{name}" not in labels:
+                out.append(f"{obj_name}.{name}")
+    return out
+
+
+def test_every_form_field_has_a_spanish_label():
+    from academy.lessons.registry import LESSONS
+    from academy.schema import COMMON_LABELS
+    from academy.workspace import LABELS, WorkspaceSettings
+
+    missing = {}
+    for lesson in LESSONS.values():
+        labels = COMMON_LABELS | lesson.content().labels
+        for spec in lesson.inputs:
+            fields = _unlabeled(spec.model, labels)
+            if fields:
+                missing[f"{lesson.number}/{spec.id}"] = fields
+    assert not missing, missing
+    assert not _unlabeled(WorkspaceSettings, LABELS)

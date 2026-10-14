@@ -1,0 +1,343 @@
+# Registro y mapa de stakeholders de NovaMercado.
+purpose: >-
+  El propósito de este mapa es identificar a quién servimos, cuáles son sus objetivos, cómo
+  habilitamos su éxito y cómo medimos que cumplimos con ellos.
+
+# level interno: individual_contributor | manager | divisional_leader | executive | board
+# level externo: customer | partner | supplier | investor | regulator
+# health: positive | neutral | negative
+# influence e interest: 1 (bajo) a 5 (alto)
+# Tipos de resultado objetivo: revenue | customer | cost | risk | productivity | data
+#   ("data" es una vanity metric: mide el dato, no el negocio)
+groups:
+  # --- Internos ------------------------------------------------------------------------
+  - id: store_staff
+    short: Equipo de tienda
+    name: Colaboradores de tienda
+    kind: internal
+    level: individual_contributor
+    role: Atienden al cliente y reponen el stock de su sección.
+    health: positive
+    contributions: Salario por horas, descuento de empleado y seguro médico.
+    success_measures: [Satisfacción del cliente en tienda, Roturas de stock por sección]
+    influence: 1
+    interest: 2
+  - id: marketing_analysts
+    short: Analistas de marketing
+    name: Analistas de marketing
+    kind: internal
+    level: individual_contributor
+    role: Preparan las segmentaciones y los informes de campañas.
+    health: positive
+    contributions: Salario fijo y bonus por objetivos de equipo.
+    success_measures: [Campañas lanzadas en plazo, Horas dedicadas a cruzar bases de datos]
+    influence: 1
+    interest: 5
+  - id: store_managers
+    short: Jefes de tienda
+    name: Jefes de tienda
+    kind: internal
+    level: manager
+    role: Gestionan una tienda, su equipo y su cuenta de resultados.
+    health: neutral
+    contributions: Salario, bonus por ventas de tienda y seguro médico.
+    success_measures: [Ventas de tienda frente a objetivo, NPS de tienda, Merma]
+    influence: 2
+    interest: 3
+  - id: regional_directors
+    short: Dir. regionales
+    name: Directores regionales
+    kind: internal
+    level: divisional_leader
+    role: Dirigen una región de 20 a 30 tiendas.
+    health: negative
+    contributions: Salario, bonus regional, acciones y seguro médico.
+    success_measures: [Ventas regionales frente a objetivo, Margen regional, Rotación de personal]
+    influence: 3
+    interest: 3
+    notes: Desconfían de los informes de ventas porque no cuadran con sus propias hojas de cálculo.
+  - id: ceo
+    short: CEO
+    name: Consejero delegado (CEO)
+    kind: internal
+    level: executive
+    role: Fija la estrategia y responde ante el consejo.
+    health: positive
+    contributions: Salario, bonus por plan estratégico y acciones.
+    success_measures: [Crecimiento de ventas, Margen operativo, Cumplimiento del plan estratégico]
+    influence: 5
+    interest: 4
+  - id: cmo
+    short: CMO
+    name: Directora de Marketing (CMO)
+    kind: internal
+    level: executive
+    role: Lidera marketing, CRM y el programa de fidelización.
+    health: positive
+    contributions: Salario, bonus por crecimiento de clientes y acciones.
+    success_measures: [Clientes activos del programa de fidelización, Ventas atribuidas a campañas, Valor de vida del cliente (CLV)]
+    influence: 5
+    interest: 5
+    map:
+      objectives:
+        - Aumentar las ventas atribuidas a campañas un 15 % interanual
+        - Reducir el abandono de clientes del programa de fidelización por debajo del 12 %
+      data_solutions:
+        - Vista única de cliente entre CRM, e-commerce y tiendas
+        - Alerta temprana de clientes en riesgo de abandono para el equipo de fidelización
+      target_results:
+        - {text: "+US$ 1,2 M de ventas anuales atribuidas a campañas personalizadas", type: revenue}
+        - {text: "Retener al menos el 40 % de los clientes marcados en riesgo", type: customer}
+      ultimate_beneficiary: Cliente del programa de fidelización
+    partnership: null
+  - id: cfo
+    short: CFO
+    name: Director Financiero (CFO)
+    kind: internal
+    level: executive
+    role: Responde de finanzas, control de gestión y reporting al consejo.
+    health: positive
+    contributions: Salario, bonus por resultados y acciones.
+    success_measures: [Cierre mensual en plazo, Exactitud del forecast, Gasto operativo]
+    influence: 5
+    interest: 4
+    map:
+      objectives:
+        - Una única cifra de ventas por canal en el comité de dirección
+        - Acortar el cierre mensual de 8 a 5 días
+      data_solutions:
+        - Reporting de ventas certificado con linaje hasta el origen
+        - Reglas de calidad sobre los elementos de dato críticos de ventas
+      target_results:
+        - {text: "Eliminar 7.500 horas anuales de conciliación manual", type: productivity}
+        - {text: "Cierre mensual en 5 días", type: productivity}
+      ultimate_beneficiary: Comité de dirección y consejo
+    partnership:
+      what_we_need: Apoyo para asegurar la financiación y saber quién la desbloquea.
+      what_they_need: Ver con claridad el valor (costes, riesgo, ingresos y tiempo) y los plazos.
+  - id: commercial_director
+    short: Dir. Comercial
+    name: Director Comercial
+    kind: internal
+    level: executive
+    role: Responde del surtido, los precios y la relación con las marcas.
+    health: neutral
+    contributions: Salario, bonus por margen comercial y acciones.
+    success_measures: [Margen bruto, Rotación de inventario, Ventas por metro cuadrado]
+    influence: 4
+    interest: 2
+    map:
+      objectives:
+        - Mejorar el margen bruto 1 punto con un surtido ajustado a cada tienda
+      data_solutions:
+        - Datos de producto curados con atributos completos
+      target_results:
+        - {text: "Completitud de atributos de producto por encima del 95 %", type: data}
+      ultimate_beneficiary: Cliente de tienda
+  - id: coo
+    short: COO
+    name: Director de Operaciones (COO)
+    kind: internal
+    level: executive
+    role: Responde de la red de tiendas, la logística y la cadena de suministro.
+    health: positive
+    contributions: Salario, bonus por eficiencia operativa y acciones.
+    success_measures: [Coste por pedido, Disponibilidad en lineal, Plazo de entrega online]
+    influence: 4
+    interest: 3
+    map:
+      objectives:
+        - Reducir las roturas de stock un 20 %
+      data_solutions:
+        - Datos maestros de tienda y producto alineados entre ERP y POS
+      target_results:
+        - {text: "-20 % de roturas de stock en las 50 tiendas piloto", type: revenue}
+        - {text: "Ahorro de US$ 300.000 anuales en transferencias urgentes entre tiendas", type: cost}
+      ultimate_beneficiary: Cliente de tienda
+  - id: procurement_director
+    short: Dir. Compras
+    name: Director de Compras
+    kind: internal
+    level: divisional_leader
+    role: Gestiona proveedores y negociaciones; reporta al COO.
+    health: neutral
+    contributions: Salario y bonus por ahorro en compras.
+    success_measures: [Ahorro en compras, Plazo de alta de proveedor]
+    influence: 3
+    interest: 3
+    map:
+      objectives:
+        - Reducir el plazo de alta de proveedor de 15 a 5 días
+      data_solutions:
+        - Catálogo de proveedores con un responsable de datos designado
+      target_results:
+        - {text: "Ahorro de 2.500 horas anuales en altas y correcciones de proveedores", type: productivity}
+        - {text: "Proveedores dados de alta en 5 días", type: productivity}
+      ultimate_beneficiary: Equipo de compras y proveedores
+  - id: cio
+    short: CIO
+    name: Director de Tecnología (CIO)
+    kind: internal
+    level: executive
+    role: Responde de los sistemas, la infraestructura y los equipos de ingeniería.
+    health: neutral
+    contributions: Salario, bonus por entrega de proyectos y acciones.
+    success_measures: [Disponibilidad de sistemas, Proyectos entregados en plazo, Coste de TI]
+    influence: 4
+    interest: 3
+    partnership:
+      what_we_need: Plataformas, herramientas de gestión de datos e ingenieros para entregar.
+      what_they_need: Prioridades claras y acordadas con el negocio, sin peticiones contradictorias.
+  - id: dpo_legal
+    short: DPO / Legal
+    name: Legal y Privacidad (DPO)
+    kind: internal
+    level: executive
+    role: Define la clasificación de la información, la retención y el cumplimiento del RGPD.
+    health: positive
+    contributions: Salario y bonus por objetivos de cumplimiento.
+    success_measures: [Incidentes de privacidad, Respuestas a derechos ARCO en plazo]
+    influence: 3
+    interest: 5
+    map:
+      objectives:
+        - Saber dónde está la PII y que esté clasificada y protegida
+      data_solutions:
+        - Descubrimiento y clasificación automática de PII en el catálogo
+      target_results:
+        - {text: "Reducir la exposición esperada a multas de US$ 320.000 a US$ 80.000 anuales", type: risk}
+      ultimate_beneficiary: Clientes y la propia empresa
+    partnership:
+      what_we_need: Las políticas de clasificación y retención que debemos implementar.
+      what_they_need: Saber qué datos tiene la empresa, dónde están y cómo se clasifican.
+  - id: ciso
+    short: CISO
+    name: Seguridad de la Información (CISO)
+    kind: internal
+    level: executive
+    role: Protege los sistemas y los datos frente a amenazas.
+    health: positive
+    contributions: Salario y bonus por objetivos de seguridad.
+    success_measures: [Incidentes de seguridad, Tiempo de respuesta a incidentes]
+    influence: 3
+    interest: 4
+    map:
+      objectives:
+        - Aplicar controles de acceso según la sensibilidad del dato
+      data_solutions:
+        - Metadatos técnicos con la ubicación y la clasificación de cada dato
+      target_results:
+        - {text: "Tablas con datos sensibles cubiertas por controles de acceso", type: data}
+      ultimate_beneficiary: Clientes y la propia empresa
+    partnership:
+      what_we_need: Los requisitos de seguridad para cada nivel de clasificación.
+      what_they_need: Inventario de dónde están los datos y cómo se mueven.
+  - id: chro
+    short: CHRO
+    name: Directora de Personas (CHRO)
+    kind: internal
+    level: executive
+    role: Responde del talento, la organización y la formación.
+    health: neutral
+    contributions: Salario, bonus y acciones.
+    success_measures: [Rotación voluntaria, Tiempo de cobertura de vacantes]
+    influence: 3
+    interest: 2
+    partnership:
+      what_we_need: Apoyo para estructurar el equipo, contratar y retener talento de datos.
+      what_they_need: Saber qué perfiles necesitamos y cómo evolucionarán.
+  - id: data_team
+    short: Equipo de datos
+    name: Equipo de la oficina del CDAO
+    kind: internal
+    level: individual_contributor
+    role: Ingenieros, analistas y stewards que entregan las soluciones.
+    health: positive
+    contributions: Salario fijo y bonus por objetivos.
+    success_measures: [Entregas en plazo, Satisfacción de los usuarios de datos]
+    influence: 1
+    interest: 5
+  - id: board
+    short: Consejo
+    name: Consejo de administración
+    kind: internal
+    level: board
+    role: Supervisa la estrategia, evalúa al CEO y aprueba las políticas corporativas.
+    health: neutral
+    contributions: Remuneración en efectivo y acciones.
+    success_measures: [Cumplimiento del plan estratégico, Retención del CEO]
+    influence: 5
+    interest: 2
+
+  # --- Externos ------------------------------------------------------------------------
+  - id: loyalty_customers
+    short: Clientes fidelizados
+    name: Clientes del programa de fidelización
+    kind: external
+    level: customer
+    role: Compran en tienda y online y comparten sus datos a cambio de ventajas.
+    health: neutral
+    contributions: Compras y datos de preferencias.
+    success_measures: [Ofertas relevantes, Protección de sus datos personales]
+    influence: 2
+    interest: 3
+  - id: suppliers
+    short: Proveedores
+    name: Proveedores de producto
+    kind: external
+    level: supplier
+    role: Suministran el producto y sus fichas técnicas.
+    health: neutral
+    contributions: Producto, condiciones comerciales y datos de producto.
+    success_measures: [Pagos en plazo, Alta rápida de nuevas referencias]
+    influence: 2
+    interest: 2
+  - id: logistics_partner
+    short: Partner logístico
+    name: Operador logístico
+    kind: external
+    level: partner
+    role: Realiza la entrega a domicilio de los pedidos online.
+    health: neutral
+    contributions: Servicio de entrega y datos de seguimiento.
+    success_measures: [Entregas en plazo, Direcciones correctas]
+    influence: 1
+    interest: 2
+  - id: investors
+    short: Inversores
+    name: Accionistas e inversores
+    kind: external
+    level: investor
+    role: Financian a la empresa y siguen sus resultados.
+    health: neutral
+    contributions: Capital.
+    success_measures: [Rentabilidad para el accionista, Gestión del riesgo]
+    influence: 3
+    interest: 1
+  - id: privacy_regulator
+    short: Regulador
+    name: Autoridad de protección de datos
+    kind: external
+    level: regulator
+    role: Supervisa el cumplimiento de la normativa de privacidad.
+    health: neutral
+    contributions: Supervisión y sanciones.
+    success_measures: [Cumplimiento de la normativa de privacidad]
+    influence: 4
+    interest: 2
+
+# Escucha en todas las direcciones, no solo con los pares.
+# direction: horizontal | up | down | across | out ; format: one_on_one | small_group | large_group
+listening_sessions:
+  - {direction: horizontal, audience: CMO, format: one_on_one, date: 2026-09-02, done: true}
+  - {direction: horizontal, audience: CFO, format: one_on_one, date: 2026-09-03, done: true}
+  - {direction: horizontal, audience: COO, format: one_on_one, date: 2026-09-08, done: true}
+  - {direction: horizontal, audience: Director Comercial, format: one_on_one, date: 2026-09-10, done: true}
+  - {direction: horizontal, audience: CIO, format: one_on_one, date: 2026-09-11, done: true}
+  - {direction: horizontal, audience: DPO y CISO, format: small_group, date: 2026-09-15, done: true}
+  - {direction: up, audience: CEO, format: one_on_one, date: 2026-09-01, done: true}
+  - {direction: up, audience: Comisión de auditoría del consejo, format: small_group, date: 2026-11-20, done: false}
+  - {direction: down, audience: Equipo de la oficina del CDAO, format: large_group, date: 2026-09-04, done: true}
+  - {direction: across, audience: Jefes de tienda de la región Norte, format: large_group, date: 2026-09-22, done: true}
+  - {direction: across, audience: Analistas de marketing y de control de gestión, format: small_group, date: 2026-09-24, done: true}
+  - {direction: out, audience: Proveedor del CRM, format: one_on_one, date: 2026-10-30, done: false}

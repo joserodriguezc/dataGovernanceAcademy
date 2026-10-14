@@ -1,0 +1,54 @@
+# Contexto organizativo de NovaMercado para diseñar el equipo de datos.
+
+# Los 10 resultados habituales de un equipo de datos de alto rendimiento: se eligen y priorizan
+# los que sirven a la estrategia de la empresa.
+outcomes:
+  - {id: decision_making, name: Mejores decisiones, selected: true, priority: 1, rationale: "Una sola cifra de ventas para el comité de dirección (CFO, capítulo 2)."}
+  - {id: customer_experience, name: Mejor experiencia de cliente, selected: true, priority: 2, rationale: "Vista única de cliente para la sponsor principal (CMO)."}
+  - {id: data_security, name: Seguridad de los datos, selected: true, priority: 3, rationale: "PII de clientes sin clasificar; riesgo regulatorio con NovaPay."}
+  - {id: data_quality, name: Mayor calidad de los datos, selected: true, priority: 4, rationale: "Duplicados de cliente y métricas inconsistentes."}
+  - {id: efficiency, name: Mayor eficiencia, selected: true, priority: 5, rationale: "Horas de conciliación manual en cada cierre."}
+  - {id: regulatory_compliance, name: Cumplimiento regulatorio, selected: true, priority: 6, rationale: "RGPD hoy y regulación financiera con NovaPay."}
+  - {id: cost_savings, name: Ahorro de costes, selected: false, priority: null, rationale: "Se obtiene como consecuencia de la eficiencia; no es un objetivo propio."}
+  - {id: scalability, name: Escalabilidad, selected: false, priority: null, rationale: "La plataforma actual soporta el crecimiento previsto a 3 años."}
+  - {id: innovation, name: Innovación e insights, selected: false, priority: null, rationale: "Se aborda tras consolidar los datos de cliente y ventas."}
+  - {id: data_literacy, name: Alfabetización en datos, selected: false, priority: null, rationale: "Se integra en las formaciones existentes en vez de lanzar un programa propio (capítulo 2)."}
+
+# Preguntas para definir las funciones principales del equipo.
+core_questions:
+  - question: ¿Cuáles serán nuestras capacidades principales?
+    answer: Gobierno de datos, gestión de metadatos, calidad de datos y datos maestros de cliente.
+  - question: ¿Cuáles serán las prioridades del equipo?
+    answer: El dominio piloto de cliente y la cifra única de ventas.
+  - question: ¿Qué es urgente y qué puede esperar?
+    answer: Es urgente la clasificación de PII y los duplicados de cliente; la analítica avanzada puede esperar.
+  - question: ¿En qué debe implicarse más el CDAO?
+    answer: En la relación con la CMO y el CFO y en el comité empresarial de datos.
+  - question: ¿Qué huecos de talento requieren su atención?
+    answer: No hay un líder de gobierno y estrategia ni experiencia en datos maestros.
+
+# Hechos para elegir el modelo organizativo según las reglas del capítulo.
+org_facts:
+  has_data_capabilities: true          # ¿Existen ya requisitos o capacidades de datos?
+  capabilities_consistent: false       # ¿Se implementan de forma consistente entre áreas?
+  major_trust_issues: true             # ¿Hay problemas graves de calidad, uso o confianza?
+  broad_support: true                  # ¿Hay apoyo general a la iniciativa de datos?
+  strong_bu_leaders: false             # ¿Hay líderes de datos fuertes dentro de las áreas?
+  central_office_strong: false         # ¿La oficina del CDO es sólida y está bien financiada?
+
+# Gobierno de la IA: preguntas que la empresa debe responder.
+# status: open | in_progress | answered
+ai_governance:
+  - {question: "¿Son adecuados los datos con los que se entrena la IA?", owner: Líder de gobierno y estrategia, status: in_progress, decision: "Solo datos del catálogo con clasificación y calidad certificada."}
+  - {question: "¿Cómo se protegen y retienen los prompts?", owner: CISO, status: open, decision: null}
+  - {question: "¿Cómo protegemos la propiedad intelectual que se introduce en herramientas de IA?", owner: Legal (DPO), status: answered, decision: "Prohibido usar herramientas públicas con código o datos internos; se usa un entorno corporativo."}
+  - {question: "¿Cómo se protegen nuestros datos?", owner: CISO, status: in_progress, decision: "Mismos controles por nivel de clasificación que el resto de sistemas."}
+  - {question: "¿Cómo se entrenan los productos de IA generativa que contratamos y qué pasa con nuestros datos?", owner: CIO, status: open, decision: null}
+  - {question: "¿Cómo garantizamos un uso ético de entradas y salidas, de acuerdo con nuestros valores?", owner: Comité empresarial de datos, status: open, decision: null}
+
+# Dónde puede ayudar la IA a las propias capacidades de datos.
+ai_opportunities:
+  - {area: Calidad de datos, use_case: "Detectar y proponer correcciones de direcciones y nombres de cliente."}
+  - {area: Privacidad, use_case: "Clasificar automáticamente columnas con PII en el catálogo."}
+  - {area: Seguridad, use_case: "Detectar accesos anómalos a tablas sensibles."}
+  - {area: Cumplimiento, use_case: "Revisar los contratos con proveedores en busca de cláusulas de tratamiento de datos."}

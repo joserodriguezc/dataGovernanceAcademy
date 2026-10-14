@@ -5,9 +5,14 @@ etiquetas de la lección los sustituyen: la clave puede ser `campo` o `Modelo.ca
 segunda gana cuando un mismo nombre significa cosas distintas en dos modelos.
 """
 
+from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel
+
+from academy.core.config import load_yaml
+
+COMMON_LABELS: dict[str, str] = load_yaml(Path(__file__).with_name("labels.yaml"))
 
 
 def _label_object(schema: dict[str, Any], model_name: str, labels: dict[str, str]) -> None:
@@ -20,6 +25,7 @@ def _label_object(schema: dict[str, Any], model_name: str, labels: dict[str, str
 
 
 def form_schema(model: type[BaseModel], labels: dict[str, str]) -> dict[str, Any]:
+    labels = COMMON_LABELS | labels
     schema = model.model_json_schema()
     _label_object(schema, model.__name__, labels)
     schema.pop("title", None)  # la pestaña ya nombra la entrada

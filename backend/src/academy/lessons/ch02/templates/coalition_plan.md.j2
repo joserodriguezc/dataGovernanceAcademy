@@ -1,0 +1,55 @@
+# Plan de coalición de {{ company }}
+
+La confianza se construye relación a relación. Este plan reúne a los socios clave, el pulso del comité de datos y cómo se comunica el programa a toda la empresa.
+
+## Socios clave para entregar
+
+| Socio | Qué necesitamos de él | Qué necesita de nosotros |
+|---|---|---|
+{% for g in partners %}
+| **{{ g.name }}** | {{ g.partnership.what_we_need }} | {{ g.partnership.what_they_need }} |
+{% endfor %}
+
+## Pulso del {{ committee.name | lower }}
+
+Cadencia actual: cada {{ committee.cadence_months }} meses.
+
+| Miembro | {% for m in meetings %}{{ m.date.strftime("%d/%m/%Y") }} | {% endfor %}
+
+|---|{% for _ in meetings %}---|{% endfor %}
+
+{% for member in committee.members %}
+| {{ member }} | {% for m in meetings %}{{ attendance_labels[m.attendance[member]] }} | {% endfor %}
+
+{% endfor %}
+| *Preguntas* | {% for m in meetings %}{{ m.questions }} | {% endfor %}
+
+| *Peticiones fuera de ciclo* | {% for m in meetings %}{{ m.off_cycle_requests }} | {% endfor %}
+
+
+{% if signals %}
+### Señales a atender
+
+| Señal | Qué vemos | Acción |
+|---|---|---|
+{% for s in signals %}
+| {{ signal_labels[s.kind] }} | {{ s.message }} | {{ s.action }} |
+{% endfor %}
+{% else %}
+✅ No hay señales de que el ritmo o el contenido de las reuniones haya que ajustarlo.
+{% endif %}
+
+## Apoyo de toda la organización
+
+La confianza se gana mostrando lo que se ha hecho, no contando lo que se va a hacer.
+
+- **{{ forum.name }}:** {{ forum.cadence }}. Abierto a {{ forum.audience | lower }}.
+{% for c in channels %}
+- {{ c }}
+{% endfor %}
+
+| Entrega | Qué podrás hacer que hoy no puedes | Por qué te importa | Canal | Fecha |
+|---|---|---|---|---|
+{% for c in communications %}
+| **{{ c.capability }}** | {{ c.can_do_now }} | {{ c.why_it_matters }} | {{ c.channel }} | {{ c.date.strftime("%d/%m/%Y") }} |
+{% endfor %}

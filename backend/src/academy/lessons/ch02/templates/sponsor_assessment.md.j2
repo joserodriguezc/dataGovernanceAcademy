@@ -1,0 +1,94 @@
+# Evaluación de sponsors ejecutivos
+
+Un sponsor ejecutivo da apoyo desde arriba al programa, ayuda a moverse por la organización y abre la puerta a la financiación. Los mejores son líderes de negocio con necesidades de datos que hoy frenan su éxito.
+
+## Puntuación de candidatos
+
+Criterios (de 1 a 5) y pesos:
+{% for key, label in criteria.items() %}
+- {{ label }} (peso {{ weights[key] | num(1) }})
+{% endfor %}
+
+| Candidato | Dominio | {% for label in criteria.values() %}{{ label }} | {% endfor %}Puntuación (0-100) | Elegible |
+|---|---|{% for _ in criteria %}---:|{% endfor %}---:|---|
+{% for a in assessments %}
+| **{{ names[a.candidate.stakeholder] }}** | {{ domain_names.get(a.candidate.domain, "—") }} | {% for key in criteria %}{{ a.candidate.scores[key] }} | {% endfor %}{{ a.score | num }} | {{ "✅ Sí" if a.eligible else "❌ " ~ a.exclusion }} |
+{% endfor %}
+
+## Recomendación
+
+{% if recommended %}
+{% for a in recommended %}
+- **{{ "Sponsor principal" if loop.first else "Sponsor secundario" }}: {{ names[a.candidate.stakeholder] }}**, con {{ a.score | num }} puntos. Sus necesidades: {{ a.candidate.needs | join("; ") }}.
+{% endfor %}
+
+**Dominio piloto:** {{ domain_names[recommended[0].candidate.domain] }}. Es mejor ejecutar con calidad en un dominio que con resultados mediocres en dos. El segundo dominio solo se abre si el primero va muy bien y hay apoyo sólido.
+{% else %}
+⚠️ No hay ningún candidato elegible. Sin sponsor, el programa avanzará más despacio y le costará conseguir financiación.
+{% endif %}
+
+{% if mismatch %}
+> ⚠️ **Revisar el caso de negocio piloto:** {{ mismatch }}
+{% endif %}
+
+---
+
+# Caso de negocio piloto: {{ case.title }}
+
+| | |
+|---|---|
+| **Sponsor ejecutivo** | {{ names[recommended[0].candidate.stakeholder] if recommended else "⚠️ sin sponsor" }} |
+| **Sponsor de negocio** | {{ case.business_sponsor }} |
+| **Dominio** | {{ domain_names[case.domain] }} |
+
+## 1. Contexto
+
+**Objetivo.** {{ case.objective }}
+
+**Soluciones clave:**
+{% for s in case.key_solutions %}
+- {{ s }}
+{% endfor %}
+
+**Resultados medibles (KPI):**
+{% for k in case.kpis %}
+- {{ k }}
+{% endfor %}
+
+## 2. Tracks de entrega
+
+| Track | Alcance | Cómo es el éxito |
+|---|---|---|
+{% for t in case.tracks %}
+| **{{ t.name }}** | {{ t.what }} | {{ t.outcomes | join("; ") }} |
+{% endfor %}
+
+## 3. Resultados a corto plazo (6-9 meses)
+
+{% for o in case.near_term_outcomes %}
+- {{ o }}
+{% endfor %}
+
+## 4. Lo que necesitamos del comité
+
+{% for a in case.committee_asks %}
+- {{ a }}
+{% endfor %}
+
+## 5. Detalle por track
+
+{% for t in case.tracks %}
+### {{ loop.index }}. {{ t.name }}
+
+| | |
+|---|---|
+| **Qué es** | {{ t.what }} |
+| **Capacidades** | {{ t.capabilities | join("; ") }} |
+| **Por qué importa** | {{ t.why_it_matters }} |
+| **Resultados** | {{ t.outcomes | join("; ") }} |
+| **Hecho hasta hoy** | {{ t.done_to_date }} |
+| **Hitos** | {{ t.milestones | join("; ") }} |
+| **Qué necesita** | {{ t.needs | join("; ") if t.needs else "—" }} |
+| **KPI comprometidos** | {{ t.kpis | join("; ") }} |
+
+{% endfor %}

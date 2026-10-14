@@ -1,0 +1,109 @@
+# Contenido de la lección 3. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  Con el programa justificado y los aliados identificados, toca organizarse. En esta lección
+  eliges el modelo organizativo que encaja con la situación de NovaMercado, diseñas el equipo
+  de datos y su plan de contratación, asignas la responsabilidad sobre los datos en cada
+  dominio, repartes el trabajo con una matriz RACI y fijas el ritmo de los foros de gobierno.
+  Usa el caso de negocio y el scorecard de la lección 1 tal como los hayas dejado.
+
+ideas:
+  - idea: "El equipo se diseña empezando por los resultados que tiene que conseguir."
+    application: "Se eligen y priorizan los resultados del equipo de datos, y también se justifica por qué se descartan los demás."
+  - idea: "Hay tres modelos organizativos (federado, hub and spoke y centralizado), y cada uno encaja en una situación distinta."
+    application: "Un selector de reglas recomienda el modelo según los hechos de la organización, con su horizonte, su evolución y los requisitos previos."
+  - idea: "En cada modelo cambia lo que hace la oficina del CDO y lo que hacen las áreas."
+    application: "Una matriz de responsabilidades por modelo lo deja por escrito."
+  - idea: "Los roles clave se contratan en un orden: primero gobierno y soluciones, después arquitectura, ingeniería y operaciones."
+    application: "El plan de contratación avisa si un rol empieza antes que otro que debería ir primero, y compara el coste con el presupuesto de la lección 1."
+  - idea: "El negocio no es propietario de los datos, pero sí responde de ellos: ejecutivo de dominio, steward de negocio y steward técnico."
+    application: "Se señalan los huecos de cada dominio y se contrastan con el scorecard de la lección 1."
+  - idea: "La IA trae preguntas de gobierno propias."
+    application: "Una lista de las preguntas de gobierno de la IA, con su responsable y su estado, y las oportunidades de uso."
+  - idea: "El negocio de datos necesita un ritmo: revisión del portfolio, consejo y comité, cada uno con su carta."
+    application: "Se validan las cartas y la jerarquía de los foros, y se genera el calendario de 12 meses."
+  - idea: "Se revisan resultados para el stakeholder, no resultados del dato."
+    application: "Se avisa de cada trabajo del portfolio que no dice qué resultado consigue para su stakeholder."
+  - idea: "El talento se atrae, se hace crecer y se forma."
+    application: "La matriz de habilidades indica, para cada una, si basta con formar o hay que contratar."
+
+takeaways:
+  - "Toca centralizar durante 12-24 meses y evolucionar después a hub and spoke."
+  - "Las posiciones nuevas caben en el presupuesto de la lección 1, pero con muy poco margen."
+  - "Los datos maestros son la brecha crítica: nadie del equipo pasa del nivel 1."
+  - "Dos trabajos del portfolio no tienen un resultado para su stakeholder: es la primera conversación con el CIO."
+
+challenges:
+  - title: Otro modelo organizativo
+    steps:
+      - "En Entradas → Contexto, activa «capabilities_consistent» en los hechos de la organización."
+      - "Guarda y ejecuta de nuevo."
+    look_for: "La recomendación deja de ser centralizada. ¿Qué hecho de NovaMercado tendría que cambiar en la vida real para que eso ocurra?"
+  - title: Rompe el presupuesto
+    steps:
+      - "Ve a la lección 1 → Entradas → Caso de negocio y recomienda la opción «slow» (más lenta y barata)."
+      - "Vuelve aquí y ejecuta de nuevo."
+    look_for: "El presupuesto anual cae y el coste de las posiciones nuevas ya no cabe. Las lecciones están conectadas: una decisión en el caso de negocio limita el equipo que puedes contratar."
+  - title: Un rol que no hace nada
+    steps:
+      - "En Entradas → RACI, quita a un rol de todas las columnas A y R."
+      - "Ejecuta de nuevo."
+    look_for: "Aparece el aviso de roles que solo opinan o se enteran. Una RACI sirve también para detectar puestos sin trabajo asignado."
+
+labels:
+  # Contexto
+  core_questions: Preguntas clave
+  org_facts: Hechos de la organización
+  has_data_capabilities: Existen requisitos o capacidades de datos
+  capabilities_consistent: Las capacidades se implementan de forma consistente
+  major_trust_issues: Hay problemas graves de calidad, uso o confianza
+  broad_support: Hay apoyo general a la iniciativa de datos
+  strong_bu_leaders: Hay líderes de datos fuertes en las áreas
+  central_office_strong: La oficina del CDO es sólida y está bien financiada
+  selected: Elegido
+  ai_governance: Gobierno de la IA
+  decision: Decisión
+  ai_opportunities: Oportunidades de IA
+  area: Área
+  use_case: Caso de uso
+  # Equipo
+  roles: Roles
+  function: Función
+  reports_to: Reporta a
+  headcount: Personas
+  annual_cost_usd: Coste anual por persona (US$)
+  book_priority: Orden de contratación recomendado
+  functional_roles: Roles funcionales por dominio
+  executive: Ejecutivo de dominio
+  business_stewards: Stewards de negocio
+  technical_stewards: Stewards técnicos
+  skills: Habilidades
+  required: Nivel objetivo por habilidad
+  levels: Nivel por habilidad (0-4)
+  talent_plan: Plan de talento
+  lever: Palanca
+  # RACI
+  RaciInput.roles: Roles (id → nombre)
+  activities: Actividades
+  A: Responde (A, uno solo)
+  R: Ejecutan (R)
+  C: Se consulta (C)
+  I: Se informa (I)
+  # Ritmo
+  calendar: Ventana del calendario
+  forums: Foros
+  importance: Importancia
+  chair: Preside
+  member_level: Nivel de los miembros
+  responsibilities: Responsabilidades
+  first_meeting: Primera reunión
+  every: Cada
+  communication: Comunicación
+  evaluation: Evaluación
+  portfolio: Portfolio
+  type: Tipo
+  team: Equipo
+  stakeholder: Stakeholder
+  stakeholder_outcome: Resultado para el stakeholder
+  next_milestone: Próximo hito
+  blockers: Bloqueos

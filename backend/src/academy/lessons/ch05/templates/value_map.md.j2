@@ -1,0 +1,47 @@
+# Medidas de valor en el mapa de stakeholders de {{ company }}
+
+> Se consolidan los resultados por stakeholder para tener una visión completa del valor que el programa entrega a cada uno. Es la base de las revisiones trimestrales (QBR).
+
+## Mapa con valor
+
+| Stakeholder | Objetivos (capítulo 2) | Soluciones de datos | Resultado de negocio comprometido | Valor anual | Resultado real | Beneficiario final |
+|---|---|---|---|---:|---|---|
+{% for s in stakeholders %}
+| **{{ s.group.name }}** | {{ s.group.map.objectives | join("<br>") if s.group.map else "—" }} | {{ s.capabilities | join("<br>") }} | {{ s.outcomes | map(attribute="business_outcome") | join("<br>") }} | {{ s.value | money }} | {{ s.actual | join("<br>") }} | {{ s.group.map.ultimate_beneficiary if s.group.map else "—" }} |
+{% endfor %}
+
+{% for s in stakeholders %}
+---
+
+## QBR {{ qbr.quarter_label }}: {{ s.group.name }}
+
+**1. Alcance de la relación.** {{ s.outcomes | map(attribute="goal") | join(" ") }}
+
+**2. Entregado hasta la fecha:**
+{% if s.completed %}
+{% for d in s.completed %}
+- ✅ {{ d.name }}
+{% endfor %}
+{% else %}
+- Nada completado todavía.
+{% endif %}
+
+**3. Servicios de empresa que recibe (como todos los stakeholders):** {{ qbr.enterprise_services | join("; ") }}.
+
+**4. Medición del valor:**
+{% for o in s.outcomes %}
+- {{ o.business_metric.name }}: {{ fmt(o.business_metric.actual, o.business_metric.unit) if o.business_metric.actual is not none else "sin medir" }} frente a un objetivo de {{ fmt(o.business_metric.target, o.business_metric.unit) }} ({{ o.business_metric.progress | pct }} del camino). Valor comprometido: {{ value[o.id] | money }}/año{{ "" if o.signoff else " ⚠️ pendiente de firma" }}.
+{% endfor %}
+
+**5. Próximo trimestre:**
+{% if s.next %}
+{% for d in s.next %}
+- {{ d.name }} (vence el {{ d.due.strftime("%d/%m/%Y") }})
+{% endfor %}
+{% else %}
+- Sin entregas previstas.
+{% endif %}
+
+**Pregunta de cierre:** ¿estamos de acuerdo en los resultados medidos y en que nuestro equipo ha contribuido a ellos?
+
+{% endfor %}

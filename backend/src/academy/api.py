@@ -152,7 +152,8 @@ def create_app(data_dir: Path = DATA_DIR, catalog: Catalog | None = None,
         if lesson.requires_warehouse and not workspace.built:
             raise HTTPException(409, "Esta lección trabaja sobre el warehouse de NovaMercado: "
                                      "constrúyelo antes en «Datos de NovaMercado».")
-        ctx = LessonContext(db_path=workspace.db_path, raw_dir=workspace.raw_dir)
+        ctx = LessonContext(db_path=workspace.db_path, raw_dir=workspace.raw_dir,
+                            stored_input=lessons_store.get_input)
         try:
             sections = lesson.compute(models, ctx)
         except ValueError as exc:

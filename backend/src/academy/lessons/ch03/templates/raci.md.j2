@@ -1,0 +1,18 @@
+# Matriz RACI del gobierno de datos de {{ company }}
+
+**R** = Responsable (ejecuta) · **A** = Accountable (rinde cuentas; uno por actividad) · **C** = Consultado · **I** = Informado
+
+| Actividad | {% for name in roles.values() %}{{ name }} | {% endfor %}
+
+|---|{% for _ in roles %}:---:|{% endfor %}
+
+{% for row in rows %}
+| {{ row[0] }} | {% for cell in row[1:] %}{{ ("**" ~ cell ~ "**") if "A" in cell else cell }} | {% endfor %}
+
+{% endfor %}
+
+{% if idle %}
+⚠️ Roles que no ejecutan ni rinden cuentas de ninguna actividad: {{ idle | join(", ") }}. Revisar si sobran o si les falta responsabilidad.
+{% else %}
+✅ Todos los roles ejecutan o rinden cuentas de al menos una actividad.
+{% endif %}

@@ -1,0 +1,78 @@
+# Diseño del equipo de la oficina del CDAO de {{ company }}
+
+## Organigrama
+
+Los roles con borde discontinuo aún no están cubiertos.
+
+```mermaid
+{{ org_chart }}
+```
+
+## Roles por función
+
+| Función | Rol | Personas | Estado | Incorporación | Coste anual |
+|---|---|---:|---|---|---:|
+{% for r in roles %}
+| {{ function_labels[r.function] }} | {{ r.title }} | {{ r.headcount }} | {{ status_labels[r.status] }} | {{ r.start.strftime("%m/%Y") }} | {{ r.total_cost | money }} |
+{% endfor %}
+
+### Coste del equipo frente al caso de negocio
+
+| | Coste anual |
+|---|---:|
+| Posiciones ya cubiertas (presupuesto existente) | {{ cost.filled | money }} |
+| Posiciones nuevas (en búsqueda y planificadas) | **{{ (cost.open + cost.planned) | money }}** |
+| Presupuesto anual de construcción del capítulo 1 ({{ budget_option }}) | {{ annual_budget | money }} |
+
+{% if (cost.open + cost.planned) <= annual_budget %}
+✅ Las posiciones nuevas consumen el {{ ((cost.open + cost.planned) / annual_budget) | pct }} del presupuesto anual de construcción. El resto queda para herramientas y apoyo externo.
+{% else %}
+⚠️ Las posiciones nuevas superan en {{ ((cost.open + cost.planned) - annual_budget) | money }} el presupuesto anual de construcción del capítulo 1: hay que revisar el plan o el caso de negocio.
+{% endif %}
+
+### Orden de contratación
+
+El capítulo recomienda incorporar, por este orden: líder de gobierno y estrategia, líder de soluciones de datos, arquitecto de información, líder de ingeniería de datos y líder de operaciones de datos.
+
+{% if hiring_issues %}
+{% for i in hiring_issues %}
+- ⚠️ {{ i }}
+{% endfor %}
+{% else %}
+✅ Las incorporaciones pendientes respetan el orden recomendado.
+{% endif %}
+
+## Roles funcionales por dominio
+
+Cada dominio define su responsabilidad sobre los datos de tres formas. Se habla de responsabilidad, no de propiedad: los datos son de toda la empresa.
+
+| Dominio | Ejecutivo de dominio | Stewards de negocio | Stewards técnicos | Huecos |
+|---|---|---|---|---|
+{% for f in functional %}
+| {{ domain_names[f.domain] }} | {{ f.executive or "—" }} | {{ f.business_stewards | join(", ") or "—" }} | {{ f.technical_stewards | join(", ") or "—" }} | {{ ("⚠️ " ~ f.gaps | join(", ")) if f.gaps else "✅" }} |
+{% endfor %}
+
+{% if exec_diffs %}
+**Diferencias con el EDG Scorecard del capítulo 1:**
+{% for d in exec_diffs %}
+- {{ d }}
+{% endfor %}
+{% endif %}
+
+## Habilidades del equipo
+
+{% if chart_name %}![Mapa de habilidades]({{ chart_name }}){% endif %}
+
+| Habilidad | Nivel objetivo | Mejor nivel actual | Personas en objetivo | Acción |
+|---|---:|---:|---:|---|
+{% for g in gaps %}
+| {{ g.skill }} | {{ g.required }} | {{ g.best }} | {{ g.at_target }} | {{ ("✅ " if g.action == "Cubierta" else "⚠️ ") ~ g.action }} |
+{% endfor %}
+
+## Plan de talento
+
+| Palanca | Acción | Responsable | Fecha |
+|---|---|---|---|
+{% for t in talent %}
+| {{ t.lever }} | {{ t.action }} | {{ t.owner }} | {{ t.due.strftime("%d/%m/%Y") }} |
+{% endfor %}

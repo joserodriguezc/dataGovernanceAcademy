@@ -1,0 +1,51 @@
+# Informe de progreso de los resultados de datos ({{ as_of.strftime("%d/%m/%Y") }})
+
+> Paso 6 del proceso: informar del avance al menos una vez al mes para mantener a los stakeholders implicados.
+
+## Resumen
+
+| Resultado | Stakeholder | Estado | Hitos | Métrica de negocio | Línea base → actual → objetivo | Avance | Valor firmado |
+|---|---|---|---:|---|---|---:|---|
+{% for row in summary %}
+| **{{ row.o.id }}** | {{ names[row.o.stakeholder] }} | {{ status_labels[row.status] }} | {{ row.o.milestone_progress | pct }} | {{ row.o.business_metric.name }} | {{ fmt(row.o.business_metric.baseline, row.o.business_metric.unit) }} → {{ fmt(row.o.business_metric.actual, row.o.business_metric.unit) if row.o.business_metric.actual is not none else "—" }} → {{ fmt(row.o.business_metric.target, row.o.business_metric.unit) }} | {{ row.o.business_metric.progress | pct }} | {{ "✅" if row.o.signoff else "⚠️ No" }} |
+{% endfor %}
+
+{% for row in summary %}
+## {{ row.o.id }}. {{ row.o.goal }}
+
+| Entregable | Hito | Plazo | Estado |
+|---|---:|---|---|
+{% for d in row.o.deliverables %}
+| {{ d.id }}. {{ d.name }} | {{ d.done }} de {{ d.total }} | {{ d.due.strftime("%d/%m/%Y") }} | {{ "✅ Completado" if d.complete else ("🔴 Vencido" if d.overdue(as_of) else "⏳ En curso" if d.start <= as_of else "🗓️ No iniciado") }} |
+{% endfor %}
+
+**Resultados de datos (paso 7):**
+
+| Resultado de datos | Entregables | Medido en el warehouse | Objetivo | Logrado |
+|---|---|---:|---:|---|
+{% for s in row.data_outcomes %}
+| {{ s.name }} | {{ s.deliverables | map(attribute="id") | join(", ") }} | {{ (s.measured | pct(1)) if s.measured is not none else "—" }} | {{ (s.metric.target | pct(1)) if s.metric else "Entregables completos" }} | {{ "✅" if s.achieved else "⏳" }} |
+{% endfor %}
+
+{% if row.status != "green" %}
+**⚠️ Desviación.** {{ row.variance }} Hay que explicarla con transparencia, buscar la causa raíz y valorar el impacto en el resultado de negocio.
+{% endif %}
+
+{% endfor %}
+## Barreras para lograr el valor
+
+| Severidad | Barrera | Resultados | Descripción | Mitigación |
+|---:|---|---|---|---|
+{% for b in barriers %}
+| {{ b.severity }} | {{ barrier_labels[b.type] }} | {{ b.outcomes | join(", ") }} | {{ b.description }} | {{ b.mitigation }} |
+{% endfor %}
+
+Severidad = probabilidad × impacto (cada una de 1 a 3).
+
+{% if warnings %}
+## Avisos del marco
+
+{% for w in warnings %}
+- ⚠️ {{ w }}
+{% endfor %}
+{% endif %}

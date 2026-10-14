@@ -46,10 +46,21 @@ class LessonContent(BaseModel):
 
 @dataclass(frozen=True)
 class LessonContext:
-    """Lo que una lección necesita del entorno: el warehouse y los datos de NovaMercado."""
+    """Lo que una lección necesita del entorno.
 
-    db_path: Path
-    raw_dir: Path
+    - El warehouse y los datos de NovaMercado (lecciones técnicas).
+    - Las entradas de otras lecciones tal como las ha dejado el alumno: si edita los
+      stakeholders en la lección 2, la lección 5 los usa así.
+    """
+
+    db_path: Path | None = None
+    raw_dir: Path | None = None
+    stored_input: Callable[[int, "InputSpec"], dict[str, Any]] | None = None
+
+    def input_of(self, lesson: int, spec: "InputSpec") -> BaseModel:
+        """Entrada `spec` de la lección `lesson`: la editada o, si no hay, la de por defecto."""
+        data = self.stored_input(lesson, spec) if self.stored_input else spec.default()
+        return spec.model.model_validate(data)
 
 
 Compute = Callable[[dict[str, BaseModel], LessonContext], list[ResultSection]]

@@ -1,0 +1,94 @@
+# Contenido de la lección 5. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  Un programa que no define qué es el éxito no puede demostrarlo. En esta lección conectas
+  cada capacidad de datos con un resultado de negocio que un stakeholder concreto quiere y
+  firma, con su métrica, sus entregables y sus plazos. Después mides el avance: primero en
+  resultados de datos, con los indicadores del warehouse, y después en el negocio. El valor
+  sale de la data equity de la lección 1 y los stakeholders de la lección 2, tal como los hayas
+  dejado.
+
+ideas:
+  - idea: "Capacidades y resultados hacen falta los dos, pero primero va el resultado de negocio."
+    application: "Cada resultado se descompone en capacidades, cada capacidad en entregables y cada entregable en resultados de datos."
+  - idea: "Una capacidad sólida tiene cinco componentes: habilidades, procesos, tecnología, recursos y cultura."
+    application: "Se avisa si a una capacidad le falta alguno."
+  - idea: "Paso 1: un resultado concreto, no un objetivo genérico."
+    application: "Cada resultado lleva una métrica con línea base, objetivo, responsable y fecha."
+  - idea: "Paso 2: explicar por qué esas capacidades son las adecuadas."
+    application: "La justificación de cada capacidad es obligatoria."
+  - idea: "Paso 3: entregables con hitos contables."
+    application: "Cada entregable dice cuántos hitos lleva hechos de su total, y tiene plazo."
+  - idea: "Paso 4: el valor lo define el stakeholder, y no cuenta hasta que lo firma."
+    application: "El valor sale de la data equity de la lección 1, y se avisa si falta la firma."
+  - idea: "Paso 5: entregar de forma iterativa."
+    application: "Un roadmap muestra los entregables de cada resultado en el tiempo."
+  - idea: "Paso 6: informar del progreso a menudo y explicar cada desviación."
+    application: "Cada resultado tiene un estado; los retrasos se explican con los entregables vencidos o por detrás del ritmo previsto."
+  - idea: "Pasos 7 y 8: medir primero los resultados de datos y después los de negocio."
+    application: "Los resultados de datos se miden con los indicadores del warehouse de la lección 4."
+  - idea: "Hay barreras conocidas que impiden lograr valor."
+    application: "Un registro de barreras con su probabilidad, impacto y mitigación."
+
+takeaways:
+  - "Hay tres resultados de negocio, uno por stakeholder clave: cliente único, localización de datos personales y cifra única de ventas."
+  - "El resultado del CFO no tiene el valor firmado: hasta que lo firme no se puede presentar como éxito."
+  - "Hay resultados retrasados en el primer informe, y hay que explicarlos con su causa."
+  - "Los resultados de datos confirman la línea base de la lección 4: las lecciones técnicas son las que los mueven."
+
+challenges:
+  - title: Firma el valor
+    steps:
+      - "En Entradas → Resultados, añade la firma (quién y fecha) al resultado del CFO."
+      - "Guarda y ejecuta de nuevo."
+    look_for: "Desaparece el aviso de valor sin firmar. El valor comprometido es el mismo, pero ahora es creíble."
+  - title: Quita una validación en la lección 1
+    steps:
+      - "Ve a la lección 1 → Entradas → Data equity y vacía «Validado por» en una línea que use O1 (sus ids están en Entradas → Resultados → Líneas de data equity)."
+      - "Guarda, vuelve aquí y ejecuta de nuevo."
+    look_for: "Aparece un aviso: O1 usa una línea que el negocio no ha validado. Las lecciones comparten datos, y lo que cambias en una se nota en la siguiente."
+  - title: Pon al día un entregable
+    steps:
+      - "En Entradas → Resultados, busca un entregable vencido y pon sus hitos hechos igual al total."
+      - "Ejecuta de nuevo y mira el roadmap."
+    look_for: "El entregable aparece como completado y el estado del resultado puede mejorar. Así se explica una desviación: con hechos, no con adjetivos."
+
+labels:
+  as_of: Fecha del informe
+  outcomes: Resultados de negocio
+  Outcome: Resultado
+  stakeholder: Stakeholder (id de la lección 2)
+  goal: Objetivo genérico
+  business_outcome: Resultado de negocio concreto
+  deadline: Fecha límite
+  equity_lines: Líneas de data equity (ids de la lección 1)
+  signoff: Firma del valor
+  by: Firmado por
+  business_metric: Métrica de negocio
+  unit: Unidad
+  baseline: Línea base
+  target: Objetivo
+  actual: Valor actual
+  higher_is_better: Más es mejor
+  capabilities: Capacidades
+  Capability: Capacidad
+  why: Por qué es la capacidad adecuada
+  components: Componentes
+  deliverables: Entregables
+  Deliverable: Entregable
+  done: Hitos hechos
+  total: Hitos totales
+  data_outcome: Resultado de datos
+  data_outcome_metrics: Métricas de los resultados de datos
+  indicator: Indicador del warehouse
+  barriers: Barreras
+  Barrier: Barrera
+  type: Tipo
+  likelihood: Probabilidad (1-3)
+  impact: Impacto (1-3)
+  mitigation: Mitigación
+  qbr: Revisión trimestral (QBR)
+  quarter_label: Trimestre
+  quarter_start: Inicio del trimestre
+  quarter_end: Fin del trimestre
+  enterprise_services: Servicios para toda la empresa

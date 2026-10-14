@@ -48,7 +48,8 @@ Este recorrido crece con cada avance del proyecto.
 | 1 | Esqueleto: catálogo de las 17 lecciones, navegación, progreso y la API | ✅ hecho |
 | 2 | Infraestructura de lecciones y lección 1 interactiva | ✅ hecho |
 | 3 | Datos de NovaMercado en la app y lección 8 (técnica) | ✅ hecho |
-| 4+ | Resto de capítulos, uno a uno | ⬜ siguiente |
+| 4 | Lecciones 2 a 5 (gestión), conectadas entre sí | ✅ hecho |
+| 5+ | Resto de capítulos, uno a uno | ⬜ siguiente |
 
 ### Paso 1. Esqueleto de la plataforma
 
@@ -85,6 +86,20 @@ Este recorrido crece con cada avance del proyecto.
 - **Qué probar:** en «Datos de NovaMercado», sube «CRM: email vacío» a 0,20, guarda, reconstruye y vuelve a ejecutar la lección 8. DQ-01 empeora, pero la detección sigue en el 100 %.
 - La certificación exige documentación y steward (lección 6) y linaje (lección 7). Hasta que esas lecciones se migren, ningún dataset se certifica y la lección lo explica, igual que ocurre en el laboratorio si se ejecuta el capítulo 8 antes que el 6 y el 7.
 
+### Paso 4. Lecciones 2 a 5: la parte 1 del libro completa
+
+- **Qué hay:** las lecciones 2 (coalición de defensores), 3 (equipo), 4 (línea base de madurez) y 5 (resultados), interactivas. Junto con la 1, cubren toda la parte 1 del libro. Tres bloques de resultado nuevos:
+  - **matriz de influencia e interés**: el color y la forma indican la salud de la relación;
+  - **mapa de calor**: habilidades del equipo y madurez por unidad;
+  - **roadmap en el tiempo**: entregables de cada resultado, con la fecha de corte.
+- **Las lecciones están conectadas:** cada lección usa las entradas de las anteriores tal como las hayas dejado, no los valores originales.
+  - La lección 3 toma el presupuesto del caso de negocio de la lección 1.
+  - La lección 4 entrevista a los stewards del equipo de la lección 3.
+  - La lección 5 usa la data equity de la lección 1 y los stakeholders de la lección 2.
+  - La lección 8 asigna las incidencias a los stewards de la lección 3.
+- **Qué mirar:** las lecciones 4 y 5 miden la línea base en el warehouse: 0 % de tablas documentadas, 5,9 % de clientes duplicados y 93,1 % de controles superados. Son las cifras que moverán las lecciones técnicas.
+- **Qué probar:** en la lección 1, recomienda la opción «slow» del caso de negocio. Vuelve a ejecutar la lección 3: el coste del equipo ya no cabe en el presupuesto.
+
 ## Comandos útiles
 
 ```bash
@@ -109,11 +124,12 @@ dataGovernanceAcademy/
 │   │   ├── state.py         # entradas editadas y último resultado de cada lección
 │   │   ├── workspace.py     # datos sintéticos y warehouse de NovaMercado (parámetros editables)
 │   │   ├── core/            # utilidades compartidas traídas del laboratorio
+│   │   ├── labels.yaml      # etiquetas comunes de los formularios
 │   │   ├── lessons/         # una carpeta por lección (lógica del laboratorio + lesson.py + content.yaml)
 │   │   └── api.py           # API /api/... y servidor del frontend compilado
 │   └── tests/
 ├── frontend/                # Vite · React · TypeScript
-│   └── src/ (api.ts, App.tsx, pages/ (Home, Lesson, Workspace), components/ (SchemaForm, InputsPanel, ResultView))
+│   └── src/ (api.ts, App.tsx, pages/ (Home, Lesson, Workspace), components/ (SchemaForm, InputsPanel, ResultView, Charts))
 ├── data/                    # estado local (gitignored): progreso, lecciones y workspace/ con el warehouse
 └── docs/                    # tu copia del libro (gitignored)
 ```

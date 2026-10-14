@@ -1,0 +1,54 @@
+# Plan de mejora y seguimiento de la madurez de {{ company }}
+
+## [#7] Plan
+
+Se priorizan los temas comunes que benefician a toda la comunidad de datos y los problemas que afectan a clientes o a obligaciones legales.
+
+| # | Iniciativa | Tema | Dimensiones | Responsable | Plazo | Inversión |
+|---:|---|---|---|---|---|---:|
+{% for p in plan %}
+| {{ loop.index }} | **{{ p.initiative }}** | {{ p.theme }} | {{ p.dimensions | map("extract", dim_names) | join(", ") }} | {{ p.owner }} | {{ p.start }} → {{ p.end }} | {{ p.funding_usd | money }} |
+{% endfor %}
+| | **Total** | | | | | **{{ total_funding | money }}** |
+
+{% if uncovered %}
+⚠️ Temas prioritarios sin iniciativa: {{ uncovered | join(", ") }}.
+{% endif %}
+
+## [#8] y [#9] Seguimiento
+
+El avance se mide con datos, no con sensaciones. La línea base sale del warehouse.
+
+| Iniciativa | Métrica | Línea base | Objetivo |
+|---|---|---:|---:|
+{% for p in plan %}
+| {{ p.initiative }} | {{ p.metric }} | {{ (indicators[p.baseline_indicator] | pct(1)) if p.baseline_indicator else "Seguimiento manual" }} | {{ p.target | pct(1) }} |
+{% endfor %}
+
+Cuando una entrega tenga impacto, hay que pedir al usuario de negocio (no al steward) que cuente cómo le ha cambiado el día a día.
+
+### Controles de calidad de la línea base
+
+| Control | Registros válidos |
+|---|---:|
+{% for name, value in dq_checks.items() %}
+| {{ name }} | {{ value | pct(1) }} |
+{% endfor %}
+
+## [#10] Reevaluación
+
+**Próxima evaluación:** {{ next_assessment.strftime("%m/%Y") }} (cada {{ reassessment.frequency_months }} meses). Además, evaluaciones especiales ante:
+
+| Disparador | Acción |
+|---|---|
+{% for t in reassessment.triggers %}
+| {{ t.event }} | {{ t.action }} |
+{% endfor %}
+
+## Cómo mediremos el éxito de la evaluación
+
+| Medida | Resultado |
+|---|---|
+{% for m in success %}
+| {{ m.measure }} | {{ m.value or "Pendiente de cierre" }} |
+{% endfor %}

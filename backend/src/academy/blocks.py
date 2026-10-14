@@ -4,7 +4,7 @@ El frontend sabe dibujar cada tipo de bloque, así que una lección nueva no nec
 de interfaz propio: su `compute` devuelve secciones con bloques.
 """
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field
@@ -87,6 +87,81 @@ class BarListBlock(BaseModel):
     items: list[BarItem]
     min_value: float = 0.0
     max_value: float = 1.0
+    legend: str | None = None  # explica la escala y las marcas; si falta, porcentajes y umbral
+
+
+class MatrixGroup(BaseModel):
+    id: str
+    label: str
+    tone: Tone  # color y forma: good = círculo, info = cuadrado, bad = triángulo, warning = rombo
+
+
+class MatrixPoint(BaseModel):
+    x: float
+    y: float
+    label: str
+    group: str
+    detail: str | None = None
+
+
+class QuadrantLabel(BaseModel):
+    x: float
+    y: float
+    text: str
+
+
+class MatrixBlock(BaseModel):
+    """Matriz de dos ejes con cuadrantes, p. ej., influencia frente a interés."""
+
+    type: Literal["matrix"] = "matrix"
+    title: str
+    subtitle: str | None = None
+    x_label: str
+    y_label: str
+    x_range: tuple[float, float]
+    y_range: tuple[float, float]
+    ticks: list[float] = []
+    divider_x: float | None = None
+    divider_y: float | None = None
+    quadrants: list[QuadrantLabel] = []
+    groups: list[MatrixGroup]
+    points: list[MatrixPoint]
+
+
+class HeatmapRow(BaseModel):
+    label: str
+    values: list[float | None]
+
+
+class HeatmapBlock(BaseModel):
+    """Mapa de calor con una sola rampa de color (más oscuro = más valor)."""
+
+    type: Literal["heatmap"] = "heatmap"
+    title: str
+    subtitle: str | None = None
+    columns: list[str]
+    rows: list[HeatmapRow]
+    min_value: float
+    max_value: float
+
+
+class TimelineItem(BaseModel):
+    label: str
+    group: str
+    start: date
+    end: date
+    note: str | None = None
+
+
+class TimelineBlock(BaseModel):
+    """Barras en el tiempo, coloreadas por grupo, con la fecha de corte."""
+
+    type: Literal["timeline"] = "timeline"
+    title: str
+    subtitle: str | None = None
+    today: date | None = None
+    groups: list[MatrixGroup]
+    items: list[TimelineItem]
 
 
 class DocumentBlock(BaseModel):
@@ -96,8 +171,11 @@ class DocumentBlock(BaseModel):
     markdown: str
 
 
-Block = Annotated[KpisBlock | CalloutBlock | TableBlock | LineChartBlock | BarListBlock
-                  | DocumentBlock, Field(discriminator="type")]
+Block = Annotated[
+    KpisBlock | CalloutBlock | TableBlock | LineChartBlock | BarListBlock | MatrixBlock
+    | HeatmapBlock | TimelineBlock | DocumentBlock,
+    Field(discriminator="type"),
+]
 
 
 class ResultSection(BaseModel):

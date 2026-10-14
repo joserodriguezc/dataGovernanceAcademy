@@ -1,0 +1,63 @@
+# Marco de resultados de {{ company }}
+
+> Primero hay que acordar con el negocio cómo es el éxito para ellos, en sus términos. Solo entonces se mapean los resultados de datos sobre sus resultados de negocio.
+
+Proceso de alineación: **1** resultado de negocio → **2** capacidades de datos → **3** entregables → **4** medición del valor → **5** entrega iterativa → **6** informe de progreso → **7** éxito en resultados de datos → **8** éxito en resultados de negocio.
+
+{% for o in outcomes %}
+---
+
+## {{ o.id }}. {{ o.goal }}
+
+**Stakeholder:** {{ names[o.stakeholder] }} · **Fecha límite:** {{ o.deadline.strftime("%d/%m/%Y") }}
+
+### Paso 1. Resultado de negocio
+
+> {{ o.business_outcome }}
+
+**Métrica:** {{ o.business_metric.name }}: de {{ fmt(o.business_metric.baseline, o.business_metric.unit) }} a {{ fmt(o.business_metric.target, o.business_metric.unit) }}. Responsable: {{ o.business_metric.owner }}.
+
+### Paso 2. Capacidades de datos necesarias
+
+| Capacidad | Por qué es la adecuada | Componentes |
+|---|---|---|
+{% for c in o.capabilities %}
+| **{{ c.id }}.** {{ c.name }} | {{ c.why }} | {{ ("⚠️ falta: " ~ c.missing_components | join(", ")) if c.missing_components else "✅ los cinco" }} |
+{% endfor %}
+
+### Paso 3. Entregables
+
+| Capacidad | Entregable | Hito | Plazo |
+|---|---|---:|---|
+{% for c in o.capabilities %}
+{% for d in c.deliverables %}
+| {{ c.id }} | **{{ d.id }}.** {{ d.name }} | {{ d.done }} de {{ d.total }} | {{ d.start.strftime("%m/%Y") }} → {{ d.due.strftime("%m/%Y") }} |
+{% endfor %}
+{% endfor %}
+
+### Paso 4. Medición del valor
+
+El valor sale de las líneas de data equity del capítulo 1. El valor no está en la herramienta, sino en lo que permite hacer a la empresa.
+
+| Línea de data equity | Mejora anual | Validada por |
+|---|---:|---|
+{% for ln in equity[o.id] %}
+| {{ ln.id }}. {{ ln.name }} | {{ ln.benefit | money }} | {{ ln.vetted_by or "⚠️ pendiente" }} |
+{% endfor %}
+| **Total** | **{{ value[o.id] | money }}** | |
+
+{% if o.signoff %}
+✅ Valor firmado por **{{ o.signoff.by }}** el {{ o.signoff.date.strftime("%d/%m/%Y") }}.
+{% else %}
+⚠️ **El stakeholder aún no ha firmado el valor.** Hasta que lo haga, lo que creamos aportar no cuenta.
+{% endif %}
+
+### Pasos 7 y 8. De los resultados de datos al resultado de negocio
+
+| Capacidad | Resultados de datos | Resultado de negocio |
+|---|---|---|
+{% for c in o.capabilities %}
+| {{ c.id }}. {{ c.name }} | {{ c.deliverables | map(attribute="data_outcome") | select | unique | join("<br>") }} | {{ o.business_metric.name }} |
+{% endfor %}
+
+{% endfor %}

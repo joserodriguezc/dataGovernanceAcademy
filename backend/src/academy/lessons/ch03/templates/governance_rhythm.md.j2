@@ -1,0 +1,58 @@
+# Ritmo del negocio de datos de {{ company }}
+
+## Foros de gobierno
+
+```mermaid
+graph BT
+{% for f in forums %}
+  {{ f.id }}["{{ f.name }}<br>{{ f.every.label }}"]
+{% endfor %}
+{% for f in forums if f.reports_to %}
+  {{ f.id }} -->|reporta a| {{ f.reports_to }}
+{% endfor %}
+```
+
+{% if issues %}
+{% for i in issues %}
+- ⚠️ {{ i }}
+{% endfor %}
+{% endif %}
+
+{% for f in forums %}
+### Carta: {{ f.name }}
+
+| | |
+|---|---|
+| **Propósito** | {{ f.purpose }} |
+| **Importancia** | {{ f.importance }} |
+| **Preside** | {{ f.chair }} |
+| **Miembros** | {{ f.members | join(", ") }} ({{ level_labels[f.member_level] }}) |
+| **Responsabilidades** | {{ f.responsibilities | join("; ") }} |
+| **Cadencia** | {{ f.every.label | capitalize }}, desde el {{ f.first_meeting.strftime("%d/%m/%Y") }} |
+| **Reporta a** | {{ names[f.reports_to] if f.reports_to else "CEO y consejo de administración" }} |
+| **Comunicación** | {{ f.communication | join(", ") }} |
+| **Evaluación** | {{ f.evaluation }} |
+
+{% endfor %}
+## Calendario de {{ calendar_label }}
+
+| Mes | {% for f in forums %}{{ f.name }} | {% endfor %}
+
+|---|{% for _ in forums %}---|{% endfor %}
+
+{% for month, by_forum in months %}
+| {{ month }} | {% for f in forums %}{{ by_forum.get(f.id, []) | join(", ") or "—" }} | {% endfor %}
+
+{% endfor %}
+
+## Inventario del portfolio
+
+| Trabajo | Tipo | Equipo | Stakeholder | Resultado para el stakeholder | Estado | Próximo hito | Bloqueos |
+|---|---|---|---|---|---|---|---|
+{% for i in portfolio %}
+| **{{ i.name }}** | {{ type_labels[i.type] }} | {{ i.team }} | {{ i.stakeholder }} | {{ i.stakeholder_outcome or "⚠️ sin definir" }} | {{ status_labels[i.status] }} | {{ i.next_milestone or "—" }} | {{ i.blockers or "—" }} |
+{% endfor %}
+
+{% if no_outcome %}
+⚠️ {{ no_outcome | length }} trabajos no tienen un resultado para su stakeholder: {{ no_outcome | map(attribute="name") | join(", ") }}. Lo que se revisa son los resultados que percibe el stakeholder, no los resultados de datos: hay que definirlos o cuestionar ese trabajo.
+{% endif %}

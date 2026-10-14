@@ -87,7 +87,40 @@ export type Block =
       subtitle: string | null
       min_value: number
       max_value: number
+      legend: string | null
       items: { label: string; value: number; display: string; target: number | null; ok: boolean | null; detail: string | null }[]
+    }
+  | {
+      type: 'matrix'
+      title: string
+      subtitle: string | null
+      x_label: string
+      y_label: string
+      x_range: [number, number]
+      y_range: [number, number]
+      ticks: number[]
+      divider_x: number | null
+      divider_y: number | null
+      quadrants: { x: number; y: number; text: string }[]
+      groups: { id: string; label: string; tone: Tone }[]
+      points: { x: number; y: number; label: string; group: string; detail: string | null }[]
+    }
+  | {
+      type: 'heatmap'
+      title: string
+      subtitle: string | null
+      columns: string[]
+      rows: { label: string; values: (number | null)[] }[]
+      min_value: number
+      max_value: number
+    }
+  | {
+      type: 'timeline'
+      title: string
+      subtitle: string | null
+      today: string | null
+      groups: { id: string; label: string; tone: Tone }[]
+      items: { label: string; group: string; start: string; end: string; note: string | null }[]
     }
   | { type: 'document'; title: string; filename: string; markdown: string }
 

@@ -21,12 +21,11 @@ from academy.blocks import (
     TableBlock,
 )
 from academy.core.company import DOMAIN_NAMES
-from academy.core.config import load_yaml
 from academy.core.reporting import fmt_money, fmt_num, fmt_pct, render_template
 from academy.core.synthetic.io import read_truth
 from academy.core.warehouse import connect
 from academy.lessons.base import InputSpec, LessonContext, LessonDef
-from academy.lessons.ch03.team import TeamInput
+from academy.lessons.ch03.lesson import TEAM
 
 from .profiling import profile_table
 from .publish import write_quality
@@ -42,7 +41,6 @@ from .rules import DQInput, run_rules, scorecard
 
 LESSON_DIR = Path(__file__).parent
 TEMPLATES = LESSON_DIR / "templates"
-CH03_TEAM = LESSON_DIR.parent / "ch03" / "inputs" / "team.yaml"
 COMPANY = "NovaMercado"
 REMEDIATION_LABELS = {"estandarizar": "Estandarizar el formato", "excluir": "Excluir del cálculo",
                       "corregir_en_origen": "Corregir en el sistema de origen",
@@ -68,7 +66,7 @@ INPUT_SPECS = [
 
 def compute(inputs: dict[str, BaseModel], ctx: LessonContext) -> list[ResultSection]:
     inp: DQInput = inputs["dq_rules"]
-    roles = TeamInput.model_validate(load_yaml(CH03_TEAM)).functional_roles
+    roles = ctx.input_of(3, TEAM).functional_roles  # stewards de la lección 3
     stewards = {r.domain: r.business_stewards for r in roles}
     _, seeded = read_truth(ctx.raw_dir)
 

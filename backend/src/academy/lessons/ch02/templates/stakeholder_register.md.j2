@@ -1,0 +1,40 @@
+# Registro de stakeholders de {{ company }}
+
+> {{ purpose }}
+
+## Escucha en todas las direcciones
+
+Escuchar solo a los pares da una visión filtrada de la empresa, así que la escucha se planifica en cinco direcciones.
+
+| Dirección | Sesiones hechas | Planificadas |
+|---|---:|---:|
+{% for d, c in coverage.items() %}
+| {{ direction_labels[d] }} | {{ "✅ " if c.done else "⚠️ " }}{{ c.done }} | {{ c.planned }} |
+{% endfor %}
+
+{% if gaps %}
+**Huecos de escucha:** todavía no se ha escuchado a nadie en {{ gaps | join(", ") }}.
+{% else %}
+✅ Ya se ha escuchado en las cinco direcciones.
+{% endif %}
+
+## Priorización
+
+{% if chart_name %}![Matriz de influencia e interés]({{ chart_name }}){% endif %}
+
+| Cuadrante | Grupos |
+|---|---|
+{% for q, names in quadrants.items() %}
+| **{{ q }}** | {{ names | join(", ") }} |
+{% endfor %}
+
+{% for title, rows in [("Stakeholders internos", internal), ("Stakeholders externos", external)] %}
+## {{ title }}
+
+| Grupo | Nivel | Rol | Relación | Contribución y beneficios | Medidas de éxito |
+|---|---|---|---|---|---|
+{% for g in rows %}
+| **{{ g.name }}** | {{ level_labels[g.level] }} | {{ g.role }}{% if g.notes %} *{{ g.notes }}*{% endif %} | {{ health_labels[g.health] }} | {{ g.contributions }} | {{ g.success_measures | join("; ") }} |
+{% endfor %}
+
+{% endfor %}

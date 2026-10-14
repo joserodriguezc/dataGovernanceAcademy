@@ -1,0 +1,120 @@
+# Contenido de la lección 2. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  Un programa de gobierno de datos no sale adelante por decreto: necesita aliados. En esta
+  lección identificas a quién le importa el programa de NovaMercado y cuánto pesa cada grupo,
+  escuchas en todas las direcciones, eliges al sponsor ejecutivo con criterios explícitos y
+  vigilas las señales de que el comité de datos pierde fuerza.
+
+ideas:
+  - idea: "La confianza se construye relación a relación, y escuchar solo a tus pares te da una visión filtrada."
+    application: "Las sesiones de escucha se registran en cinco direcciones (pares, arriba, abajo, transversal y hacia fuera) y se señalan los huecos."
+  - idea: "Cada stakeholder tiene un rol, una relación más o menos sana y su propia forma de medir el éxito."
+    application: "El registro de stakeholders internos y externos valida que el nivel corresponda al tipo de grupo."
+  - idea: "Un mapa de stakeholders conecta sus objetivos con soluciones de datos y con resultados de negocio."
+    application: "Cada grupo del mapa tiene objetivos, soluciones, resultados objetivo y un beneficiario final."
+  - idea: "Las métricas que solo miden el dato (completitud, tiempos) no bastan: hay que llegar al impacto en el negocio."
+    application: "Cada resultado se marca como de dato o de negocio, y se avisa si un grupo solo tiene métricas del dato."
+  - idea: "No todos los stakeholders pesan igual."
+    application: "La matriz de influencia e interés los reparte en cuatro cuadrantes para priorizar (es un complemento del laboratorio, no está en el libro)."
+  - idea: "Un buen sponsor exige, respalda y tiene necesidades de datos urgentes; no es el CIO, que es el socio para entregar."
+    application: "Los candidatos se puntúan con pesos explícitos. Se excluye al CIO y a quien no reporta al CEO, y se recomiendan dos sponsors."
+  - idea: "El primer caso de negocio debe ser del dominio del sponsor."
+    application: "Se avisa si el caso de negocio piloto no es del dominio del sponsor principal."
+  - idea: "El comité da señales cuando falla: delega, recibe peticiones fuera de ciclo o se queda en silencio."
+    application: "Las señales se detectan solas a partir del registro de reuniones."
+  - idea: "El apoyo de toda la organización llega mostrando qué podrá hacer cada persona y por qué le importa."
+    application: "Cada comunicación exige un «qué podrás hacer» y un «por qué te importa»."
+
+takeaways:
+  - "La CMO es la sponsor principal y el CFO el secundario: el piloto natural es el dominio de cliente."
+  - "Falta escuchar hacia fuera, y dos grupos solo tienen métricas del dato que hay que traducir a negocio."
+  - "El comité ya da dos señales: un miembro que delega y demasiadas peticiones fuera de ciclo."
+
+challenges:
+  - title: Un nuevo candidato elegible
+    steps:
+      - "En Entradas → Sponsors, busca al candidato «procurement_director» (Director de Compras) y activa «Reporta al CEO»."
+      - "Guarda y ejecuta de nuevo."
+    look_for: "Pasa a ser elegible y aparece con su puntuación, pero no supera a la CMO ni al CFO. Ser elegible no es lo mismo que ser el mejor sponsor."
+  - title: Cambia los pesos
+    steps:
+      - "En Entradas → Sponsors, sube mucho el peso de «urgent_data_needs» y baja el de «ceo_support»."
+      - "Ejecuta de nuevo."
+    look_for: "¿Cambia el orden de los candidatos? Los criterios son una decisión: hay que poder explicar por qué pesan lo que pesan."
+  - title: Arregla una relación
+    steps:
+      - "En Entradas → Stakeholders, cambia la salud de la relación de los directores regionales de «negative» a «neutral»."
+      - "Ejecuta de nuevo y mira la matriz."
+    look_for: "El punto cambia de color y de forma. ¿Qué entrega del programa podría conseguir ese cambio en la vida real?"
+  - title: Cierra un hueco de escucha
+    steps:
+      - "En Entradas → Stakeholders, marca como hecha la sesión de escucha con el proveedor del CRM («out»)."
+      - "Ejecuta de nuevo."
+    look_for: "Desaparece el aviso de huecos de escucha y la tabla de las cinco direcciones queda completa."
+
+labels:
+  # Stakeholders
+  groups: Grupos de stakeholders
+  StakeholderGroup: Grupo
+  kind: Tipo (internal o external)
+  level: Nivel
+  health: Salud de la relación
+  contributions: Contribución al programa
+  success_measures: Cómo mide el éxito
+  influence: Influencia (1-5)
+  interest: Interés (1-5)
+  map: Mapa de objetivos
+  objectives: Objetivos
+  data_solutions: Soluciones de datos
+  target_results: Resultados objetivo
+  text: Texto
+  type: Tipo
+  actual_results: Resultados conseguidos
+  ultimate_beneficiary: Beneficiario final
+  partnership: Alianza
+  what_we_need: Qué necesitamos
+  what_they_need: Qué necesitan
+  listening_sessions: Sesiones de escucha
+  direction: Dirección
+  audience: Audiencia
+  format: Formato
+  done: Hecha
+  # Sponsors
+  weights: Pesos de los criterios
+  candidates: Candidatos a sponsor
+  Candidate: Candidato
+  stakeholder: Stakeholder (id)
+  reports_to_ceo: Reporta al CEO
+  scores: Puntuaciones (1-5)
+  pilot_business_case: Caso de negocio piloto
+  business_sponsor: Sponsor de negocio
+  objective: Objetivo
+  key_solutions: Soluciones clave
+  near_term_outcomes: Resultados a corto plazo
+  committee_asks: Peticiones al comité
+  tracks: Líneas de trabajo
+  what: Qué
+  capabilities: Capacidades
+  why_it_matters: Por qué importa
+  done_to_date: Hecho hasta hoy
+  milestones: Hitos
+  # Coalición
+  committee: Comité de datos
+  cadence_months: Cadencia (meses)
+  meetings: Reuniones
+  attendance: Asistencia
+  questions: Preguntas recibidas
+  off_cycle_requests: Peticiones fuera de ciclo
+  signals: Umbrales de las señales
+  delegation_window: Reuniones que se miran para la delegación
+  delegation_threshold: Delegaciones para dar la señal
+  off_cycle_threshold: Peticiones fuera de ciclo para dar la señal
+  silence_questions: Preguntas por debajo de las cuales hay silencio
+  open_forum: Foro abierto
+  cadence: Cadencia
+  channels: Canales
+  communications: Comunicaciones
+  capability: Capacidad
+  can_do_now: Qué podrás hacer ya
+  channel: Canal

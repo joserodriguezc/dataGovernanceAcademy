@@ -1,0 +1,103 @@
+# Evaluación de candidatos a sponsor ejecutivo.
+# Criterios del capítulo, puntuados de 1 a 5:
+#   challenges_you          Exige definir el éxito en términos de negocio
+#   digs_deeper             Obliga a reforzar el caso de negocio y alinearlo con la estrategia
+#   defines_ultimate_impact Tiene reputación de medir el éxito por su impacto final en la empresa
+#   ceo_support             Está alineado con el CEO y cuenta con su respaldo
+#   urgent_data_needs       Tiene necesidades de datos urgentes que frenan su éxito
+weights:
+  challenges_you: 1.0
+  digs_deeper: 1.0
+  defines_ultimate_impact: 1.5
+  ceo_support: 1.5
+  urgent_data_needs: 2.0
+
+candidates:
+  - stakeholder: cmo
+    domain: customer
+    reports_to_ceo: true
+    scores: {challenges_you: 5, digs_deeper: 4, defines_ultimate_impact: 5, ceo_support: 4, urgent_data_needs: 5}
+    needs:
+      - No puede personalizar campañas porque el mismo cliente aparece varias veces
+      - El programa de fidelización pierde clientes y no sabe cuáles están en riesgo
+  - stakeholder: cfo
+    domain: sales
+    reports_to_ceo: true
+    scores: {challenges_you: 5, digs_deeper: 5, defines_ultimate_impact: 4, ceo_support: 5, urgent_data_needs: 3}
+    needs:
+      - El CEO cuestiona las cifras de ventas por canal en cada comité
+  - stakeholder: commercial_director
+    domain: product
+    reports_to_ceo: true
+    scores: {challenges_you: 3, digs_deeper: 2, defines_ultimate_impact: 3, ceo_support: 3, urgent_data_needs: 2}
+    needs:
+      - Atributos de producto incompletos para decidir el surtido
+  - stakeholder: coo
+    domain: store
+    reports_to_ceo: true
+    scores: {challenges_you: 3, digs_deeper: 3, defines_ultimate_impact: 4, ceo_support: 4, urgent_data_needs: 3}
+    needs:
+      - Roturas de stock por desalineación entre ERP y POS
+  - stakeholder: cio
+    domain: null  # no es ejecutivo de ningún dominio de negocio
+    reports_to_ceo: true
+    scores: {challenges_you: 3, digs_deeper: 3, defines_ultimate_impact: 2, ceo_support: 4, urgent_data_needs: 2}
+    needs:
+      - Reducir el coste de mantener integraciones duplicadas
+  - stakeholder: procurement_director
+    domain: supplier
+    reports_to_ceo: false
+    scores: {challenges_you: 4, digs_deeper: 3, defines_ultimate_impact: 3, ceo_support: 2, urgent_data_needs: 4}
+    needs:
+      - Altas de proveedor lentas y con errores
+
+# Caso de negocio para el dominio piloto del sponsor (estructura por tracks del capítulo).
+pilot_business_case:
+  title: Vista única del cliente de NovaMercado
+  domain: customer
+  business_sponsor: Chief Data & Analytics Officer (CDAO)
+  objective: >-
+    Conocer a cada cliente como una sola persona en todos los canales para personalizar las
+    campañas, retener a los clientes del programa de fidelización y proteger sus datos.
+  key_solutions:
+    - Clasificación y protección de los datos personales de clientes
+    - Registro único de cliente (golden record) entre CRM, e-commerce y tiendas
+    - Calidad de los datos de contacto
+  kpis:
+    - Ventas atribuidas a campañas personalizadas (+US$ 1,2 M/año)
+    - Retención de clientes en riesgo (≥ 40 %)
+    - Exposición esperada a multas de privacidad (de US$ 320.000 a US$ 80.000/año)
+  near_term_outcomes:
+    - Primera campaña sin duplicados en las 50 tiendas piloto en 6 meses
+    - PII de clientes clasificada en CRM y e-commerce en 9 meses
+  committee_asks:
+    - Nombrar a un data steward de cliente a tiempo completo
+    - Priorizar con el CIO la integración del POS con el CRM
+  tracks:
+    - name: Privacidad del cliente
+      what: Descubrir, clasificar y proteger la PII de clientes.
+      capabilities: [Clasificación automática de PII, Controles de acceso por sensibilidad]
+      why_it_matters: Reduce el riesgo regulatorio y sostiene la confianza de los clientes.
+      outcomes: [Exposición esperada a multas reducida un 75 %]
+      done_to_date: Inventario manual de las tablas de CRM.
+      milestones: [Clasificación de CRM (T1), Clasificación de e-commerce (T2)]
+      needs: [Políticas de clasificación del DPO, Requisitos de acceso del CISO]
+      kpis: [Porcentaje de columnas con PII clasificadas]
+    - name: Cliente único
+      what: Unificar al cliente entre CRM, e-commerce y tiendas.
+      capabilities: [Matching de clientes, Reglas de supervivencia por atributo, Jerarquía de hogares]
+      why_it_matters: Sin un cliente único no hay personalización ni retención.
+      outcomes: [+US$ 1,2 M de ventas anuales atribuidas a campañas]
+      done_to_date: Prueba de concepto de matching en una región.
+      milestones: [Golden record en piloto (T2), Golden record nacional (T4)]
+      needs: [Ingenieros de datos del equipo del CIO]
+      kpis: [Tasa de duplicados de cliente, Ventas atribuidas a campañas]
+    - name: Contacto de calidad
+      what: Validar y estandarizar emails, teléfonos y direcciones.
+      capabilities: [Reglas de calidad sobre datos de contacto, Enriquecimiento de direcciones]
+      why_it_matters: Las campañas y las entregas solo funcionan si llegan al cliente.
+      outcomes: [Retención de al menos el 40 % de los clientes en riesgo]
+      done_to_date: Ninguno.
+      milestones: [Reglas de calidad en producción (T2)]
+      needs: [Acuerdo con el operador logístico para devolver direcciones erróneas]
+      kpis: [Porcentaje de contactos válidos, Entregas fallidas por dirección]

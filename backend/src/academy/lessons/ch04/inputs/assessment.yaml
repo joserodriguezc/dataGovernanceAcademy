@@ -1,0 +1,74 @@
+# Evaluación de madurez 2026 de NovaMercado: los 10 pasos del capítulo.
+assessment_year: 2026
+
+# [#1] Alcance: toda la empresa (todos los dominios) más la propia oficina de datos.
+scope:
+  type: enterprise          # enterprise | pilot | rolling
+  domains: [customer, product, supplier, sales, store, finance]
+  include_data_office: true
+
+# [#2] Participantes de la oficina de datos (los de los dominios salen del capítulo 3).
+data_office_participants: [Líder de gobierno y estrategia, Líder de ingeniería de datos]
+# Personas con relación difícil: se reúnen 1:1 antes del taller (stakeholders del capítulo 2).
+one_on_one_first: [Director Comercial, Directores regionales]
+
+# Calendario por fases (semanas), como propone el capítulo.
+phases:
+  - {name: "Fase 1: alcance, stakeholders y modelo", weeks: 4, steps: [1, 2, 3]}
+  - {name: "Fase 2: ejecución, análisis y comunicación", weeks: 12, steps: [4, 5, 6]}
+  - {name: "Fase 3: plan, implantación, seguimiento y reevaluación", weeks: null, steps: [7, 8, 9, 10]}
+start_date: 2026-10-19
+hours_per_participant: 2
+
+# [#6] Comunicación: aggregated (recomendado) o disaggregated.
+communication: aggregated
+target_level: 4  # nivel objetivo a 3 años para todas las dimensiones
+
+# [#4] Simulación de las respuestas (en un caso real vendrían de los talleres).
+# Nivel real = base del dominio + ajuste de la dimensión + ruido. El taller (consenso
+# facilitado) refleja el nivel real; la autoevaluación añade el sesgo de cada dominio.
+simulation:
+  seed: 42
+  domain_base: {customer: 2.4, product: 1.8, supplier: 1.5, sales: 2.8, store: 2.2, finance: 3.0, data_office: 2.5}
+  dimension_adjust: {strategy_governance: 0.3, metadata: -0.6, lineage: -0.7, data_quality: 0.0, architecture: 0.2, master_data: -0.5, data_operations: 0.1, privacy_security: 0.2}
+  # Sesgo de autoevaluación: >0 se sobrevalora para mostrar avance, <0 se infravalora para pedir fondos
+  self_bias: {customer: 0.0, product: 0.0, supplier: 0.0, sales: 1.2, store: -1.1, finance: 0.2, data_office: 0.0}
+  noise: 0.35
+bias_threshold: 0.75  # diferencia media autoevaluación − taller que se considera sesgo
+
+# [#5] Hallazgos cualitativos de los talleres.
+# priority: 1 (máxima) a 3
+findings:
+  - {text: "Cada sistema identifica al cliente de forma distinta y nadie sabe cuál es el bueno.", theme: Identidad de cliente, dimension: master_data, domains: [customer, sales], root_cause: "No hay un registro maestro de cliente ni un responsable de sus datos.", priority: 1}
+  - {text: "Marketing y Ventas calculan los clientes activos de forma diferente.", theme: Definiciones de negocio, dimension: metadata, domains: [customer, sales], root_cause: "No hay glosario de negocio con definiciones aprobadas.", priority: 1}
+  - {text: "Nadie sabe qué tablas contienen datos personales.", theme: Privacidad, dimension: privacy_security, domains: [customer, store], root_cause: "No hay catálogo ni clasificación de datos.", priority: 1}
+  - {text: "Las cifras de ventas del comité no cuadran con las de las regiones.", theme: Definiciones de negocio, dimension: lineage, domains: [sales, store], root_cause: "No se conoce el origen ni las reglas de cálculo de cada informe.", priority: 1}
+  - {text: "Los errores de calidad se detectan cuando el informe ya está publicado.", theme: Calidad reactiva, dimension: data_quality, domains: [sales, finance, product], root_cause: "No hay reglas de calidad en los procesos de carga.", priority: 2}
+  - {text: "Los productos nuevos se dan de alta sin categoría.", theme: Calidad reactiva, dimension: data_quality, domains: [product], root_cause: "El formulario de alta no valida campos obligatorios.", priority: 2}
+  - {text: "Nadie responde de los datos de proveedor.", theme: Responsabilidad sobre los datos, dimension: strategy_governance, domains: [supplier], root_cause: "El dominio de proveedores no tiene ejecutivo ni stewards.", priority: 2}
+  - {text: "Las cargas nocturnas fallan sin que nadie se entere hasta la mañana.", theme: Operación invisible, dimension: data_operations, domains: [data_office, sales], root_cause: "No hay monitorización ni SLAs de los procesos de datos.", priority: 3}
+
+# [#7] Plan de mejora: como máximo 5 iniciativas, ligadas a temas y con métrica de seguimiento.
+# baseline_indicator: indicador del warehouse que da la línea base (ver evidence.py)
+plan:
+  - {initiative: Glosario de negocio y catálogo con clasificación de PII, theme: Definiciones de negocio, dimensions: [metadata, privacy_security], owner: Líder de soluciones de datos, start: 2027-01, end: 2027-09, funding_usd: 180000, metric: "% de tablas curated documentadas", baseline_indicator: documented_tables, target: 1.0}
+  - {initiative: Golden record de cliente, theme: Identidad de cliente, dimensions: [master_data], owner: Responsable de datos maestros, start: 2027-03, end: 2027-12, funding_usd: 350000, metric: "% de teléfonos de CRM duplicados", baseline_indicator: crm_duplicate_phones, target: 0.005}
+  - {initiative: Linaje de la cifra de ventas, theme: Definiciones de negocio, dimensions: [lineage], owner: Arquitecto de información, start: 2027-02, end: 2027-07, funding_usd: 90000, metric: "% de tablas curated con linaje documentado", baseline_indicator: lineage_coverage, target: 1.0}
+  - {initiative: Reglas de calidad en las cargas, theme: Calidad reactiva, dimensions: [data_quality], owner: Responsable de calidad de datos, start: 2027-04, end: 2027-10, funding_usd: 120000, metric: "% de controles de calidad superados", baseline_indicator: dq_pass_rate, target: 0.99}
+  - {initiative: Ejecutivo y stewards del dominio de proveedores, theme: Responsabilidad sobre los datos, dimensions: [strategy_governance], owner: CDAO, start: 2026-11, end: 2027-01, funding_usd: 0, metric: "Dominios con ejecutivo y stewards", baseline_indicator: null, target: 1.0}
+
+# [#10] Reevaluación: anual, más evaluaciones especiales ante estos disparadores.
+reassessment:
+  frequency_months: 12
+  triggers:
+    - {event: Adquisición, action: "Evaluación ligera en los 90 días siguientes al cierre."}
+    - {event: Desinversión, action: "Evaluación especial dentro de la due diligence."}
+    - {event: Cambio significativo, action: "Evaluación especial al lanzar NovaPay, la filial financiera regulada (capítulo 17)."}
+
+# Medidas de éxito de la propia evaluación (se completan al cerrarla).
+success_measures:
+  - {measure: Participación de los convocados, value: null}
+  - {measure: Aceptación de los resultados por el comité, value: null}
+  - {measure: Preguntas recibidas del comité de dirección, value: null}
+  - {measure: Interés del consejo en el avance, value: null}
+  - {measure: Mejora de las puntuaciones respecto a la evaluación anterior, value: null}

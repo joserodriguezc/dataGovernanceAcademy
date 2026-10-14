@@ -1,0 +1,95 @@
+# Contenido de la lección 4. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  Para demostrar que el programa mejora algo hay que saber de dónde se parte. En esta lección
+  haces la evaluación de madurez de NovaMercado siguiendo los diez pasos del capítulo: alcance,
+  participantes, modelo, ejecución, análisis, comunicación, plan, implantación, seguimiento y
+  reevaluación. Las respuestas de los talleres se simulan, pero la evidencia que las contrasta
+  sale del warehouse que hayas construido, y los participantes salen del equipo de la lección 3.
+
+ideas:
+  - idea: "Primero se decide el alcance: toda la empresa, un piloto o por oleadas."
+    application: "Se evalúa toda la empresa más la oficina de datos, y se avisa si falta algún dominio."
+  - idea: "Hay que decidir quién participa y quién no."
+    application: "Participan los stewards de la lección 3. Si un dominio no tiene stewards, se entrevista a su ejecutivo."
+  - idea: "Un modelo de madurez describe niveles, de lo improvisado a lo optimizado, por dimensión."
+    application: "Un modelo propio de 6 niveles y 8 dimensiones."
+  - idea: "Por defecto se usan talleres, y entrevistas 1:1 para los escépticos; cuidado con quien maquilla sus respuestas."
+    application: "Las respuestas simuladas tienen una autoevaluación y un consenso del taller, y algunos dominios se sobrevaloran o se infravaloran a propósito."
+  - idea: "El análisis es cuantitativo (medias) y cualitativo (temas, causas raíz y prioridades)."
+    application: "Se calculan medias por dimensión y por unidad, se detecta el sesgo y los hallazgos se agrupan en temas."
+  - idea: "Lo que dice la gente se contrasta con los datos."
+    application: "Indicadores del warehouse acotan el nivel que la evidencia respalda en cada dimensión (complemento del laboratorio)."
+  - idea: "Se comunica el resultado agregado, no el de cada área."
+    application: "Hay un informe agregado para los comités y uno desagregado solo para uso interno."
+  - idea: "El plan es corto (pocas iniciativas) y cada una tiene una métrica con línea base."
+    application: "El plan de mejora se liga a los temas, y la línea base de cada métrica sale del warehouse."
+  - idea: "Se vuelve a evaluar cada año y cuando la empresa cambia mucho."
+    application: "Se calcula la próxima evaluación y se listan los disparadores, como una adquisición o la filial NovaPay."
+
+takeaways:
+  - "La madurez de partida es baja (Básico), y lo más débil es linaje, metadatos y datos maestros."
+  - "Privacidad y seguridad puntúa más de lo que respalda la evidencia: sin documentación nadie sabe dónde están los datos personales."
+  - "Ventas se sobrevalora y Tiendas se infravalora: por eso se reporta el consenso del taller y el informe va agregado."
+  - "Las líneas base salen de los datos, y son las cifras contra las que se medirán las lecciones 6, 8 y 10."
+
+challenges:
+  - title: Exagera la autoevaluación
+    steps:
+      - "En Entradas → Evaluación, sube el «self_bias» de ventas (sales) en la simulación."
+      - "Guarda y ejecuta de nuevo."
+    look_for: "Crece la diferencia entre lo que Ventas dice de sí misma y lo que concluye el taller, y aparece o se amplía el aviso de sesgo."
+  - title: Deja un dominio sin stewards
+    steps:
+      - "En la lección 3 → Entradas → Equipo, vacía los stewards de negocio y técnicos de un dominio."
+      - "Vuelve aquí y ejecuta de nuevo."
+    look_for: "Aparece el aviso de que en ese dominio se entrevista al ejecutivo. Sin stewards, la evaluación pierde la voz de quien trabaja con los datos."
+  - title: Mejora la evidencia
+    steps:
+      - "En «Datos de NovaMercado», baja «CRM: cliente dado de alta dos veces» a 0, guarda y reconstruye."
+      - "Ejecuta de nuevo."
+    look_for: "Baja el indicador de teléfonos duplicados y desaparece el límite que la evidencia ponía a los datos maestros. Sin embargo, la encuesta no cambia: la evidencia y la opinión se miden por separado."
+
+labels:
+  # Modelo
+  version: Versión
+  levels: Niveles
+  dimensions: Dimensiones
+  chapter: Capítulo del libro
+  questions: Preguntas
+  # Evaluación
+  assessment_year: Año de la evaluación
+  scope: Alcance
+  type: Tipo
+  include_data_office: Incluir la oficina de datos
+  data_office_participants: Participantes de la oficina de datos
+  one_on_one_first: Entrevistas 1:1 primero
+  phases: Fases
+  steps: Pasos
+  start_date: Fecha de inicio
+  hours_per_participant: Horas por participante
+  communication: Comunicación
+  target_level: Nivel objetivo
+  simulation: Simulación de respuestas
+  domain_base: Nivel de partida por dominio
+  dimension_adjust: Ajuste por dimensión
+  self_bias: Sesgo de autoevaluación por dominio
+  noise: Ruido
+  bias_threshold: Diferencia que se considera sesgo
+  findings: Hallazgos de los talleres
+  text: Texto
+  dimension: Dimensión
+  root_cause: Causa raíz
+  plan: Plan de mejora
+  initiative: Iniciativa
+  funding_usd: Financiación (US$)
+  metric: Métrica
+  baseline_indicator: Indicador de línea base
+  target: Objetivo
+  reassessment: Reevaluación
+  frequency_months: Cada cuántos meses
+  triggers: Disparadores
+  event: Evento
+  success_measures: Medidas de éxito
+  measure: Medida
+  value: Valor

@@ -6,6 +6,7 @@ import {
 } from 'recharts'
 import remarkGfm from 'remark-gfm'
 import type { Block, LessonResult } from '../api.ts'
+import { Heatmap, MatrixChart, Timeline } from './Charts.tsx'
 
 // Colores categóricos en orden fijo (nunca reciclados); el modo oscuro tiene sus propios tonos.
 const SERIES = ['var(--series-1)', 'var(--series-2)', 'var(--series-3)', 'var(--series-4)']
@@ -124,8 +125,7 @@ function BarList({ block }: { block: Extract<Block, { type: 'bar_list' }> }) {
         ))}
       </ul>
       <p className="muted bar-legend">
-        Escala de {Math.round(block.min_value * 100)} % a {Math.round(block.max_value * 100)} % ·
-        la marca vertical es el umbral · ✓ cumple · ✗ no cumple
+        {block.legend ?? `Escala de ${Math.round(block.min_value * 100)} % a ${Math.round(block.max_value * 100)} % · la marca vertical es el umbral · ✓ cumple · ✗ no cumple`}
       </p>
     </figure>
   )
@@ -177,6 +177,12 @@ function BlockView({ block }: { block: Block }) {
       return <ChartBlock block={block} />
     case 'bar_list':
       return <BarList block={block} />
+    case 'matrix':
+      return <MatrixChart block={block} />
+    case 'heatmap':
+      return <Heatmap block={block} />
+    case 'timeline':
+      return <Timeline block={block} />
     case 'document':
       return <DocumentView block={block} />
   }

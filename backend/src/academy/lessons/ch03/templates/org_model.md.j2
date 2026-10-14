@@ -1,0 +1,63 @@
+# Modelo organizativo de datos de {{ company }}
+
+> No se construye un departamento, sino una empresa capaz de aprovechar sus datos. El modelo se diseña empezando por los resultados.
+
+## 1. Resultados que debe lograr el equipo
+
+| Prioridad | Resultado | Por qué |
+|---:|---|---|
+{% for o in ctx.selected_outcomes %}
+| {{ o.priority }} | **{{ o.name }}** | {{ o.rationale }} |
+{% endfor %}
+
+Descartados por ahora: {% for o in ctx.outcomes if not o.selected %}{{ o.name }} ({{ o.rationale | lower }}){{ "; " if not loop.last else "." }}{% endfor %}
+
+
+## 2. Funciones principales
+
+| Pregunta | Respuesta |
+|---|---|
+{% for q in ctx.core_questions %}
+| {{ q.question }} | {{ q.answer }} |
+{% endfor %}
+
+## 3. Modelo recomendado: {{ model_labels[rec.model] }}
+
+{{ rec.rationale }}
+
+- **Horizonte:** {{ rec.horizon }}.
+- **Evolución:** {{ model_labels[rec.model] }}{% if rec.target != rec.model %} → {{ model_labels[rec.target] }}{% endif %}.
+{% if rec.prerequisites %}
+- **⚠️ Requisitos previos:** {{ rec.prerequisites | join("; ") }}.
+{% endif %}
+
+| Hecho de la organización | Valor |
+|---|---|
+{% for label, value in facts %}
+| {{ label }} | {{ "Sí" if value else "No" }} |
+{% endfor %}
+
+### Quién hace qué en cada modelo
+
+| Responsabilidad | {% for m in model_labels %}{{ "**" ~ model_labels[m] ~ "** ⬅️" if m == rec.model else model_labels[m] }} | {% endfor %}
+
+|---|{% for _ in model_labels %}---|{% endfor %}
+
+{% for resp in responsibilities %}
+{% set i = loop.index0 %}
+| {{ resp }} | {% for m in model_labels %}{{ matrix[m][i] }} | {% endfor %}
+
+{% endfor %}
+
+## 4. Consideraciones de IA
+
+| Pregunta de gobierno de la IA | Responsable | Estado | Decisión |
+|---|---|---|---|
+{% for q in ctx.ai_governance %}
+| {{ q.question }} | {{ q.owner }} | {{ ai_status[q.status] }} | {{ q.decision or "—" }} |
+{% endfor %}
+
+**Dónde puede ayudar la IA a nuestras capacidades de datos:**
+{% for o in ctx.ai_opportunities %}
+- **{{ o.area }}:** {{ o.use_case }}
+{% endfor %}

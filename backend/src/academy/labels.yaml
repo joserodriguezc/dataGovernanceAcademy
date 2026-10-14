@@ -1,0 +1,31 @@
+# Etiquetas comunes de los formularios: campos que se repiten en varias lecciones.
+# Cada lección puede sobrescribirlas en su content.yaml (clave `campo` o `Modelo.campo`).
+id: Id
+name: Nombre
+short: Nombre corto
+title: Título
+description: Descripción
+owner: Responsable
+date: Fecha
+start: Inicio
+end: Fin
+due: Fecha de entrega
+domain: Dominio
+domains: Dominios
+purpose: Propósito
+status: Estado
+priority: Prioridad
+notes: Notas
+role: Rol
+members: Miembros
+outcomes: Resultados
+kpis: KPI
+needs: Necesidades
+rationale: Justificación
+question: Pregunta
+answer: Respuesta
+theme: Tema
+action: Acción
+weeks: Semanas
+months: Meses
+seed: Semilla

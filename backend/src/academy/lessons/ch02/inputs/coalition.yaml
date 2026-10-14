@@ -1,0 +1,57 @@
+# Bucles de feedback con el comité empresarial de datos y comunicación a toda la organización.
+committee:
+  name: Comité empresarial de datos
+  cadence_months: 3  # trimestral, como recomienda el capítulo al empezar
+  members: [CMO, CFO, Director Comercial, COO, CIO, DPO]
+
+# Registro de reuniones. attendance: present | delegated | absent
+meetings:
+  - date: 2025-12-16
+    attendance: {CMO: present, CFO: present, Director Comercial: present, COO: present, CIO: present, DPO: present}
+    questions: 9
+    off_cycle_requests: 1
+  - date: 2026-03-17
+    attendance: {CMO: present, CFO: present, Director Comercial: present, COO: present, CIO: delegated, DPO: present}
+    questions: 7
+    off_cycle_requests: 2
+  - date: 2026-06-16
+    attendance: {CMO: present, CFO: present, Director Comercial: delegated, COO: present, CIO: present, DPO: present}
+    questions: 6
+    off_cycle_requests: 3
+  - date: 2026-09-15
+    attendance: {CMO: present, CFO: present, Director Comercial: delegated, COO: present, CIO: present, DPO: present}
+    questions: 8
+    off_cycle_requests: 5
+
+# Umbrales de las señales de ritmo inadecuado
+signals:
+  delegation_window: 3        # reuniones recientes que se miran
+  delegation_threshold: 2     # delegaciones en esa ventana que ya forman un patrón
+  off_cycle_threshold: 4      # peticiones fuera de ciclo que piden reunirse más a menudo
+  silence_questions: 1        # con estas preguntas o menos, y sin peticiones, hay silencio
+
+# Comunicación a toda la organización: qué podrá hacer un empleado que hoy no puede, y por qué importa.
+open_forum:
+  name: Foro abierto de datos de NovaMercado
+  cadence: mensual
+  audience: Toda la empresa, sin límite de asistentes
+channels:
+  - Página del programa en la wiki interna con el caso de negocio, el roadmap y las métricas
+  - Newsletter mensual
+  - Vídeos cortos de demostración de cada entrega
+communications:
+  - capability: Vista única de cliente (piloto)
+    can_do_now: Ver todas las compras de un cliente, en tienda y online, en una sola ficha.
+    why_it_matters: Recomendar al cliente lo que de verdad necesita, sin preguntarle dos veces.
+    channel: Foro abierto (demo en directo)
+    date: 2027-03-10
+  - capability: Cifra única de ventas
+    can_do_now: Consultar las ventas por canal con la misma cifra que ve el comité de dirección.
+    why_it_matters: Se acabaron las horas cuadrando hojas de cálculo antes de cada reunión.
+    channel: Newsletter y vídeo corto
+    date: 2027-05-05
+  - capability: Clasificación de datos personales
+    can_do_now: Saber si una tabla contiene datos personales antes de compartirla.
+    why_it_matters: Protege a nuestros clientes y evita sanciones.
+    channel: Wiki del programa
+    date: 2027-04-14

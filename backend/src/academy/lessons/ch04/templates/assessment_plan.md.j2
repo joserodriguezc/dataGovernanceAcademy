@@ -1,0 +1,83 @@
+# Plan de la evaluación de madurez {{ inp.assessment_year }} de {{ company }}
+
+**Modelo:** {{ model.name }} (v{{ model.version }}), {{ model.dimensions | length }} dimensiones y {{ model.levels | length }} niveles.
+
+## Por qué la hacemos
+
+1. **Entender dónde estamos:** es la línea base para medir el avance en las evaluaciones siguientes.
+2. **Orientar la estrategia de datos:** muestra qué áreas necesitan mejorar.
+3. **Valorar el riesgo de la información:** se revisa con el CISO, sobre todo si los controles son débiles.
+4. **Priorizar las soluciones:** las áreas más débiles salen a la luz.
+5. **Que la empresa entienda mejor el valor de sus datos:** la conversación durante la evaluación vale tanto como la nota.
+
+Un modelo de madurez no es una estrategia ni una metodología: solo indica en qué punto estamos.
+
+## [#1] Alcance
+
+**Tipo:** {{ scope_labels[inp.scope.type] }}.
+{% if inp.scope.missing_domains %}
+⚠️ Faltan dominios ({{ inp.scope.missing_domains | map("extract", domain_names) | join(", ") }}): el resultado no puede presentarse como una evaluación de toda la empresa.
+{% else %}
+✅ Están todos los dominios de datos y además la oficina de datos: el resultado es de toda la empresa.
+{% endif %}
+
+| Unidad | En alcance | Puntuación base {{ inp.assessment_year }} | Puntuación actual |
+|---|---|---:|---:|
+{% for u in inp.scope.units %}
+| {{ unit_names[u] }} | Sí | *tras los talleres* | *en la reevaluación* |
+{% endfor %}
+
+## [#2] Stakeholders
+
+| RACI | Quién |
+|---|---|
+| **Responsable** | Líder de gobierno y estrategia (metodología, ejecución e informe) |
+| **Accountable** | CDAO |
+| **Consultados** | Ejecutivos de dominio, stewards de negocio (y, a través de ellos, analistas y usuarios), stewards técnicos y expertos en la materia |
+| **Informados** | Antes: ejecutivos de dominio y comité empresarial de datos. Después: los mismos, el comité de dirección y el consejo |
+
+### Participantes en los talleres
+
+Participan el steward de negocio y el técnico de cada dominio. Quien quiera aportar más debe hacerlo a través del representante de su dominio.
+
+| Unidad | Participante | Rol |
+|---|---|---|
+{% for p in people %}
+| {{ unit_names[p.unit] }} | {{ p.name }} | {{ p.role }}{% if p.fallback %} ⚠️ *sin stewards: se entrevista al ejecutivo*{% endif %} |
+{% endfor %}
+
+**Reuniones 1:1 antes de los talleres:** {{ inp.one_on_one_first | join(", ") }}. Sirven para explicar el porqué y escuchar sus preocupaciones: miedo a una nota baja, querer su resultado individual o no sentirse bien representados.
+
+## Calendario
+
+| Fase | Pasos | Duración | Desde |
+|---|---|---|---|
+{% for p, start in phases %}
+| {{ p.name }} | {{ p.steps | join(", ") }} | {{ (p.weeks ~ " semanas") if p.weeks else "Continua" }} | {{ start.strftime("%d/%m/%Y") }} |
+{% endfor %}
+
+## Email de lanzamiento
+
+> **Para:** stewards de negocio y técnicos · **CC:** ejecutivos de dominio, comité empresarial de datos, CDAO
+> **Asunto:** Lanzamos la evaluación de madurez de gestión de datos {{ inp.assessment_year }}
+>
+> Hola a todos:
+>
+> En las próximas semanas haremos una evaluación de la madurez en gestión de datos de toda la empresa, con el {{ model.name | lower }}, que mide {{ model.dimensions | length }} dimensiones en una escala de {{ model.levels | length }} niveles.
+>
+> Os pedimos unas {{ inp.hours_per_participant | num }} horas. En la primera sesión hablaremos de cómo gestionáis hoy los datos en vuestra área: no hay respuestas incorrectas, solo queremos saber dónde estamos. En la segunda os enseñaremos el resultado para que podáis cuestionarlo y corregirlo antes de agregarlo.
+>
+> {% if inp.communication == "aggregated" %}Compartiremos con el comité empresarial de datos, el comité de dirección y el consejo **solo la puntuación de la empresa**, no la de cada área. {% endif %}Los resultados nos ayudarán a priorizar y financiar las mejoras que más os ayuden.
+>
+> Gracias por vuestro tiempo. Las convocatorias llegarán desde la agenda del CDAO.
+>
+> Líder de gobierno y estrategia · Oficina del CDAO
+
+## Agenda del taller
+
+1. Bienvenida y presentaciones
+2. Para qué estamos aquí: qué es la evaluación, por qué la hacemos y qué gana cada participante y la empresa
+3. Objetivos: qué lograremos juntos
+4. Debate por dimensión y puntuación de consenso
+5. Ejemplos de documentos que respaldan la puntuación (no se habla de "evidencias", para que no parezca una auditoría)
+6. Próximos pasos: agregación, comunicación y cómo seguiremos contando con los participantes

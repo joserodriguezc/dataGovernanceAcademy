@@ -1,0 +1,84 @@
+# Ritmo del negocio de datos: foros de gobierno y portfolio de trabajo.
+calendar:
+  start: 2027-01-01
+  months: 12
+
+# member_level: c_suite | c_minus_1_2 | team | mixed
+# every: {weeks: N} o {months: N}
+forums:
+  - id: committee
+    name: Comité empresarial de datos
+    purpose: >-
+      Desarrollar e implantar el marco de gobierno de datos de NovaMercado, de forma que los
+      datos se gestionen con eficacia y responsabilidad y apoyen los objetivos estratégicos.
+    importance: >-
+      Garantiza que los datos sean exactos, completos y coherentes, que estén protegidos frente
+      a usos indebidos, que cumplan la ley y que mejoren la toma de decisiones.
+    chair: CDAO
+    member_level: c_suite
+    members: [CMO, CFO, Director Comercial, COO, CIO, DPO, CHRO]
+    responsibilities:
+      - Aprobar la estrategia de gobierno de datos
+      - Supervisar la implantación de la estrategia, la política y los estándares
+      - Vigilar la eficacia del marco con la información del CDAO y del consejo de datos
+      - Proponer mejoras al marco
+      - Patrocinar la formación de los empleados en gobierno de datos
+      - Informar al CEO y al consejo de administración
+    reports_to: null
+    first_meeting: 2027-01-19
+    every: {months: 3}
+    communication: [Email, Intranet, Reuniones generales, Reuniones 1:1]
+    evaluation: El comité evalúa cada año la eficacia del marco de gobierno de datos.
+  - id: council
+    name: Consejo empresarial de datos
+    purpose: >-
+      Grupo transversal de líderes que fija la dirección y supervisa la implantación del
+      gobierno de datos, y prepara lo que se lleva al comité.
+    importance: >-
+      Permite validar los temas antes de presentarlos al comité de dirección y movilizar el
+      apoyo de cada área a través de sus directivos.
+    chair: Líder de gobierno y estrategia
+    member_level: c_minus_1_2
+    members: [Responsable de CRM, Controller de ventas, Responsable de red de tiendas, Controller financiero, Arquitecto empresarial de TI, Responsable de privacidad]
+    responsibilities:
+      - Desarrollar e implantar la política y los procedimientos de gobierno de datos
+      - Supervisar las iniciativas de gobierno de datos
+      - Vigilar la calidad de los datos y el cumplimiento
+      - Resolver incidencias de gobierno de datos
+      - Recomendar prioridades entre dominios
+      - Formar a los empleados en gobierno de datos
+    reports_to: committee
+    first_meeting: 2027-01-12
+    every: {months: 1}
+    communication: [Email, Wiki del programa]
+    evaluation: Revisión semestral de asistencia, decisiones tomadas e incidencias resueltas.
+  - id: portfolio_review
+    name: Revisión del portfolio del negocio de datos
+    purpose: >-
+      Revisar qué está haciendo el equipo, su avance, los resultados que perciben los
+      stakeholders, los riesgos, los bloqueos y los próximos hitos.
+    importance: >-
+      Da visibilidad al CDAO antes de cada reunión con ejecutivos y detecta pronto dónde necesita
+      apoyo el equipo.
+    chair: Chief of Staff
+    member_level: team
+    members: [CDAO, Líder de gobierno y estrategia, Líder de soluciones de datos, Líder de ingeniería de datos, Líder de analítica]
+    responsibilities:
+      - Mantener el inventario de programas, proyectos y trabajo recurrente
+      - Revisar el estado y los resultados para los stakeholders
+      - Escalar bloqueos al CDAO
+    reports_to: council
+    first_meeting: 2027-01-07
+    every: {weeks: 2}
+    communication: [Resumen escrito en la wiki del equipo]
+    evaluation: El CDAO revisa cada trimestre si el foro sigue aportando valor.
+
+# Inventario del portfolio: programas, proyectos y trabajo recurrente (BAU).
+# status: green | yellow | red
+portfolio:
+  - {name: Vista única de cliente, type: program, team: Soluciones de datos, stakeholder: CMO, stakeholder_outcome: "+US$ 1,2 M en ventas atribuidas a campañas", status: yellow, next_milestone: "Golden record piloto (T2 2027)", blockers: "Falta el steward de negocio de cliente a tiempo completo"}
+  - {name: Cifra única de ventas, type: program, team: Gobierno y estrategia, stakeholder: CFO, stakeholder_outcome: "Eliminar 7.500 h/año de conciliación manual", status: green, next_milestone: "CDE de ventas definidos (T1 2027)", blockers: null}
+  - {name: Clasificación de PII, type: project, team: Soluciones de datos, stakeholder: DPO, stakeholder_outcome: "Exposición a multas de US$ 320.000 a US$ 80.000/año", status: green, next_milestone: "CRM clasificado (T1 2027)", blockers: null}
+  - {name: Migración del data warehouse a la nube, type: project, team: Ingeniería de datos, stakeholder: CIO, stakeholder_outcome: null, status: red, next_milestone: "Carga de ventas históricas", blockers: "Sin resultado para el negocio definido; compite por los ingenieros con la vista única de cliente"}
+  - {name: Informes semanales de ventas, type: bau, team: Analítica, stakeholder: Directores regionales, stakeholder_outcome: "Informe disponible cada lunes a las 9:00", status: yellow, next_milestone: null, blockers: "Las cifras no cuadran con las hojas de cálculo regionales"}
+  - {name: Cuadros de mando de marketing, type: bau, team: Analítica, stakeholder: CMO, stakeholder_outcome: null, status: green, next_milestone: null, blockers: null}

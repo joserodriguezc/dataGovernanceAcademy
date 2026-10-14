@@ -1,0 +1,32 @@
+# Mapa de stakeholders de {{ company }}
+
+> {{ purpose }}
+
+¿Cómo vamos a ayudar a cada stakeholder a lograr sus objetivos construyendo confianza en los datos?
+
+| Grupo | Objetivos (por prioridad) | Soluciones de datos | Resultados de negocio objetivo | Resultados reales | Beneficiario final |
+|---|---|---|---|---|---|
+{% for g in groups %}
+| **{{ g.name }}** | {% for o in g.map.objectives %}{{ loop.index }}. {{ o }}{{ "" if loop.last else "<br>" }}{% endfor %} | {% for s in g.map.data_solutions %}{{ loop.index }}. {{ s }}{{ "" if loop.last else "<br>" }}{% endfor %} | {% for r in g.map.target_results %}{{ loop.index }}. {{ r.text }}{% if r.type == "data" %} ⚠️{% endif %}{{ "" if loop.last else "<br>" }}{% endfor %} | {{ (g.map.actual_results | join("<br>")) if g.map.actual_results else "Pendiente de entrega" }} | {{ g.map.ultimate_beneficiary }} |
+{% endfor %}
+
+{% if vanity %}
+## ⚠️ Resultados que solo miden el dato
+
+Estos grupos solo tienen *vanity metrics*: métricas que miden la mejora del dato, pero no lo que el negocio consigue gracias a ella. Hay que traducirlas a resultados de negocio (ingresos, clientes, coste, riesgo o productividad) antes de comprometerlas.
+
+{% for g in vanity %}
+- **{{ g.name }}:** {{ g.map.target_results | map(attribute="text") | join("; ") }}
+{% endfor %}
+{% endif %}
+
+## Cómo mantener el mapa
+
+Revisarlo en cada 1:1 con el stakeholder:
+
+1. ¿Han cambiado sus prioridades o han aparecido otras nuevas?
+2. ¿Siguen alineadas con lo que necesitan de nuestro equipo? ¿Falta algo?
+3. ¿Las soluciones siguen cubriendo sus necesidades? ¿Echan en falta alguna capacidad?
+4. ¿Los resultados objetivo tienen sentido? ¿Son lo bastante ambiciosos?
+
+Cuando haya entregas, se rellena la columna de resultados reales y se pregunta: *¿estamos de acuerdo en el resultado medido y en que nuestro equipo contribuyó a él?*

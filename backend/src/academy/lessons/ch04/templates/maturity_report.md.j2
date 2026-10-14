@@ -1,0 +1,45 @@
+# Madurez de gestión de datos de {{ company }}: línea base {{ year }}
+
+> Informe **agregado** para el comité empresarial de datos, el comité de dirección y el consejo. Muestra la puntuación de la empresa, no la de cada área.
+
+## Resultado
+
+**Madurez de la empresa: {{ company_score | num(1) }} sobre {{ max_level }}** (nivel *{{ level_name(company_score) }}*). El objetivo a 3 años es el nivel {{ target }} (*{{ levels[target].name }}*).
+
+Es una línea base, no una nota: indica dónde empezamos y nos permitirá medir el avance.
+
+{% if chart_name %}![Madurez por dimensión]({{ chart_name }}){% endif %}
+
+| Dimensión | Puntuación | Nivel | Brecha hasta el objetivo | Evidencia |
+|---|---:|---|---:|---|
+{% for dim, score in scores %}
+| {{ dim_names[dim] }} | {{ score | num(1) }} | {{ level_name(score) }} | {{ (target - score) | num(1) if score < target else "—" }} | {{ ("⚠️ respalda como máximo el nivel " ~ caps[dim].max_level) if dim in flagged else ("Acota en " ~ caps[dim].max_level if dim in caps else "—") }} |
+{% endfor %}
+
+{% if flags %}
+### Puntuaciones que la evidencia no respalda
+
+{% for f in flags %}
+- **{{ dim_names[f.cap.dimension] }}** ({{ f.score | num(1) }} > {{ f.cap.max_level }}): {{ f.cap.reason }}
+{% endfor %}
+
+Antes de comunicarlas, hay que revisar estas puntuaciones con los participantes.
+{% endif %}
+
+## Lo que hemos escuchado
+
+| Prioridad | Tema | Dimensiones | Hallazgos | Causa raíz principal |
+|---:|---|---|---:|---|
+{% for t in themes %}
+| {{ t.priority }} | **{{ t.name }}** | {{ t.dimensions | map("extract", dim_names) | join(", ") }} | {{ t.findings | length }} | {{ t.findings[0].root_cause }} |
+{% endfor %}
+
+## Plan de mejora
+
+| Iniciativa | Tema | Responsable | Plazo | Inversión |
+|---|---|---|---|---:|
+{% for p in plan %}
+| {{ p.initiative }} | {{ p.theme }} | {{ p.owner }} | {{ p.start }} → {{ p.end }} | {{ p.funding_usd | money }} |
+{% endfor %}
+
+Detalle y métricas de seguimiento en [improvement_plan.md](improvement_plan.md).
