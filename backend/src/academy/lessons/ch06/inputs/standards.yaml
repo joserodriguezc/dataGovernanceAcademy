@@ -1,0 +1,21 @@
+# Estándar de metadatos de NovaMercado: lo mínimo que debe cumplir cada activo.
+# applies_to: table (tablas staging y curated) | column (columnas de esas tablas) | term (glosario)
+# check: comprobación implementada en standards.py
+publication:
+  version: "1.0"
+  owner: Líder de gobierno y estrategia
+  accountable: Responsable de metadatos
+  published: 2027-02-15
+  next_review: 2028-02-15
+
+standards:
+  - {id: MD-01, applies_to: table, check: has_description, text: "Toda tabla tiene una descripción de negocio."}
+  - {id: MD-02, applies_to: table, check: has_domain, text: "Toda tabla pertenece a un único dominio de datos."}
+  - {id: MD-03, applies_to: table, check: has_business_steward, text: "Toda tabla tiene un steward de negocio."}
+  - {id: MD-04, applies_to: table, check: has_technical_steward, text: "Toda tabla tiene un steward técnico."}
+  - {id: MD-05, applies_to: column, check: is_classified, text: "Toda columna está clasificada según la política de clasificación."}
+  - {id: MD-06, applies_to: column, check: has_business_term, text: "Toda columna está ligada a un término del glosario."}
+  - {id: MD-07, applies_to: term, check: has_definition, text: "Todo término tiene una definición."}
+  - {id: MD-08, applies_to: term, check: is_approved, text: "Todo término está aprobado por su steward."}
+  - {id: MD-09, applies_to: term, check: has_steward, text: "Todo término tiene un steward de negocio."}
+  - {id: MD-10, applies_to: term, check: is_mapped, text: "Todo término está ligado a columnas del warehouse."}

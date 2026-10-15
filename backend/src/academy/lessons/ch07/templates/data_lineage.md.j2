@@ -1,0 +1,51 @@
+# Linaje de datos de {{ company }}
+
+> El recorrido de los datos: de qué sistema llegan, qué transformaciones atraviesan y dónde se usan. Se extrae automáticamente del SQL del warehouse en cada ejecución.
+
+## Cadena de suministro de datos
+
+```mermaid
+graph LR
+{% for layer, nodes in layers %}
+  subgraph {{ layer }}
+{% for n in nodes %}
+    {{ n | replace(".", "_") }}["{{ n }}"]
+{% endfor %}
+  end
+{% endfor %}
+{% for s, t in table_edges %}
+  {{ s | replace(".", "_") }} --> {{ t | replace(".", "_") }}
+{% endfor %}
+```
+
+| Sistema de origen | Ubicación | Steward técnico | Tablas raw |
+|---|---|---|---|
+{% for key, s in systems.items() %}
+| **{{ s.name }}** (`{{ key }}`) | {{ s.location }} | {{ s.technical_steward or "⚠️ sin asignar" }} | {{ raw_by_system.get(key, []) | join(", ") }} |
+{% endfor %}
+
+## Linaje de la venta neta (columna a columna)
+
+```mermaid
+graph LR
+{% for s, t, kind in kpi_edges %}
+  {{ s | replace(".", "_") }}["{{ s }}"] -->|{{ kind }}| {{ t | replace(".", "_") }}["{{ t }}"]
+{% endfor %}
+```
+
+## Transformaciones
+
+{% for step in steps %}
+### `{{ step.target }}`
+
+**Fichero:** `{{ step.sql_file }}` · **Desde:** {{ step.sources | join(", ") }}{% if step.filters %} · **Filtro:** `{{ step.filters | join(" / ") }}`{% endif %}{% if step.group_by %} · **Agrupa por:** {{ step.group_by | join(", ") }}{% endif %}
+
+
+| Columna | Tipo de transformación | Expresión | Columnas de origen |
+|---|---|---|---|
+{% for col, info in columns_by_table[step.target].items() %}
+| `{{ col }}` | {{ info.kinds | join(", ") }} | `{{ info.expressions | join("` / `") }}` | {{ info.sources | join(", ") or "—" }} |
+{% endfor %}
+
+{% endfor %}
+El detalle completo está en las tablas `meta.lineage_edges` y `meta.lineage_steps` del warehouse.

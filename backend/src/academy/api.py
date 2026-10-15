@@ -156,8 +156,11 @@ def create_app(data_dir: Path = DATA_DIR, catalog: Catalog | None = None,
                             stored_input=lessons_store.get_input)
         try:
             sections = lesson.compute(models, ctx)
-        except ValueError as exc:
+        except ValueError as exc:  # entradas incoherentes: el mensaje ya es para el alumno
             raise HTTPException(400, str(exc)) from exc
+        except Exception as exc:  # p. ej., una regla sobre una tabla que no existe
+            raise HTTPException(400, f"La lección ha fallado con tus entradas: "
+                                     f"{type(exc).__name__}: {exc}") from exc
         result = LessonResult(lesson=number, ran_at=datetime.now(UTC), sections=sections)
         lessons_store.save_result(result)
         return result

@@ -1,0 +1,108 @@
+# Operaciones de datos de {{ company }} ({{ as_of.strftime("%d/%m/%Y") }})
+
+> Las operaciones de datos son como la electricidad: nadie las aprecia hasta que fallan. Este informe las hace visibles.
+
+## Panel de valor del equipo
+
+| Dólares ahorrados | Horas ahorradas | Riesgos evitados | Automatizaciones |
+|---:|---:|---:|---:|
+| **{{ value.dollars | money }}** | **{{ value.hours | num }} h** | **{{ value.risks }}** | **{{ value.automations }}** |
+
+| Automatización | Capítulo | Horas/año | Dólares/año (además de las horas) | Riesgos evitados |
+|---|---:|---:|---:|---:|
+{% for a in automations %}
+| {{ a.name }} | {{ a.chapter }} | {{ a.hours_saved | num }} | {{ a.dollars_saved | money }} | {{ a.risks_avoided }} |
+{% endfor %}
+
+Las horas se valoran a {{ cost_per_hour | money }}/h. Los importes vienen de los capítulos indicados y siguen pendientes de validar con el negocio.
+
+## Última ejecución real del pipeline
+
+Ejecución `{{ run_id }}` · {{ total_runs }} ejecuciones registradas en `{{ ops_db }}` (fuera del warehouse, para que el historial sobreviva a cada reconstrucción).
+
+```mermaid
+graph LR
+{% for s in steps %}
+  {{ s.id }}["{{ s.name }}<br>{{ last.get(s.id, {}).get("label", "sin ejecutar") }}"]
+{% endfor %}
+{% for s in steps %}{% for d in s.depends_on %}
+  {{ d }} --> {{ s.id }}
+{% endfor %}{% endfor %}
+```
+
+| Paso | Responsable | Estado | Intentos | Duración | Ejecutado por |
+|---|---|---|---:|---:|---|
+{% for s in steps %}
+{% set r = last.get(s.id) %}
+| {{ s.name }} | {{ s.owner }} | {{ status_labels[r.status] if r else "—" }} | {{ r.attempts if r else "—" }} | {{ (r.seconds | num(1)) ~ " s" if r else "—" }} | {{ r.executed_by if r else "—" }} |
+{% endfor %}
+
+### Observabilidad
+
+**Frescura:** el último dato de ventas es del {{ latest_sale.strftime("%d/%m/%Y") }} ({{ freshness }} días). El SLA pide {{ delivery.freshness_days }} días como máximo: {{ "✅ se cumple" if freshness <= delivery.freshness_days else "❌ no se cumple" }}.
+
+{% if row_changes is not none %}
+**Volumen** (filas de cada tabla curada frente a la ejecución anterior; aviso a partir del {{ tolerance | pct }}):
+
+| Tabla | Anterior | Actual | Cambio | |
+|---|---:|---:|---:|---|
+{% for r in row_changes %}
+| `{{ r.table_fqn }}` | {{ r.previous | num if r.previous == r.previous else "—" }} | {{ r.current | num }} | {{ (r.change | pct(1)) if r.change == r.change else "nueva" }} | {{ "⚠️" if r.alert else "✅" }} |
+{% endfor %}
+{% endif %}
+
+## SLAs (historial de {{ sla.nights }} noches)
+
+{% if timeline_chart %}![Hora de fin del pipeline frente al SLA]({{ timeline_chart }}){% endif %}
+
+| Indicador | Objetivo | Real | |
+|---|---:|---:|---|
+| Noches sin fallos | {{ delivery.success_target | pct }} | {{ sla.success_rate | pct(1) }} | {{ "✅" if sla.success_rate >= delivery.success_target else "❌" }} |
+| Cifra de ventas lista antes de las {{ delivery.ready_by.strftime("%H:%M") }} | {{ delivery.success_target | pct }} | {{ sla.on_time_rate | pct(1) }} | {{ "✅" if sla.on_time_rate >= delivery.success_target else "❌" }} |
+
+| Paso | SLA | p95 | Ejecuciones fuera de SLA | Fallos (tras reintento) |
+|---|---:|---:|---:|---:|
+{% for s in steps %}
+{% set b = sla.by_step.loc[s.id] %}
+| {{ s.name }} | {{ s.sla_minutes | num }} min | {{ b.p95 | num(1) }} min | {{ b.over_sla | pct(1) }} | {{ b.failures | int }} |
+{% endfor %}
+
+## Tickets y causas raíz
+
+{{ tickets | length }} tickets en {{ sla.nights }} días, {{ ticket_hours | num }} horas de trabajo y {{ open_tickets }} abiertos. Tiempo medio de resolución: {{ mttr | num(1) }} días.
+
+{% if causes_chart %}![Causas raíz de los tickets]({{ causes_chart }}){% endif %}
+
+| Causa raíz | Tickets | Horas |
+|---|---:|---:|
+{% for cause, row in causes %}
+| {{ cause }} | {{ row.tickets | int }} | {{ row.hours | num }} |
+{% endfor %}
+
+### Revisión posterior (after-action review): dónde se repiten los problemas
+
+| Sistema | Causa | Tickets | Horas | Propuesta |
+|---|---|---:|---:|---|
+{% for h in hotspots %}
+| {{ h.system }} | {{ h.cause }} | {{ h.tickets }} | {{ h.hours | num }} | {{ proposals.get(h.cause, "Analizar la causa raíz") }} |
+{% endfor %}
+
+Estas combinaciones son las candidatas al backlog de automatización: arreglarlas de raíz libera al equipo de apagar fuegos.
+
+## Operaciones de TI y operaciones de datos
+
+| Actividad | TI | Datos |
+|---|:---:|:---:|
+{% for p in partnership %}
+| {{ p.activity }} | {{ p.it }} | {{ p.data }} |
+{% endfor %}
+
+Son funciones separadas: cuando se mezclan, TI se centra en sus sistemas y los datos quedan en segundo plano.
+
+## Hacer visible el equipo
+
+- **Champion:** {{ visibility.champion }}.
+{% for c in visibility.channels %}
+- {{ c }}.
+{% endfor %}
+- **Control de un equipo con accesos amplios:** cada paso del pipeline queda registrado con quién lo ejecutó y cuándo (`runs` en `{{ ops_db }}`). La confianza no es un control.

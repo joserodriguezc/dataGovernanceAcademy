@@ -1,0 +1,63 @@
+# Operaciones de datos de NovaMercado.
+as_of: 2026-10-12
+
+# Pipeline nocturno: los pasos y sus dependencias. Cada paso es un capítulo del laboratorio.
+# sla_minutes: duración máxima; los tiempos reales del laboratorio son segundos, por eso el
+# historial simulado usa minutos de un entorno real (baseline_minutes).
+pipeline:
+  - {id: load, name: Carga del warehouse, depends_on: [], owner: Ingeniería de datos, sla_minutes: 45, baseline_minutes: 25, failure_rate: 0.03}
+  - {id: pdm, name: Golden record de cliente (cap. 10), depends_on: [load], owner: Datos maestros, sla_minutes: 30, baseline_minutes: 18, failure_rate: 0.02}
+  - {id: metadata, name: Catálogo y clasificación (cap. 6), depends_on: [pdm], owner: Metadatos, sla_minutes: 15, baseline_minutes: 6, failure_rate: 0.01}
+  - {id: lineage, name: Linaje (cap. 7), depends_on: [metadata], owner: Arquitectura, sla_minutes: 15, baseline_minutes: 5, failure_rate: 0.01}
+  - {id: quality, name: Calidad y certificación (cap. 8), depends_on: [lineage], owner: Calidad de datos, sla_minutes: 30, baseline_minutes: 14, failure_rate: 0.04}
+
+# SLA de entrega: la cifra de ventas debe estar lista antes de esta hora (el pipeline
+# arranca a la hora de inicio).
+delivery:
+  start: "01:00"
+  ready_by: "02:45"
+  freshness_days: 3          # antigüedad máxima del último dato de ventas (DQ-16)
+  success_target: 0.98       # proporción de noches sin fallos
+
+# Observabilidad: aviso si el número de filas de una tabla curada cambia más que esto
+# respecto a la ejecución anterior.
+row_count_tolerance: 0.2
+
+# Historial simulado (en un caso real saldría del orquestador y del sistema de tickets)
+history:
+  seed: 42
+  nights: 120
+  duration_noise: 0.3
+  retry_success: 0.5          # parte de los fallos que se arreglan solos al reintentar
+  # Tickets al año por causa raíz (categorías del panel del libro). Los de "Fallos de proceso"
+  # no se fijan aquí: salen de las noches que falla el pipeline simulado.
+  tickets_per_year: {Bugs: 70, Calidad de datos: 40, Petición de datos ad hoc: 6}
+  hours_per_ticket: {Bugs: 6, Fallos de proceso: 3, Calidad de datos: 5, Petición de datos ad hoc: 8}
+  systems: [CRM, E-commerce, POS, ERP, Warehouse]
+  # Probabilidad de que la causa de un ticket esté en cada sistema
+  system_weights: [0.25, 0.2, 0.3, 0.15, 0.1]
+
+# Automatizaciones desplegadas y su valor anual (el "value stream" del equipo)
+automations:
+  - {name: Pipeline nocturno orquestado (antes se lanzaba a mano), hours_saved: 365, dollars_saved: 0, risks_avoided: 4, chapter: 11}
+  - {name: Reglas de calidad automáticas en cada carga, hours_saved: 326, dollars_saved: 0, risks_avoided: 9, chapter: 8}
+  - {name: Golden record de cliente, hours_saved: 2400, dollars_saved: 2756, risks_avoided: 2, chapter: 10}
+  - {name: Clasificación automática de PII, hours_saved: 120, dollars_saved: 240000, risks_avoided: 23, chapter: 6}
+  - {name: Linaje generado desde el SQL, hours_saved: 1500, dollars_saved: 60000, risks_avoided: 4, chapter: 7}
+  - {name: Revisión de arquitectura automática en el SDLC, hours_saved: 200, dollars_saved: 0, risks_avoided: 5, chapter: 9}
+cost_per_hour: 45
+
+# Operaciones de TI frente a operaciones de datos: quién hace qué
+partnership:
+  - {activity: Infraestructura y servidores del warehouse, it: R/A, data: C}
+  - {activity: Disponibilidad de los sistemas de origen (CRM, ERP, POS), it: R/A, data: I}
+  - {activity: Pipelines de datos y su orquestación, it: C, data: R/A}
+  - {activity: Monitorización de la calidad de los datos, it: I, data: R/A}
+  - {activity: Clasificación y cumplimiento de los datos, it: C, data: R/A}
+  - {activity: Seguridad y control de accesos, it: R/A, data: C}
+  - {activity: Incidencias de datos en informes de negocio, it: C, data: R/A}
+
+# Hacer visible el equipo: el plan del capítulo
+visibility:
+  champion: Director Financiero (CFO)
+  channels: [Panel de valor publicado en el marketplace, Newsletter mensual con las victorias del mes, Revisión trimestral de causas raíz con el comité de datos]

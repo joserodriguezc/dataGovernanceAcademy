@@ -1,0 +1,77 @@
+# Contenido de la lección 7. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  Cuando una cifra sale mal, la primera pregunta es de dónde viene. En esta lección calculas
+  el linaje del warehouse de NovaMercado a nivel de columna, leyendo directamente el SQL de
+  las transformaciones: no se dibuja a mano, así que no se queda desactualizado. Con él
+  validas lo que cree el responsable de un informe, analizas el impacto de un cambio antes de
+  hacerlo y compruebas si los datos personales llegan a la capa de negocio. El linaje queda en
+  el warehouse (meta.lineage_edges) y la lección 8 lo usa para certificar.
+
+ideas:
+  - idea: "Los metadatos técnicos son el esquema, el diccionario y el linaje."
+    application: "El esquema sale del warehouse y el linaje, del SQL de las transformaciones."
+  - idea: "El linaje dice dónde están los datos, de dónde vienen y cómo se transformaron."
+    application: "Linaje de columna con el tipo de cada paso: directo, renombrado, conversión de tipo, calculado, agregado, constante, filtro o clave de unión."
+  - idea: "Gestionar el cambio es saber qué se ve afectado antes de cambiar nada."
+    application: "El análisis de impacto lista las columnas afectadas y avisa si toca métricas críticas del comité."
+  - idea: "El linaje sirve para encontrar el origen de un problema en un informe."
+    application: "El grafo muestra, para cualquier columna, todo lo que la alimenta."
+  - idea: "El linaje protege los datos: dice por dónde viaja la información personal."
+    application: "Se cruza con la clasificación de la lección 6 para ver si llega PII a la capa curated."
+  - idea: "Conviene empezar por un informe o una métrica importante."
+    application: "Las métricas críticas del comité tienen su linaje completo hasta el origen."
+  - idea: "El linaje se valida con quien produce el informe."
+    application: "Se compara la explicación del Controller de ventas con el linaje real, fuente por fuente y filtro por filtro."
+  - idea: "El valor se mide con un ROI con supuestos explícitos."
+    application: "ROI = (beneficios − costes) / costes, con los supuestos a la vista."
+
+takeaways:
+  - "La venta neta no sale de donde cree su responsable: el linaje encuentra 5 diferencias con su explicación."
+  - "El estado del pedido es una columna crítica oculta: no aparece en ninguna fórmula, pero filtra dos KPI del comité."
+  - "Los datos de cliente se cargan, pero no llegan a curated: es el hueco que cerrará la lección 10."
+  - "Con el linaje publicado, la lección 8 ya puede certificar datasets."
+
+challenges:
+  - title: Desbloquea la certificación
+    steps:
+      - "Ejecuta las lecciones 6 y 7."
+      - "Vuelve a ejecutar la lección 8."
+    look_for: "La lección 8 certifica ahora curated.dim_store. Las demás siguen sin certificar porque sus reglas de severidad 1 fallan, en la propia tabla o en sus fuentes según el linaje."
+  - title: Explora el linaje
+    steps:
+      - "En Resultados → Linaje, haz clic en una tabla raw del primer grafo, por ejemplo raw.ecom_orders."
+      - "Después haz clic en una tabla curated."
+    look_for: "Se resaltan sus fuentes y lo que depende de ella. Así se responde a «¿qué se rompe si cambio esto?» antes de cambiarlo."
+  - title: Corrige la narrativa
+    steps:
+      - "En Entradas → Linaje, cambia las fuentes que cita la narrativa para que coincidan con las columnas que de verdad usa el SQL."
+      - "Ejecuta de nuevo."
+    look_for: "Bajan las diferencias con la narrativa. Validar el linaje con quien produce el informe corrige su explicación, no el dato."
+
+labels:
+  source_systems: Sistemas de origen
+  SourceSystem: Sistema
+  location: Ubicación
+  technical_steward: Steward técnico
+  critical_metrics: Métricas críticas del comité
+  CriticalMetric: Métrica crítica
+  term: Término del glosario
+  column: Columna (esquema.tabla.columna)
+  validation: Narrativa que se valida
+  report: Informe
+  business_element: Elemento de negocio (columna)
+  producer: Quién produce el informe
+  sample: Muestra
+  narrative: Narrativa
+  claimed_sources: Fuentes que cita la narrativa
+  claimed_filters: Filtros que cita la narrativa
+  value: Supuestos de valor
+  people_impacted: Personas beneficiadas
+  hours_saved_per_person: Horas ahorradas por persona
+  cost_per_hour: Coste de una hora (US$)
+  issues_identified: Incidencias encontradas gracias al linaje
+  value_per_issue: Valor por incidencia (US$)
+  errors_avoided: Errores evitados
+  value_per_error: Valor por error evitado (US$)
+  annual_cost: Coste anual (US$)

@@ -7,10 +7,16 @@ import {
 import remarkGfm from 'remark-gfm'
 import type { Block, LessonResult } from '../api.ts'
 import { Heatmap, MatrixChart, Timeline } from './Charts.tsx'
+import { GraphChart } from './Graph.tsx'
 
 // Colores categóricos en orden fijo (nunca reciclados); el modo oscuro tiene sus propios tonos.
 const SERIES = ['var(--series-1)', 'var(--series-2)', 'var(--series-3)', 'var(--series-4)']
 const number = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 2 })
+const TONE_FILL = { good: 'var(--good)', bad: 'var(--bad)', warning: 'var(--series-4)', info: 'var(--series-1)' }
+const asTime = (h: number) => {
+  const m = Math.round(h * 60)
+  return `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`
+}
 
 function ChartBlock({ block }: { block: Extract<Block, { type: 'line_chart' }> }) {
   const xs = [...new Set(block.series.flatMap((s) => s.points.map(([x]) => x)))].sort((a, b) => a - b)
@@ -24,6 +30,8 @@ function ChartBlock({ block }: { block: Extract<Block, { type: 'line_chart' }> }
   })
   const color = (name: string) =>
     SERIES[block.series.findIndex((s) => s.name === name) % SERIES.length]
+  const fmtY = (v: number) => (block.y_format === 'time' ? asTime(v) : number.format(v))
+  const markerColor = (m: (typeof block.markers)[number]) => (m.tone ? TONE_FILL[m.tone] : color(m.series))
 
   return (
     <figure className="chart">
@@ -39,18 +47,22 @@ function ChartBlock({ block }: { block: Extract<Block, { type: 'line_chart' }> }
                  label={{ value: block.x_label, position: 'insideBottom', offset: -12,
                           fill: 'var(--text-muted)', fontSize: 12 }} />
           <YAxis tickLine={false} stroke="var(--axis)" width={56}
+                 domain={block.y_format === 'time' ? ['auto', 'auto'] : undefined}
                  tick={{ fill: 'var(--text-muted)', fontSize: 12 }}
-                 tickFormatter={(v: number) => number.format(v)}
+                 tickFormatter={(v: number) => fmtY(v)}
                  label={{ value: block.y_label, angle: -90, position: 'insideLeft',
                           fill: 'var(--text-muted)', fontSize: 12, dy: 60 }} />
           <Tooltip
             contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)',
                             borderRadius: 8, color: 'var(--text)' }}
             labelFormatter={(x) => `${block.x_label} ${x}`}
-            formatter={(v) => number.format(Number(v))} />
+            formatter={(v) => fmtY(Number(v))} />
           <Legend verticalAlign="top" height={32} wrapperStyle={{ color: 'var(--text-muted)' }} />
           {block.reference_y !== null && (
-            <ReferenceLine y={block.reference_y} stroke="var(--axis)" />
+            <ReferenceLine y={block.reference_y}
+                           stroke={block.reference_label ? 'var(--text)' : 'var(--axis)'}
+                           strokeDasharray={block.reference_label ? '5 4' : undefined}
+                           label={block.reference_label ? { value: block.reference_label, position: 'insideTopRight', fill: 'var(--text)', fontSize: 12 } : undefined} />
           )}
           {block.series.map((s) => (
             <Line key={s.name} type="monotone" dataKey={s.name} stroke={color(s.name)}
@@ -58,7 +70,7 @@ function ChartBlock({ block }: { block: Extract<Block, { type: 'line_chart' }> }
                   isAnimationActive={false} />
           ))}
           {block.markers.map((m) => (
-            <ReferenceDot key={m.label} x={m.x} y={m.y} r={6} fill={color(m.series)}
+            <ReferenceDot key={m.label} x={m.x} y={m.y} r={6} fill={markerColor(m)}
                           stroke="var(--surface)" strokeWidth={2} />
           ))}
         </LineChart>
@@ -66,7 +78,7 @@ function ChartBlock({ block }: { block: Extract<Block, { type: 'line_chart' }> }
       {block.markers.length > 0 && (
         <ul className="chart-notes">
           {block.markers.map((m) => (
-            <li key={m.label}><span className="swatch" style={{ background: color(m.series) }} />{m.label}</li>
+            <li key={m.label}><span className="swatch" style={{ background: markerColor(m) }} />{m.label}</li>
           ))}
         </ul>
       )}
@@ -183,6 +195,8 @@ function BlockView({ block }: { block: Block }) {
       return <Heatmap block={block} />
     case 'timeline':
       return <Timeline block={block} />
+    case 'graph':
+      return <GraphChart block={block} />
     case 'document':
       return <DocumentView block={block} />
   }

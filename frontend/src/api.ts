@@ -78,8 +78,10 @@ export type Block =
       x_label: string
       y_label: string
       series: { name: string; points: [number, number][]; emphasis: boolean }[]
-      markers: { series: string; x: number; y: number; label: string }[]
+      markers: { series: string; x: number; y: number; label: string; tone: Tone | null }[]
       reference_y: number | null
+      reference_label: string | null
+      y_format: 'number' | 'time'
     }
   | {
       type: 'bar_list'
@@ -121,6 +123,15 @@ export type Block =
       today: string | null
       groups: { id: string; label: string; tone: Tone }[]
       items: { label: string; group: string; start: string; end: string; note: string | null }[]
+    }
+  | {
+      type: 'graph'
+      title: string
+      subtitle: string | null
+      layers: string[]
+      nodes: { id: string; label: string; layer: string; tone: Tone | null; detail: string | null }[]
+      edges: { source: string; target: string; kind: string | null; dashed: boolean; tone: Tone | null }[]
+      focus: string | null
     }
   | { type: 'document'; title: string; filename: string; markdown: string }
 

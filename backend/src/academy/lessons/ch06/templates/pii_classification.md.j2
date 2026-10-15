@@ -1,0 +1,29 @@
+# Clasificación de datos de {{ company }}
+
+> No se puede proteger lo que no se sabe dónde está. Todas las columnas de raw, staging y curated quedan clasificadas, por nombre o por el contenido de una muestra de {{ sample_size }} valores.
+
+## Resumen por nivel y capa
+
+| Nivel | {% for layer in layers %}{{ layer }} | {% endfor %}Total |
+|---|{% for _ in layers %}---:|{% endfor %}---:|
+{% for level, row in matrix %}
+| **{{ level_names[level] }}** | {% for layer in layers %}{{ row[layer] }} | {% endfor %}{{ row["_total"] }} |
+{% endfor %}
+
+## Datos restringidos (PII directa)
+
+| Columna | Categoría | Detectada por |
+|---|---|---|
+{% for c in restricted %}
+| `{{ c.fqn }}` | {{ c.category }} | {{ c.method }} |
+{% endfor %}
+
+## Correcciones de los stewards
+
+| Columna | Clasificación | Steward | Motivo |
+|---|---|---|---|
+{% for fqn, o in overrides.items() %}
+| `{{ fqn }}` | {{ level_names[o.level] }} ({{ o.category }}) | {{ o.by }} | {{ o.reason }} |
+{% endfor %}
+
+La clasificación completa de cada columna está en `pii_classification.csv` y en la tabla `meta.catalog_columns` del warehouse.

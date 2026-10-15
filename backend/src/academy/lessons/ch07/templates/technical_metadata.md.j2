@@ -1,0 +1,61 @@
+# Metadatos técnicos y linaje de {{ company }}: madurez, hallazgos y valor
+
+## Madurez
+
+| Métrica | Valor | % |
+|---|---:|---:|
+{% for name, ok, total in maturity %}
+| {{ name }} | {{ ok }} de {{ total }} | {{ ((ok / total) | pct) if total else "—" }} |
+{% endfor %}
+
+## Análisis de impacto: ¿qué se rompe si cambia…?
+
+{% for i in impacts %}
+### `{{ i.column }}`
+
+{% if i.affected %}
+Afecta a **{{ i.affected | length }} columnas** en {{ i.tables | length }} tablas: {{ i.tables | join(", ") }}.
+{% if i.critical %}⚠️ **Toca métricas críticas del comité:** {{ i.critical | join(", ") }}. Cualquier cambio necesita pruebas y aviso previo a sus stewards.{% endif %}
+
+{% else %}
+No la usa ninguna transformación: se puede cambiar sin impacto en el warehouse.
+{% endif %}
+{% endfor %}
+
+Para cualquier otra columna: `uv run python -m academy.lessons.ch07.impact <columna>`.
+
+## Hallazgos del linaje
+
+**¿Qué parte de cada fuente llega a la capa curated?** Lo que no llega se carga y se transforma, pero ningún informe lo usa todavía.
+
+| Tabla raw | Columnas que llegan a curated | % | No llegan |
+|---|---:|---:|---|
+{% for r in reach %}
+| `{{ r.table }}` | {{ r.reaching | length }} de {{ r.reaching | length + r.not_reaching | length }} | {{ r.rate | pct }} | {{ r.not_reaching | join(", ") or "—" }} |
+{% endfor %}
+
+**PII que llega a la capa curated.**
+{% if pii_known %}
+{% for src, dst in pii_reaching %}
+- ⚠️ `{{ src }}` → `{{ dst }}`
+{% else %}
+- ✅ Ninguna columna clasificada como restringida en el capítulo 6 alimenta la capa curated.
+{% endfor %}
+{% else %}
+- No evaluado: ejecuta antes el capítulo 6 para tener la clasificación de PII en el warehouse.
+{% endif %}
+
+**Columnas calculadas por constante:** {% for e in constants %}`{{ e.target }}` = {{ e.expression }}{{ "; " if not loop.last }}{% else %}ninguna{% endfor %}.
+
+## Valor estimado
+
+| Beneficio | Valor anual |
+|---|---:|
+{% for name, amount in value.benefits.items() %}
+| {{ name }} | {{ amount | money }} |
+{% endfor %}
+| **Total de beneficios** | **{{ value.benefits.values() | sum | money }}** |
+| Coste anual de mantener el linaje | {{ value.annual_cost | money }} |
+| **ROI** = (beneficios − costes) / costes | **{{ value.roi | pct }}** |
+
+Los supuestos están en `inputs/lineage.yaml` y hay que acordarlos con el negocio *antes* de medir.

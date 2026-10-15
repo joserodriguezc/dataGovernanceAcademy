@@ -56,6 +56,7 @@ class Marker(BaseModel):
     x: float
     y: float
     label: str
+    tone: Tone | None = None  # p. ej., un fallo; si falta, el color de su serie
 
 
 class LineChartBlock(BaseModel):
@@ -67,6 +68,8 @@ class LineChartBlock(BaseModel):
     series: list[Series]
     markers: list[Marker] = []
     reference_y: float | None = None  # línea horizontal de referencia (p. ej., 0)
+    reference_label: str | None = None
+    y_format: Literal["number", "time"] = "number"  # time: horas decimales como HH:MM
 
 
 class BarItem(BaseModel):
@@ -164,6 +167,35 @@ class TimelineBlock(BaseModel):
     items: list[TimelineItem]
 
 
+class GraphNode(BaseModel):
+    id: str
+    label: str
+    layer: str
+    tone: Tone | None = None  # marca nodos especiales (p. ej., datos personales o la métrica)
+    detail: str | None = None
+
+
+class GraphEdge(BaseModel):
+    source: str
+    target: str
+    kind: str | None = None  # se muestra al pasar el ratón
+    dashed: bool = False  # p. ej., un flujo manual
+    tone: Tone | None = None  # p. ej., un flujo con datos personales
+
+
+class GraphBlock(BaseModel):
+    """Grafo dirigido por capas (p. ej., linaje): al elegir un nodo se ve de qué depende y
+    qué depende de él."""
+
+    type: Literal["graph"] = "graph"
+    title: str
+    subtitle: str | None = None
+    layers: list[str]  # orden de izquierda a derecha
+    nodes: list[GraphNode]
+    edges: list[GraphEdge]
+    focus: str | None = None  # nodo seleccionado al abrir
+
+
 class DocumentBlock(BaseModel):
     type: Literal["document"] = "document"
     title: str
@@ -173,7 +205,7 @@ class DocumentBlock(BaseModel):
 
 Block = Annotated[
     KpisBlock | CalloutBlock | TableBlock | LineChartBlock | BarListBlock | MatrixBlock
-    | HeatmapBlock | TimelineBlock | DocumentBlock,
+    | HeatmapBlock | TimelineBlock | GraphBlock | DocumentBlock,
     Field(discriminator="type"),
 ]
 

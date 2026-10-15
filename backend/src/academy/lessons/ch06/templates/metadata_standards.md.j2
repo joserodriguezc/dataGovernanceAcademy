@@ -1,0 +1,49 @@
+# Estándar de metadatos de {{ company }}: cumplimiento
+
+**Versión {{ pub.version }}**, publicado el {{ pub.published.strftime("%d/%m/%Y") }} y con próxima revisión el {{ pub.next_review.strftime("%d/%m/%Y") }}. Lo publica: {{ pub.owner }}. Responde de su adopción: {{ pub.accountable }}.
+
+Principios: los metadatos son un activo de la empresa; su gestión es transversal y necesita liderazgo de toda la empresa; nadie puede sacarla adelante solo; y las decisiones se toman pensando en la empresa, no en un grupo.
+
+## Cumplimiento por norma
+
+| Norma | Se aplica a | Cumplen | % | Incumplimientos (muestra) |
+|---|---|---:|---:|---|
+{% for c in compliance %}
+| **{{ c.standard.id }}** {{ c.standard.text }} | {{ scope_labels[c.standard.applies_to] }} | {{ c.passed }} de {{ c.total }} | {{ ("✅ " if c.rate == 1 else "⚠️ ") ~ (c.rate | pct) }} | {{ c.failures[:3] | join(", ") or "—" }}{{ " …" if c.failures | length > 3 }} |
+{% endfor %}
+
+## Adopción por dominio
+
+| Norma | {% for d in domains %}{{ domain_names.get(d, d) }} | {% endfor %}
+
+|---|{% for _ in domains %}---:|{% endfor %}
+
+{% for c in compliance %}
+| {{ c.standard.id }} | {% for d in domains %}{% set pn = c.by_domain.get(d) %}{{ (pn[0] / pn[1]) | pct if pn else "—" }} | {% endfor %}
+
+{% endfor %}
+
+## Madurez del catálogo
+
+| Métrica | Valor | % |
+|---|---:|---:|
+{% for name, ok, total in maturity %}
+| {{ name }} | {{ ok }} de {{ total }} | {{ (ok / total) | pct if total else "—" }} |
+{% endfor %}
+
+{% if broken %}
+## ⚠️ Vínculos rotos del glosario
+
+Estas columnas del glosario no existen en el warehouse:
+{% for term, col in broken %}
+- {{ term }} → `{{ col }}`
+{% endfor %}
+{% endif %}
+
+## Valor estimado
+
+| Palanca | Supuestos | Valor anual |
+|---|---|---:|
+| Catálogo: menos tiempo buscando datos | {{ v.data_users }} usuarios × {{ v.annual_cost_per_user | money }} × {{ v.search_time_share | pct }} del tiempo buscando × {{ v.expected_reduction | pct }} de reducción | {{ v.catalog_value | money }} |
+| Glosario: definiciones acordadas antes del informe | {{ v.reports_per_year }} informes × {{ v.hours_saved_per_report | num }} h × {{ v.hourly_rate | money }}/h | {{ v.glossary_value | money }} |
+| **Total** | Hay que validarlo con el negocio antes de comunicarlo (capítulo 1) | **{{ (v.catalog_value + v.glossary_value) | money }}** |

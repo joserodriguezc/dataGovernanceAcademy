@@ -1,0 +1,117 @@
+# Arquitectura de datos de {{ company }}
+
+> La arquitectura de datos es el plano de cómo se recogen, guardan, integran, procesan y consumen los datos. El principio rector es la **simplicidad**.
+
+## As-is: cómo fluyen hoy los datos
+
+**{{ as_is.stores | length }} almacenes y {{ as_is.flows | length }} flujos punto a punto**, {{ pii_flows }} de ellos con datos personales y {{ manual_flows }} manuales.
+
+```mermaid
+graph LR
+{% for s in as_is.stores %}
+  {{ s.id }}["{{ s.name }}<br><i>{{ s.kind }}</i>"]
+{% endfor %}
+{% for f in as_is.flows %}
+  {{ f.from_ }} {{ "-.->" if f.manual else "-->" }}|{{ f.how }}{{ " · PII" if f.pii else "" }}| {{ f.to }}
+{% endfor %}
+{% for s in retired %}
+  style {{ s }} stroke-dasharray: 5 5
+{% endfor %}
+```
+
+Líneas discontinuas: flujos manuales. Borde discontinuo: almacenes que desaparecen en el to-be.
+
+## To-be: el estado objetivo
+
+```mermaid
+graph TB
+{% for layer in to_be.layers %}
+  subgraph L{{ loop.index }}["{{ layer.name }}"]
+{% for c in layer.components %}
+    L{{ loop.index }}C{{ loop.index0 }}["{{ c }}"]
+{% endfor %}
+  end
+{% endfor %}
+{% for layer in to_be.layers[:-1] %}
+  L{{ loop.index }} <--> L{{ loop.index + 1 }}
+{% endfor %}
+```
+
+| | As-is | To-be |
+|---|---:|---:|
+| Almacenes de datos | {{ as_is.stores | length }} | {{ to_be_stores }} |
+| Flujos punto a punto | {{ as_is.flows | length }} | {{ to_be_flows }} |
+| Flujos manuales | {{ manual_flows }} | {{ to_be_manual }} |
+| Flujos con datos personales | {{ pii_flows }} | {{ to_be_pii }} |
+
+Se retiran: {{ retired_names | join(", ") }}.
+
+## Principios de diseño
+
+{% for p in principles %}
+{{ loop.index }}. **{{ p.id }}.** {{ p.text }}
+{% endfor %}
+
+## Estándares arquitectónicos y cumplimiento del warehouse
+
+| Estándar | Área | Incumplimientos | |
+|---|---|---:|---|
+{% for s in standards %}
+| **{{ s.id }}** {{ s.text }} | {{ s.area }} | {{ counts.get(s.id, 0) }} | {{ "✅" if not counts.get(s.id) else "❌" }} |
+{% endfor %}
+
+{% for s in standards if by_standard.get(s.id) %}
+### {{ s.id }}: {{ s.text }}
+
+{% for f in by_standard[s.id] %}
+- `{{ f.target }}`: {{ f.message }}
+{% endfor %}
+
+{% endfor %}
+## Revisión de arquitectura en el ciclo de desarrollo (SDLC)
+
+Cada cambio de SQL se revisa automáticamente antes de incorporarlo:
+`uv run python -m academy.lessons.ch09.review <fichero.sql>`
+
+| Fichero | Resultado |
+|---|---|
+{% for file, findings in sql_reviews %}
+| `{{ file }}` | {{ "✅ Cumple" if not findings else "❌ " ~ (findings | map(attribute="standard") | unique | join(", ")) }} |
+{% endfor %}
+
+{% for file, findings in sql_reviews if findings %}
+**`{{ file }}`** (propuesta rechazada):
+{% for f in findings %}
+- **{{ f.standard }}** · {{ f.message }}
+{% endfor %}
+{% endfor %}
+
+## Programa de arquitectura
+
+- **Arquitecto jefe de datos:** {{ program.chief_data_architect }} · **Sponsor ejecutivo:** {{ program.executive_sponsor }}
+- **{{ program.council.name }}** ({{ program.council.cadence }}), lo preside {{ program.council.chair }}: {{ program.council.members | join(", ") }}.
+
+| Tipo de cambio | Revisión necesaria |
+|---|---|
+{% for r in program.review_levels %}
+| {{ r.change }} | {{ r.review }} |
+{% endfor %}
+
+## Transición por fases
+
+{% for p in roadmap %}
+**{{ p.phase }}**
+{% for a in p.actions %}
+- {{ a }}
+{% endfor %}
+
+{% endfor %}
+Una arquitectura objetivo es un viaje de 5 a 7 años: hay que recordar a quien financia hacia dónde se va y enseñar valor pronto.
+
+## Medidas de éxito
+
+| Medida | Valor actual |
+|---|---|
+{% for name, value in measures %}
+| {{ name }} | {{ value }} |
+{% endfor %}

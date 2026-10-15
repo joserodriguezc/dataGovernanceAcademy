@@ -1,0 +1,46 @@
+# Gestión de datos primarios (PDM) de cliente de NovaMercado.
+
+purpose: >-
+  Nuestro programa de datos primarios entrega capacidades de datos fundamentales para la
+  transformación de NovaMercado y da a empleados, clientes y socios información de cliente
+  fiable cuando la necesitan.
+
+# Definición común de cliente (aprobada por la CMO como ejecutiva del dominio, capítulo 6)
+customer_definition: >-
+  Persona registrada en el programa de fidelización o que ha comprado al menos una vez en
+  cualquier canal. Una misma persona es un único cliente aunque aparezca en varios sistemas.
+
+# Sistemas de origen y cómo se leen (tablas de staging de la Fase 0)
+sources:
+  crm: {table: staging.stg_crm_customers, key: customer_id, label: CRM}
+  ecom: {table: staging.stg_ecom_customers, key: ecom_user_id, label: E-commerce}
+  pos: {table: staging.stg_pos_loyalty_cards, key: card_id, label: Tarjetas de tienda}
+
+# Deduplicación (match and merge): reglas en orden; la primera que se cumple decide.
+matching:
+  name_scorer: token_set_ratio     # rapidfuzz: tolera apellidos de menos ("ANA RUIZ" vs "Ana Ruiz Gil")
+  auto_match_score: 90             # mismo código postal y nombre >= este valor -> mismo cliente
+  review_score: 75                 # entre este valor y el anterior -> revisión humana
+  # Mismo nombre (>= auto_match_score) pero distinto código postal: ¿se ha mudado? -> revisión
+  review_if_postal_differs: true
+
+# Lógica de confianza (trust logic): para cada atributo, fuentes en orden de confianza.
+# Dentro de una misma fuente, gana el registro más reciente. Si una fuente no tiene un valor
+# válido, se pasa a la siguiente. Cada atributo tiene un steward.
+attributes:
+  first_name: {sources: [crm, ecom, pos], steward: Responsable de CRM, definition: "Nombre de pila del cliente."}
+  last_name: {sources: [crm, ecom, pos], steward: Responsable de CRM, definition: "Apellidos del cliente."}
+  email: {sources: [crm, ecom], validate: "^[^@\\s]+@[^@\\s]+\\.[a-z]{2,}$", steward: Responsable de CRM, definition: "Email de contacto autorizado."}
+  phone: {sources: [crm, ecom, pos], validate: "^[67]\\d{8}$", steward: Responsable de CRM, definition: "Móvil de 9 dígitos."}
+  postal_code: {sources: [crm, ecom, pos], validate: "^\\d{5}$", steward: Responsable de CRM, definition: "Código postal de la dirección principal."}
+  birth_date: {sources: [crm], steward: Responsable de CRM, definition: "Fecha de nacimiento declarada en el programa de fidelización."}
+  loyalty_tier: {sources: [crm], steward: Responsable de CRM, definition: "Nivel del programa de fidelización."}
+  consent_marketing: {sources: [crm], default: false, steward: DPO, definition: "Consentimiento expreso para comunicaciones comerciales. Sin registro, no hay consentimiento."}
+
+# Supuestos de valor (a validar con Marketing, como pide el capítulo 1)
+value:
+  campaigns_per_year: 24
+  cost_per_contact: 0.12        # US$ por envío
+  hours_manual_dedup: 3000      # horas/año de depuración manual (línea L3 del capítulo 1)
+  automation_share: 0.8         # parte de esas horas que elimina el PDM
+  cost_per_hour: 45

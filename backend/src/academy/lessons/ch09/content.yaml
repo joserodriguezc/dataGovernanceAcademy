@@ -1,0 +1,86 @@
+# Contenido de la lección 9. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  La arquitectura de datos decide cuántos sitios hay que gobernar. En esta lección dibujas la
+  arquitectura actual de NovaMercado, con todos sus almacenes y flujos (también los que nadie
+  documentó), defines la arquitectura objetivo y los principios de diseño, y conviertes los
+  estándares en un linter. El linter revisa el warehouse y cada cambio SQL antes de aceptarlo,
+  como una puerta en el ciclo de desarrollo.
+
+ideas:
+  - idea: "La simplicidad gana: menos fuentes, almacenes, integraciones y accesos."
+    application: "Se hace inventario de almacenes y flujos, y se mide cuántos desaparecen en la arquitectura objetivo."
+  - idea: "Primero se modela lo que hay y después lo que se quiere."
+    application: "El grafo de la arquitectura actual muestra el «espagueti»; la objetivo se describe por capas."
+  - idea: "Los principios de diseño se fijan antes de diseñar."
+    application: "Cinco principios del libro más dos propios: simplicidad y datos personales en el menor número de sitios."
+  - idea: "Los estándares de arquitectura cubren metadatos, calidad, acceso, distribución y consumo."
+    application: "Diez estándares que el linter comprueba automáticamente en el warehouse."
+  - idea: "Los datos sensibles no deben repetirse en muchos sitios."
+    application: "Se cuenta en cuántas tablas está cada categoría de dato personal, con la clasificación de la lección 6."
+  - idea: "La arquitectura se integra en el ciclo de desarrollo."
+    application: "Cada transformación SQL, y la propuesta nueva de Marketing, pasa por el linter antes de aceptarse."
+  - idea: "La transición va por fases: primero lo rápido, después lo de fondo."
+    application: "Una hoja de ruta en tres fases, de 0-6, 6-24 y 24-60 meses."
+  - idea: "El éxito de la arquitectura se mide."
+    application: "Las medidas usan el linter y lo que las lecciones 6, 7 y 8 han dejado en el warehouse."
+
+takeaways:
+  - "Retirando tres almacenes paralelos, de 17 flujos se pasa a 8 y los manuales casi desaparecen."
+  - "El warehouse cumple 8 de 10 estándares: los importes se guardan en coma flotante, un riesgo de redondeo para el dinero."
+  - "La propuesta de Marketing incumple varios estándares: la revisión automática la rechazaría antes de llegar al warehouse."
+
+challenges:
+  - title: Retira menos almacenes
+    steps:
+      - "En Entradas → Arquitectura, quita «xls_regions» de la lista de almacenes que se retiran."
+      - "Ejecuta de nuevo."
+    look_for: "Suben los flujos del to-be y los manuales que quedan. Cada almacén que sobrevive es un sitio más que gobernar."
+  - title: Endurece un estándar
+    steps:
+      - "En Entradas → Estándares, baja «max_pii_locations» a 1."
+      - "Ejecuta de nuevo."
+    look_for: "Aparecen más incumplimientos de datos personales: el principio P7 pide un único sitio autorizado, que es el registro único de la lección 10."
+  - title: Lee la revisión de la propuesta
+    steps:
+      - "En Resultados → Estándares y revisión SQL, busca el fichero 20_curated_customer_report.sql."
+    look_for: "Cada hallazgo dice qué estándar incumple. ¿Qué cambiarías en el SQL para que pasara la revisión?"
+
+labels:
+  # Arquitectura
+  as_is: Arquitectura actual
+  stores: Almacenes
+  Store: Almacén
+  kind: Tipo
+  flows: Flujos
+  Flow: Flujo
+  from: Desde (id)
+  to: Hacia (id)
+  how: Cómo
+  pii: Lleva datos personales
+  to_be: Arquitectura objetivo
+  layers: Capas
+  Layer: Capa
+  components: Componentes
+  retired: Almacenes que se retiran (ids)
+  principles: Principios de diseño
+  Principle: Principio
+  text: Texto
+  program: Programa de arquitectura
+  roadmap: Hoja de ruta
+  # Estándares
+  naming: Nomenclatura
+  staging_prefixes: Prefijos de staging
+  curated_prefixes: Prefijos de curated
+  column_pattern: Patrón de nombre de columna
+  allowed_reads: Lecturas permitidas entre capas
+  types: Tipos
+  date_suffixes: Sufijos de columnas de fecha
+  date_types: Tipos de fecha permitidos
+  money_names: Nombres de columnas de importe
+  money_types: Tipos de importe permitidos
+  keys: Claves
+  max_pii_locations: Máximo de tablas con el mismo dato personal
+  standards: Estándares
+  Standard: Estándar
+  area: Área

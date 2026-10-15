@@ -1,0 +1,83 @@
+# Contenido de la lección 11. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  Todo lo anterior hay que hacerlo cada noche, sin que nadie lo lance a mano. En esta lección
+  ejecutas el pipeline nocturno de NovaMercado de verdad: recarga el warehouse y encadena las
+  lecciones 10, 6, 7 y 8 con tus entradas, con reintentos y registro de auditoría. Después
+  revisas, sobre un historial simulado de meses, si se cumplen los acuerdos de servicio, de
+  dónde vienen los tickets y cuánto valor aportan las automatizaciones.
+
+ideas:
+  - idea: "Las operaciones de datos son el pegamento del ecosistema."
+    application: "El pipeline encadena la carga, el registro único, los metadatos, el linaje y la calidad."
+  - idea: "Los pipelines se automatizan."
+    application: "Un orquestador respeta las dependencias, reintenta una vez y omite los pasos que dependen de uno que ha fallado."
+  - idea: "Un equipo con muchos accesos necesita auditoría: la confianza no es un control."
+    application: "Cada paso queda registrado con quién lo ejecutó, cuándo, cuánto tardó y cómo terminó, en una base aparte del warehouse."
+  - idea: "Se monitoriza y se mejora de forma continua."
+    application: "Acuerdos de servicio por paso y de entrega, frescura del dato y variación del número de filas entre ejecuciones."
+  - idea: "Se trabaja con tickets y se analiza la causa raíz."
+    application: "Tickets por causa y sistema; las combinaciones que más se repiten alimentan el backlog de automatización."
+  - idea: "El valor del equipo se enseña: dólares, horas, riesgos evitados y automatizaciones."
+    application: "Un panel suma el valor de las automatizaciones de las lecciones 6 a 11."
+  - idea: "Operaciones de TI y de datos son distintas, pero aliadas."
+    application: "Una tabla reparte las responsabilidades entre las dos."
+
+takeaways:
+  - "El pipeline ejecuta de verdad las lecciones anteriores: tus cambios en ellas llegan al warehouse cada noche."
+  - "No se cumplen los acuerdos de servicio: menos noches sin fallos de las que se comprometieron."
+  - "La cifra de ventas no está al día: el último dato tiene más antigüedad de la que permite el SLA."
+  - "La mitad de los tickets son bugs: conviene llevar pruebas automáticas al ciclo de desarrollo en lugar de apagar fuegos."
+
+challenges:
+  - title: Haz que el registro único falle más
+    steps:
+      - "En Entradas → Operaciones, sube el «failure_rate» del paso «pdm» y pon «retry_success» a 0."
+      - "Guarda y ejecuta de nuevo."
+    look_for: "Caen las noches sin fallos y aparecen más tickets de fallos de proceso. El historial es simulado, pero la lógica de los SLA es la real."
+  - title: Rompe un paso de verdad
+    steps:
+      - "En la lección 8 → Entradas, pon en una regla una tabla que no existe (por ejemplo, staging.no_existe) en «Tabla medida» y en la lista de tablas."
+      - "Vuelve aquí y ejecuta."
+    look_for: "El paso de calidad falla, se reintenta una vez y queda registrado con su error. Deshaz el cambio con «Volver a los originales»."
+  - title: Vigila el volumen
+    steps:
+      - "En «Datos de NovaMercado», baja los clientes a 500, guarda y reconstruye."
+      - "Ejecuta esta lección."
+    look_for: "La tabla de filas por ejecución avisa de una caída de volumen en las tablas curadas: es la alerta que llega antes que la queja del comité."
+
+labels:
+  as_of: Fecha del informe
+  pipeline: Pasos del pipeline
+  Step: Paso
+  depends_on: Depende de
+  sla_minutes: SLA (minutos)
+  baseline_minutes: Duración habitual (minutos)
+  failure_rate: Probabilidad de fallo
+  delivery: Entrega
+  ready_by: Lista antes de
+  freshness_days: Antigüedad máxima del dato (días)
+  success_target: Objetivo de noches sin fallos (0 a 1)
+  row_count_tolerance: Variación de filas que da aviso (0 a 1)
+  history: Historial simulado
+  nights: Noches
+  duration_noise: Variabilidad de la duración
+  retry_success: Fallos que se arreglan al reintentar (0 a 1)
+  tickets_per_year: Tickets al año por causa
+  hours_per_ticket: Horas por ticket y causa
+  systems: Sistemas
+  system_weights: Peso de cada sistema
+  automations: Automatizaciones
+  Automation: Automatización
+  hours_saved: Horas ahorradas al año
+  dollars_saved: Ahorro al año (US$)
+  risks_avoided: Riesgos evitados
+  chapter: Lección
+  cost_per_hour: Coste de una hora (US$)
+  partnership: Reparto entre TI y datos
+  activity: Actividad
+  it: TI
+  data: Datos
+  visibility: Visibilidad del equipo
+  champion: Champion
+  channels: Canales

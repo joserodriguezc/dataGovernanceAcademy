@@ -1,0 +1,91 @@
+# Arquitectura de datos de NovaMercado: as-is, to-be, principios, programa y transición.
+
+# --- As-is: almacenes y flujos actuales, también los que nadie documentó -------------------
+as_is:
+  stores:
+    - {id: crm, name: CRM (SaaS), kind: aplicación}
+    - {id: ecom, name: E-commerce, kind: aplicación}
+    - {id: pos, name: POS de tiendas, kind: aplicación}
+    - {id: erp, name: ERP, kind: aplicación}
+    - {id: dwh, name: Warehouse NovaMercado, kind: almacén analítico}
+    - {id: mkt_db, name: Base de datos de campañas de Marketing, kind: almacén departamental}
+    - {id: fin_cube, name: Cubo de ventas de Finanzas, kind: almacén departamental}
+    - {id: xls_regions, name: Hojas de cálculo regionales, kind: hoja de cálculo}
+    - {id: bi, name: Informes y cuadros de mando, kind: consumo}
+  # Cada flujo: origen, destino, mecanismo y si transporta PII
+  flows:
+    - {from: crm, to: ecom, how: "sincronización nocturna punto a punto", pii: true}
+    - {from: ecom, to: crm, how: "exportación CSV manual semanal", pii: true}
+    - {from: pos, to: erp, how: "batch nocturno", pii: false}
+    - {from: crm, to: mkt_db, how: "extracción manual", pii: true}
+    - {from: ecom, to: mkt_db, how: "extracción manual", pii: true}
+    - {from: pos, to: fin_cube, how: "ETL heredado", pii: false}
+    - {from: erp, to: fin_cube, how: "ETL heredado", pii: false}
+    - {from: fin_cube, to: xls_regions, how: "copia y pega", pii: false}
+    - {from: pos, to: xls_regions, how: "exportación del POS de cada tienda", pii: false}
+    - {from: crm, to: dwh, how: "carga CSV", pii: true}
+    - {from: ecom, to: dwh, how: "carga CSV", pii: true}
+    - {from: pos, to: dwh, how: "carga CSV", pii: true}
+    - {from: erp, to: dwh, how: "carga CSV", pii: false}
+    - {from: dwh, to: bi, how: "consulta directa", pii: false}
+    - {from: fin_cube, to: bi, how: "consulta directa", pii: false}
+    - {from: mkt_db, to: bi, how: "consulta directa", pii: true}
+    - {from: xls_regions, to: bi, how: "adjunto por email", pii: false}
+
+# --- To-be: dos almacenes de datos (operación y análisis) y puntos de provisión autorizados ---
+to_be:
+  layers:
+    - name: Sistemas de interacción
+      components: [App móvil, Web, CRM, Tiendas]
+    - name: APIs y plataforma de integración
+      components: [API de cliente, API de producto, Eventos de venta]
+    - name: Núcleo de datos unificado
+      components: ["raw: datos tal como llegan", "staging: datos tipados y estandarizados", "curated: datos curados por dominio", "Golden record de cliente (capítulo 10)"]
+    - name: Analítica
+      components: [Informes certificados, Marketplace de datos (capítulo 6), Analítica avanzada]
+    - name: Sistemas de registro
+      components: [ERP, POS, Plataforma de pagos NovaPay]
+  retired: [mkt_db, fin_cube, xls_regions]   # almacenes que desaparecen en el to-be
+
+# --- Principios de diseño ---------------------------------------------------------------
+principles:
+  - {id: P1, text: "La arquitectura escala con el modelo de negocio, incluida la entrada en pagos (NovaPay)."}
+  - {id: P2, text: "Los procesos de negocio y de datos se automatizan siempre que sea posible."}
+  - {id: P3, text: "Los datos se almacenan para uso central y se consumen desde puntos de provisión autorizados (capa curated certificada)."}
+  - {id: P4, text: "Los datos primarios se concilian según reglas de negocio documentadas (golden record)."}
+  - {id: P5, text: "Los usuarios ven la calidad de los datos y los cambios en el modelo."}
+  - {id: P6, text: "Simplicidad: dos almacenes (operación y análisis), no uno por departamento."}
+  - {id: P7, text: "Los datos personales se guardan en el menor número posible de lugares."}
+
+# --- Programa de arquitectura -----------------------------------------------------------
+program:
+  chief_data_architect: Arquitecto de información (capítulo 3)
+  executive_sponsor: CIO
+  council:
+    name: Consejo de arquitectura
+    chair: Arquitecto jefe de TI
+    members: [Arquitecto de información, Arquitecto de negocio, Arquitecto empresarial de TI, Líder de ingeniería de datos, Steward técnico de cada dominio]
+    cadence: quincenal
+  review_levels:
+    - {change: "Añadir una columna o una tabla siguiendo los estándares", review: "Autodeclaración: la revisión automática de SQL en verde"}
+    - {change: "Nueva fuente de datos o nuevo dataset curado", review: "Revisión del arquitecto de información"}
+    - {change: "Nuevo sistema (por ejemplo, el ERP o NovaPay)", review: "Diseño de extremo a extremo aprobado por el consejo de arquitectura"}
+
+# --- Transición por fases ----------------------------------------------------------------
+roadmap:
+  - phase: "Fase 1 (0-6 meses): victorias rápidas"
+    actions:
+      - Retirar las hojas de cálculo regionales con la cifra única de ventas certificada
+      - Revisión automática de SQL en el SDLC del warehouse
+      - Corregir los tipos de importes y fechas en staging y curated
+  - phase: "Fase 2 (6-24 meses): consolidar"
+    actions:
+      - Sustituir la base de datos de campañas por el golden record de cliente
+      - Retirar el cubo de Finanzas y servir sus informes desde curated
+      - Sustituir la exportación CSV manual del e-commerce por eventos
+  - phase: "Fase 3 (24-60 meses): transformar"
+    actions:
+      - APIs de cliente y producto para los sistemas de interacción
+      - Integración de NovaPay en el núcleo de datos
+
+# Medidas de éxito (lista del capítulo): se calculan en run.py a partir de los datos

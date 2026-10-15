@@ -1,0 +1,41 @@
+# Metadatos técnicos y linaje de NovaMercado.
+
+# Sistemas de origen: el prefijo de la tabla raw indica de qué sistema llega cada CSV.
+source_systems:
+  crm: {name: CRM de clientes y fidelización, location: "SaaS (nube)", technical_steward: Ingeniero de datos de CRM}
+  ecom: {name: Plataforma e-commerce, location: "Nube pública", technical_steward: Ingeniero de datos de e-commerce}
+  pos: {name: Punto de venta de tiendas, location: "Servidores en tienda + central on-premise", technical_steward: Ingeniero de datos de POS}
+  erp: {name: ERP de compras, inventario y finanzas, location: "Centro de datos on-premise", technical_steward: Ingeniero de datos de ERP}
+
+# Métricas críticas cuyo linaje debe estar documentado de extremo a extremo (KPI del comité).
+critical_metrics:
+  - {term: Venta neta, column: curated.agg_sales_daily_channel.revenue}
+  - {term: Transacción, column: curated.agg_sales_daily_channel.transactions}
+  - {term: Categoría de producto, column: curated.fct_sales.category}
+
+# Validación del linaje (7 pasos del capítulo) para el informe más importante: la venta neta
+# por canal del comité de dirección. La narrativa es lo que cuenta quien produce el informe.
+validation:
+  report: Ventas netas por canal (comité de dirección)
+  business_element: curated.agg_sales_daily_channel.revenue
+  producer: Controller de ventas
+  sample: "Ventas netas del canal online, septiembre de 2026"
+  narrative: >-
+    La venta neta sale del ERP: cantidad vendida por precio de lista del producto, en todos los
+    canales, quitando los pedidos cancelados y las devoluciones.
+  claimed_sources:
+    - raw.erp_products.unit_price
+    - raw.pos_sales.quantity
+    - raw.ecom_orders.quantity
+  claimed_filters: [cancelado, devuelto]
+
+# Supuestos de valor (fórmulas del capítulo); hay que acordarlos con el negocio antes de medir.
+value:
+  people_impacted: 25           # analistas e ingenieros que investigan datos
+  hours_saved_per_person: 60    # al año, buscando el origen de una cifra o el impacto de un cambio
+  cost_per_hour: 45
+  issues_identified: 6          # incidencias que el linaje ayuda a localizar al año
+  value_per_issue: 8000
+  errors_avoided: 4             # cambios que habrían roto un informe del comité
+  value_per_error: 15000
+  annual_cost: 60000            # mantener el linaje (personas y herramienta)

@@ -30,7 +30,7 @@ class LessonStore:
 
     def save_input(self, lesson: int, spec: InputSpec, data: dict[str, Any]) -> dict[str, Any]:
         """Valida con el modelo de la lección (lanza ValidationError) y guarda."""
-        clean = spec.model.model_validate(data).model_dump(mode="json")
+        clean = spec.model.model_validate(data).model_dump(mode="json", by_alias=True)
         path = self._input_path(lesson, spec)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(clean, ensure_ascii=False, indent=2), encoding="utf-8")

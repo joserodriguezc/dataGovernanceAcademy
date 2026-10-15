@@ -294,6 +294,16 @@ code { font-size: 0.9em; background: var(--accent-soft); padding: 0.1em 0.35em; 
 .tl-today-label { position: absolute; bottom: 0; transform: translateX(-50%); font-size: 0.75rem; white-space: nowrap; color: var(--text); font-weight: 600; }
 .tl-axis { display: flex; justify-content: space-between; margin: 0.35rem 4.5rem 0 var(--tl-label); font-size: 0.75rem; color: var(--text-muted); }
 
+/* Grafo por capas */
+.graph-scroll { overflow-x: auto; }
+.graph svg { display: block; max-width: none; }
+.graph .layer-label { fill: var(--text-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.graph .node-label { fill: var(--text); font-size: 11.5px; }
+.graph-node { cursor: pointer; }
+.graph-node:focus { outline: none; }
+.graph-node:focus-visible rect { stroke: var(--accent); stroke-width: 3; }
+.graph-help { font-size: 0.85rem; margin: 0.5rem 0 0; }
+
 @media (max-width: 700px) {
   .timeline { --tl-label: 45%; }
   .ws-grid { grid-template-columns: 1fr; }

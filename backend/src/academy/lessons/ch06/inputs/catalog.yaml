@@ -1,0 +1,79 @@
+# Anotaciones de negocio del catálogo. Los metadatos técnicos (columnas, tipos, filas, nulos)
+# se extraen del warehouse; los stewards salen del dominio (capítulo 3).
+# format: dataset_curado | tabla_staging | aterrizaje_raw
+tables:
+  curated.fct_sales:
+    description: Líneas de venta de todos los canales (tienda y online), con su categoría y estado.
+    domain: sales
+    format: dataset_curado
+    tags: [ventas, canal, hechos]
+  curated.agg_sales_daily_channel:
+    description: Venta neta y número de transacciones por día y canal. Es la cifra oficial de ventas.
+    domain: sales
+    format: dataset_curado
+    tags: [ventas, kpi, comité]
+  curated.dim_product:
+    description: Productos con su categoría, precio de lista, coste y proveedor.
+    domain: product
+    format: dataset_curado
+    tags: [producto, catálogo]
+  curated.dim_customer:
+    description: Cliente único (golden record del capítulo 10) sin datos personales directos, con localización, segmento, canales y ventas netas.
+    domain: customer
+    format: dataset_curado
+    tags: [cliente, golden record, vista única]
+  curated.dim_store:
+    description: Tiendas físicas con su región y fecha de apertura.
+    domain: store
+    format: dataset_curado
+    tags: [tienda, región]
+  staging.stg_crm_customers:
+    description: Clientes del CRM con tipos normalizados (email en minúsculas, teléfono de 9 dígitos).
+    domain: customer
+    format: tabla_staging
+    tags: [cliente, crm, pii]
+  staging.stg_ecom_customers:
+    description: Usuarios registrados en el e-commerce, con la fecha de alta interpretada en ambos formatos.
+    domain: customer
+    format: tabla_staging
+    tags: [cliente, online, pii]
+  staging.stg_pos_loyalty_cards:
+    description: Tarjetas de fidelización emitidas en tienda.
+    domain: customer
+    format: tabla_staging
+    tags: [cliente, tienda, pii]
+  staging.stg_pos_sales:
+    description: Líneas de ticket de las tiendas con tipos normalizados.
+    domain: sales
+    format: tabla_staging
+    tags: [ventas, tienda]
+  staging.stg_ecom_orders:
+    description: Líneas de pedido online con su estado y código postal de envío.
+    domain: sales
+    format: tabla_staging
+    tags: [ventas, online]
+  staging.stg_products:
+    description: Productos del ERP con precios numéricos.
+    domain: product
+    format: tabla_staging
+    tags: [producto, erp]
+  staging.stg_suppliers:
+    description: Proveedores del ERP con su contacto de compras.
+    domain: supplier
+    format: tabla_staging
+    tags: [proveedor, erp]
+  staging.stg_stores:
+    description: Tiendas del ERP.
+    domain: store
+    format: tabla_staging
+    tags: [tienda, erp]
+
+# Supuestos para estimar el valor del glosario y el catálogo (método del capítulo).
+value:
+  data_users: 40              # analistas y usuarios intensivos de datos
+  annual_cost_per_user: 85000
+  search_time_share: 0.30     # parte de su tiempo buscando y entendiendo datos
+  expected_reduction: 0.40    # reducción esperada de ese tiempo con el catálogo
+  reports_per_year: 600
+  hours_saved_per_report: 4   # menos idas y vueltas al acordar definiciones antes de hacer el informe
+  hourly_rate: 45

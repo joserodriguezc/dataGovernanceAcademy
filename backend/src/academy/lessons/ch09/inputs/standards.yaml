@@ -1,0 +1,47 @@
+# Estándares arquitectónicos que comprueba el linter (sobre el warehouse y sobre el SQL).
+# area: metadatos | calidad | acceso | distribución | modelado
+naming:
+  staging_prefixes: [stg_]
+  curated_prefixes: [dim_, fct_, agg_]
+  column_pattern: "^[a-z][a-z0-9_]*$"
+
+# Capas de las que puede leer cada capa (flujo raw → staging → curated)
+allowed_reads:
+  staging: [raw]
+  curated: [staging, curated]
+
+# Tipos esperados según el sufijo o el nombre de la columna (en staging y curated)
+types:
+  date_suffixes: [_date, _at, _ts]
+  date_types: [DATE, TIMESTAMP]
+  money_names: [amount, price, cost, revenue, list_price, unit_price, unit_cost, net_amount, net_sales]
+  money_types: [DECIMAL]
+
+# Clave de cada tabla: debe ser única y no nula
+keys:
+  staging.stg_crm_customers: customer_id
+  staging.stg_ecom_customers: ecom_user_id
+  staging.stg_pos_loyalty_cards: card_id
+  staging.stg_pos_sales: line_id
+  staging.stg_ecom_orders: order_line_id
+  staging.stg_products: sku
+  staging.stg_suppliers: supplier_id
+  staging.stg_stores: store_id
+  curated.dim_product: sku
+  curated.dim_store: store_id
+  curated.fct_sales: sale_line_id
+
+# Número máximo de tablas (fuera de raw) que pueden guardar cada categoría de PII
+max_pii_locations: 1
+
+standards:
+  - {id: ARQ-01, area: modelado, text: "Las tablas siguen la nomenclatura de su capa (stg_ en staging; dim_, fct_ o agg_ en curated)."}
+  - {id: ARQ-02, area: modelado, text: "Las columnas están en snake_case."}
+  - {id: ARQ-03, area: distribución, text: "Cada capa lee solo de las capas permitidas (raw → staging → curated)."}
+  - {id: ARQ-04, area: modelado, text: "No se usa SELECT *: las columnas se declaran explícitamente."}
+  - {id: ARQ-05, area: calidad, text: "Las fechas se guardan como DATE o TIMESTAMP."}
+  - {id: ARQ-06, area: calidad, text: "Los importes se guardan como DECIMAL, nunca como coma flotante."}
+  - {id: ARQ-07, area: calidad, text: "Toda tabla tiene una clave única y no nula."}
+  - {id: ARQ-08, area: metadatos, text: "Toda tabla curada está documentada (capítulo 6)."}
+  - {id: ARQ-09, area: acceso, text: "Ningún dato personal restringido llega a la capa curated."}
+  - {id: ARQ-10, area: acceso, text: "Cada categoría de dato personal se guarda en el menor número de lugares posible."}

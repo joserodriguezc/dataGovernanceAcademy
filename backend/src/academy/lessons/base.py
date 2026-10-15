@@ -22,7 +22,8 @@ class InputSpec:
     default_file: Path
 
     def default(self) -> dict[str, Any]:
-        return self.model.model_validate(load_yaml(self.default_file)).model_dump(mode="json")
+        return self.model.model_validate(load_yaml(self.default_file)).model_dump(
+            mode="json", by_alias=True)
 
 
 class Idea(BaseModel):
@@ -56,6 +57,11 @@ class LessonContext:
     db_path: Path | None = None
     raw_dir: Path | None = None
     stored_input: Callable[[int, "InputSpec"], dict[str, Any]] | None = None
+
+    @property
+    def ops_db(self) -> Path | None:
+        """Registro de operaciones (lección 11), junto al warehouse pero fuera de él."""
+        return self.db_path.with_name("operations.duckdb") if self.db_path else None
 
     def input_of(self, lesson: int, spec: "InputSpec") -> BaseModel:
         """Entrada `spec` de la lección `lesson`: la editada o, si no hay, la de por defecto."""

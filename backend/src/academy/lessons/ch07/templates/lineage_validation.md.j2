@@ -1,0 +1,49 @@
+# Validación del linaje: {{ v.report }}
+
+> Una buena práctica del capítulo: comparar lo que cuenta quien produce un informe con lo que dice el linaje técnico. Las diferencias son malentendidos o huecos en el linaje.
+
+## 1-3. Informe, elemento de negocio y responsable
+
+| | |
+|---|---|
+| **Informe** | {{ v.report }} |
+| **Elemento de negocio** | `{{ v.business_element }}` ({{ term or "sin término del glosario" }}) |
+| **Muestra validada** | {{ v.sample }} |
+| **Quién lo produce** | {{ v.producer }} |
+
+## 4. La narrativa del responsable
+
+> {{ v.narrative }}
+
+## 5-6. Narrativa frente al linaje técnico
+
+| Origen | Lo cita la narrativa | Lo usa el linaje | Lectura |
+|---|---|---|---|
+{% for c in rows %}
+| `{{ c.column }}` | {{ "✅" if c.claimed else "—" }} | {{ "✅" if c.actual else "—" }} | {{ c.reading }} |
+{% endfor %}
+
+| Filtro | En la narrativa | En el SQL |
+|---|---|---|
+{% for f in v.claimed_filters %}
+| {{ f }} | ✅ | {{ "✅" if f in r.filters_found else "⚠️ no aparece" }} |
+{% endfor %}
+
+Filtros reales del recorrido: {% for f in r.actual_filters %}`{{ f }}`{{ ", " if not loop.last }}{% else %}ninguno{% endfor %}.
+
+## 7. Conclusión y acciones
+
+{% if r.gaps %}
+**{{ r.gaps }} diferencias entre la narrativa y el linaje.** Hay que repasarlas con {{ v.producer }}:
+{% for c in r.claimed_not_used %}
+- `{{ c }}`: la narrativa lo cita como origen, pero la cifra **no pasa por ahí**. Hay que corregir la comprensión del responsable (o el cálculo, si la narrativa describe lo que el negocio necesita).
+{% endfor %}
+{% if r.undocumented %}
+- La cifra se calcula con {{ r.undocumented | length }} columnas que la narrativa no menciona: {{ r.undocumented | join(", ") }}. Hay que documentarlas en el glosario.
+{% endif %}
+{% for f in r.filters_missing %}
+- El filtro «{{ f }}» de la narrativa no se aplica en el SQL.
+{% endfor %}
+{% else %}
+✅ La narrativa y el linaje técnico coinciden.
+{% endif %}

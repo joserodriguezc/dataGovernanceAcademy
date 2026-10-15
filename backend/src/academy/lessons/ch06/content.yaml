@@ -1,0 +1,101 @@
+# Contenido de la lección 6. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  Nadie puede confiar en un dato que no sabe qué significa ni dónde encontrarlo. En esta
+  lección documentas el warehouse de NovaMercado: un glosario de negocio con definiciones
+  acordadas, un catálogo de tablas y columnas con sus responsables, la clasificación de los
+  datos personales y un estándar de metadatos que se mide. Todo queda escrito en el propio
+  warehouse (comentarios y esquema meta), así que las lecciones 4, 5, 7 y 8 lo notan.
+
+ideas:
+  - idea: "Hay metadatos de negocio, técnicos y operativos."
+    application: "Los de negocio son el glosario y las anotaciones; los técnicos (columnas, tipos, filas y nulos) se extraen del propio warehouse."
+  - idea: "Un buen término de glosario tiene definición, sinónimos, antónimos, ejemplos y notas."
+    application: "Cada término tiene además una fuente autorizada, un estado y las columnas que lo implementan."
+  - idea: "Los términos tienen que ser únicos y específicos: no «ID», sino «Identificador de cliente»."
+    application: "Se validan los términos duplicados y que las columnas estén totalmente cualificadas."
+  - idea: "Acordar una definición puede costar mucho tiempo, como pasa a menudo con «cliente»."
+    application: "«Cliente activo» queda en revisión, con el conflicto entre Marketing y Ventas por escrito."
+  - idea: "Un catálogo dice qué es cada dato, dónde está, en qué formato y quién responde de él."
+    application: "Las tablas se anotan con su descripción y los stewards de su dominio, que salen de la lección 3."
+  - idea: "Los datos se clasifican según una política de sensibilidad."
+    application: "Las reglas detectan datos personales por el nombre de la columna o por su contenido. Las correcciones de los stewards prevalecen."
+  - idea: "Un estándar de metadatos se publica y se mide su adopción."
+    application: "Se mide el cumplimiento de cada norma, en total y por dominio."
+  - idea: "El catálogo vale lo que se ahorra en buscar datos y en rehacer informes."
+    application: "El valor se estima con supuestos explícitos que el negocio debe validar."
+
+takeaways:
+  - "Al ejecutar la lección, las tablas curated documentadas pasan del 0 % al 100 %: las lecciones 4 y 5 lo reflejan."
+  - "Hay datos personales directos en raw y staging, pero ninguno llega a curated."
+  - "El estándar falla donde faltan personas (stewards de Producto y Proveedores), no donde faltan herramientas."
+  - "«Cliente activo» sigue en revisión: hasta que se apruebe, cada área contará clientes distintos."
+
+challenges:
+  - title: Mira cómo cambia la línea base
+    steps:
+      - "Ejecuta esta lección."
+      - "Vuelve a ejecutar la lección 4 y la 5."
+    look_for: "El indicador de tablas documentadas pasa del 0 % al 100 %, y en la lección 5 el resultado de datos «Tablas curated documentadas» pasa a estar logrado sin tocar nada allí."
+  - title: Corrige una clasificación
+    steps:
+      - "En Entradas → Clasificación, añade en «Correcciones» una columna detectada como PII y ponle el nivel «internal», con quién lo decide y por qué."
+      - "Ejecuta de nuevo."
+    look_for: "La columna deja de contar como restringida. Las correcciones de los stewards prevalecen sobre la detección automática, pero siempre quedan firmadas."
+  - title: Asigna los stewards que faltan
+    steps:
+      - "En la lección 3 → Entradas → Equipo, añade un steward de negocio al dominio de producto."
+      - "Vuelve aquí y ejecuta de nuevo."
+    look_for: "Mejora el cumplimiento de los estándares que exigen stewards. El problema era de personas, no de herramientas."
+
+labels:
+  # Glosario
+  terms: Términos
+  Term: Término
+  term: Término
+  definition: Definición
+  synonyms: Sinónimos
+  antonyms: Antónimos
+  examples: Ejemplos
+  authorized_source: Fuente autorizada
+  columns: Columnas que lo implementan
+  # Catálogo
+  tables: Tablas (esquema.tabla → anotación)
+  TableAnnotation: Anotación
+  format: Formato
+  tags: Etiquetas
+  value: Supuestos de valor
+  data_users: Personas que usan datos
+  annual_cost_per_user: Coste anual por persona (US$)
+  search_time_share: Parte del tiempo buscando datos (0 a 1)
+  expected_reduction: Reducción esperada (0 a 1)
+  reports_per_year: Informes al año
+  hours_saved_per_report: Horas ahorradas por informe
+  hourly_rate: Coste de una hora (US$)
+  # Clasificación
+  levels: Niveles de sensibilidad
+  order: Orden (más alto = más sensible)
+  rules: Reglas de detección
+  Rule: Regla
+  category: Categoría
+  level: Nivel
+  name_pattern: Patrón en el nombre de la columna
+  value_pattern: Patrón en el contenido
+  default: Clasificación por defecto
+  sample_size: Tamaño de la muestra
+  min_match: Proporción de la muestra que debe coincidir
+  overrides: Correcciones de los stewards
+  Override: Corrección
+  by: Decidido por
+  reason: Motivo
+  # Estándares
+  publication: Publicación del estándar
+  version: Versión
+  accountable: Responde
+  published: Publicado
+  next_review: Próxima revisión
+  standards: Normas
+  Standard: Norma
+  applies_to: Se aplica a
+  check: Comprobación
+  text: Texto

@@ -33,7 +33,7 @@ navegador (React) ──/api──▶ FastAPI ──▶ lecciones (lógica del l
 | 2 | Infraestructura de lecciones: registro de lecciones, entradas con JSON Schema, ejecución y resultados; piloto con el capítulo 1 | La lección 1 se edita, se ejecuta y muestra sus resultados con los mismos números que el laboratorio | ✅ hecho |
 | 3 | Datos compartidos: generador sintético y warehouse de NovaMercado desde la app; piloto técnico con el capítulo 8 (y lo que necesita del 6 y el 7) | La lección 8 construye su warehouse y muestra reglas, incidencias y certificación | ✅ hecho |
 | 4 | Capítulos 2 a 5 (gestión) | Cada lección con sus cinco secciones y sus tests | ✅ hecho |
-| 5 | Capítulos 6, 7, 9, 10 y 11 (técnicos), con el grafo de linaje interactivo | Ídem; con 6 y 7 ejecutadas, la lección 8 certifica `curated.dim_store` como en el laboratorio | ⬜ |
+| 5 | Capítulos 6, 7, 9, 10 y 11 (técnicos), con el grafo de linaje interactivo | Ídem; con 6 y 7 ejecutadas, la lección 8 certifica `curated.dim_store` como en el laboratorio | ✅ hecho |
 | 6 | Capítulos 12 a 16 | Ídem | ⬜ |
 | 7 | Capítulo 17: caso NovaPay de punta a punta | Ídem | ⬜ |
 | 8 | Pulido: retos de "Qué probar" con comprobación automática y descarga de informes | — | ⬜ |
@@ -47,6 +47,8 @@ navegador (React) ──/api──▶ FastAPI ──▶ lecciones (lógica del l
 5. Traer los tests del laboratorio a `backend/tests/lessons/` y añadir uno que compruebe que `compute` da los mismos números que el laboratorio.
 
 Si la lección usa entradas de otra lección, las lee con `ctx.input_of(número, spec)`: obtiene lo que haya editado el alumno o, si no ha editado nada, los valores por defecto. Cada campo de los formularios necesita su etiqueta en español, en `content.yaml` o en `labels.yaml`, y un test lo comprueba.
+
+Las herramientas de línea de comandos del laboratorio (marketplace, impact, review, lookup) no se traen: su función la cubre la interfaz. De esos módulos solo se conservan las funciones que reutilizan las lecciones.
 
 Si la lección usa el warehouse, se marca con `requires_warehouse=True` y su `compute` recibe un `LessonContext` con `db_path` y `raw_dir`. La API responde 409 si el warehouse no está construido. En los tests se usa el fixture `small_workspace` (tests/conftest.py).
 

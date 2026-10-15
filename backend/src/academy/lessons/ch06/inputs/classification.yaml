@@ -1,0 +1,29 @@
+# Política de clasificación de datos y reglas de detección automática.
+levels:
+  public: {name: Público, order: 0}
+  internal: {name: Interno, order: 1}
+  confidential: {name: Confidencial, order: 2}
+  restricted: {name: Restringido, order: 3}
+
+# Reglas en orden de prioridad. Primero gana la primera regla que coincide por nombre
+# (name_pattern); si ninguna coincide, la primera que coincide por contenido (value_pattern en
+# al menos min_match de una muestra). El teléfono exige 9-12 dígitos para no confundirse con
+# fechas como 2025-03-14.
+rules:
+  - {category: PII directa - email, level: restricted, name_pattern: "email", value_pattern: "^[^@\\s]+@[^@\\s]+\\.[A-Za-z]{2,}$"}
+  - {category: PII directa - teléfono, level: restricted, name_pattern: "phone|telefono|movil", value_pattern: "^\\+?(?:[0-9][ -]?){9,12}$"}
+  - {category: PII directa - nombre, level: restricted, name_pattern: "first_name|last_name|full_name|holder_name|contact_name", value_pattern: null}
+  - {category: PII directa - fecha de nacimiento, level: restricted, name_pattern: "birth", value_pattern: null}
+  - {category: PII indirecta - localización, level: confidential, name_pattern: "postal|city", value_pattern: "^[0-9]{5}$"}
+  - {category: Identificador fiscal, level: confidential, name_pattern: "tax_id", value_pattern: "^[A-Z][0-9]{8}$"}
+  - {category: Dato comercial sensible, level: confidential, name_pattern: "unit_cost", value_pattern: null}
+  - {category: Consentimiento, level: confidential, name_pattern: "consent", value_pattern: null}
+default: {category: Dato de negocio, level: internal}
+sample_size: 200
+min_match: 0.8
+
+# Correcciones confirmadas por los stewards (prevalecen sobre la detección automática).
+overrides:
+  staging.stg_suppliers.contact_email: {category: Contacto profesional de proveedor, level: confidential, by: Director de Compras, reason: "Email corporativo de un departamento, no de una persona."}
+  curated.dim_store.city: {category: Dato de negocio, level: public, by: Responsable de red de tiendas, reason: "La ciudad de una tienda es información pública."}
+  staging.stg_stores.city: {category: Dato de negocio, level: public, by: Responsable de red de tiendas, reason: "La ciudad de una tienda es información pública."}

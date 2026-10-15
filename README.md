@@ -49,7 +49,8 @@ Este recorrido crece con cada avance del proyecto.
 | 2 | Infraestructura de lecciones y lección 1 interactiva | ✅ hecho |
 | 3 | Datos de NovaMercado en la app y lección 8 (técnica) | ✅ hecho |
 | 4 | Lecciones 2 a 5 (gestión), conectadas entre sí | ✅ hecho |
-| 5+ | Resto de capítulos, uno a uno | ⬜ siguiente |
+| 5 | Lecciones técnicas 6, 7, 9, 10 y 11, con el grafo de linaje | ✅ hecho |
+| 6+ | Lecciones 12 a 17 | ⬜ siguiente |
 
 ### Paso 1. Esqueleto de la plataforma
 
@@ -100,6 +101,20 @@ Este recorrido crece con cada avance del proyecto.
 - **Qué mirar:** las lecciones 4 y 5 miden la línea base en el warehouse: 0 % de tablas documentadas, 5,9 % de clientes duplicados y 93,1 % de controles superados. Son las cifras que moverán las lecciones técnicas.
 - **Qué probar:** en la lección 1, recomienda la opción «slow» del caso de negocio. Vuelve a ejecutar la lección 3: el coste del equipo ya no cabe en el presupuesto.
 
+### Paso 5. Lecciones técnicas: la parte 2 del libro completa
+
+- **Qué hay:** las lecciones 6 (metadatos), 7 (linaje), 9 (arquitectura), 10 (cliente único) y 11 (operaciones), interactivas. Junto con la 8, cubren toda la parte 2 del libro. Las cinco escriben o leen en el warehouse, como en el laboratorio:
+  - **lección 6:** documenta las tablas y publica el glosario y el catálogo en el esquema `meta`;
+  - **lección 7:** calcula el linaje leyendo el SQL y lo publica en `meta.lineage_edges`;
+  - **lección 10:** construye el registro único de cliente (esquema `pdm` y `curated.dim_customer`);
+  - **lección 11:** ejecuta de verdad el pipeline nocturno. Recarga el warehouse, ejecuta las lecciones 10, 6, 7 y 8 con tus entradas y lo registra en `operations.duckdb`, que sobrevive a cada reconstrucción.
+- **Grafo interactivo:** un bloque nuevo para el linaje entre tablas, el linaje de columna de la venta neta y los flujos de la arquitectura actual. Al hacer clic en un nodo se resalta de qué depende y qué depende de él. También funciona con el teclado.
+- **Qué mirar:** el orden importa, como en el libro.
+  - Ejecuta la 8 antes que la 6 y la 7: no certifica nada. Ejecútala después: certifica `curated.dim_store`.
+  - Después de la 6, la lección 4 ve el 100 % de las tablas documentadas.
+  - Después de la 10, los duplicados de cliente bajan al 0 % y la lección 5 da ese objetivo por logrado.
+- **Qué probar:** en la lección 10, baja «auto_match_score» a 70 y mira cómo cae la precisión al unir personas distintas.
+
 ## Comandos útiles
 
 ```bash
@@ -129,7 +144,7 @@ dataGovernanceAcademy/
 │   │   └── api.py           # API /api/... y servidor del frontend compilado
 │   └── tests/
 ├── frontend/                # Vite · React · TypeScript
-│   └── src/ (api.ts, App.tsx, pages/ (Home, Lesson, Workspace), components/ (SchemaForm, InputsPanel, ResultView, Charts))
+│   └── src/ (api.ts, App.tsx, pages/ (Home, Lesson, Workspace), components/ (SchemaForm, InputsPanel, ResultView, Charts, Graph))
 ├── data/                    # estado local (gitignored): progreso, lecciones y workspace/ con el warehouse
 └── docs/                    # tu copia del libro (gitignored)
 ```

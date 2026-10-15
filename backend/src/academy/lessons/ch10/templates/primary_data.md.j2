@@ -1,0 +1,131 @@
+# Datos primarios de cliente de {{ company }}
+
+> {{ cfg.purpose }}
+
+**Definición común de cliente:** {{ cfg.customer_definition }}
+
+## Deduplicación: de {{ records | num }} registros a {{ golden_count | num }} clientes
+
+{% if chart_name %}![Registros por sistema frente a clientes únicos]({{ chart_name }}){% endif %}
+
+| Sistema | Registros |
+|---|---:|
+{% for label, n in per_source %}
+| {{ label }} | {{ n | num }} |
+{% endfor %}
+| **Total de registros** | **{{ records | num }}** |
+| **Clientes únicos (golden records)** | **{{ golden_count | num }}** |
+| Registros duplicados eliminados | {{ (records - golden_count) | num }} ({{ ((records - golden_count) / records) | pct }}) |
+
+**Cómo se emparejan:**
+
+| Regla | Pares |
+|---|---:|
+{% for rule, n in rules %}
+| {{ rule }} | {{ n | num }} |
+{% endfor %}
+| Cola de revisión humana | {{ review | length }} |
+
+### ¿Acierta? (frente al solucionario)
+
+| | Precisión | Recall |
+|---|---:|---:|
+| Emparejamiento automático | {{ score.precision | pct(2) }} | {{ score.recall | pct(2) }} |
+| Automático + revisión del steward | {{ score_reviewed.precision | pct(2) }} | {{ score_reviewed.recall | pct(2) }} |
+
+Precisión: de los pares que se unen, cuántos son la misma persona. Recall: de los pares que son la misma persona, cuántos se unen. Se calculan por pares de registros.
+
+### Cola de revisión humana
+
+{% if review %}
+| Registro A | Registro B | Motivo | Similitud | Decisión del steward (simulada) |
+|---|---|---|---:|---|
+{% for r in review %}
+| {{ r.a_label }} | {{ r.b_label }} | {{ r.rule }} | {{ r.score | num }} | {{ "✅ Es el mismo cliente" if r.same else "❌ Son personas distintas" }} |
+{% endfor %}
+
+La decisión del steward se simula con el solucionario. En la realidad, la cola llega a `pdm.customer_review_queue` y la resuelve el steward de cliente.
+{% else %}
+No hay pares pendientes de revisión.
+{% endif %}
+
+## Lógica de confianza y atribución de la fuente dorada
+
+Para cada atributo se recorren las fuentes en orden de confianza; dentro de una fuente gana el registro más reciente, y se toma el primer valor válido.
+
+| Atributo | Orden de confianza | Validación | Steward | Origen del valor final |
+|---|---|---|---|---|
+{% for attr, conf in cfg.attributes.items() %}
+| `{{ attr }}` | {{ conf.sources | map("extract", source_labels) | join(" → ") }} | {{ "`" ~ conf.validate_ ~ "`" if conf.validate_ else "—" }} | {{ conf.steward }} | {{ attribution[attr] }} |
+{% endfor %}
+
+## Calidad: registros de origen frente al golden record
+
+| Atributo válido | Registros de origen | Golden record |
+|---|---:|---:|
+{% for name, before, after in completeness %}
+| {{ name }} | {{ before | pct(1) }} | {{ after | pct(1) }} |
+{% endfor %}
+
+{{ postal_fixed | num }} clientes tenían un código postal inválido en algún sistema y el golden record lo toma de otra fuente válida.
+
+## Datos de referencia, enriquecimiento y jerarquías
+
+El código postal se enriquece con la provincia y la comunidad (datos de referencia oficiales, {{ ref.source | lower }}) y con la región comercial de NovaMercado. Steward de los datos de referencia: {{ ref.steward }}.
+
+Dos jerarquías sobre la misma base: **localización** (CP → provincia → comunidad) y **comercial** (comunidad → región de ventas).
+
+| Región comercial | Clientes | Comunidades (clientes) |
+|---|---:|---|
+{% for region, total, detail in regions %}
+| **{{ region }}** | {{ total | num }} | {{ detail }} |
+{% endfor %}
+
+{% if invalid_postal %}
+{{ invalid_postal }} clientes no tienen ningún código postal válido en ningún sistema y quedan sin provincia: es un caso para enriquecimiento externo.
+{% endif %}
+
+## La vista única del cliente
+
+| Medida | Valor |
+|---|---:|
+| Clientes presentes en más de un sistema | {{ multi_system | num }} ({{ (multi_system / golden_count) | pct }}) |
+| Clientes que compran en tienda y online | {{ omnichannel | num }} ({{ (omnichannel / buyers) | pct }} de los que compran) |
+| Ventas netas atribuibles a un cliente identificado | {{ identified_sales | money }} ({{ identified_share | pct }} del total) |
+| Clientes con consentimiento de marketing | {{ consented | num }} ({{ (consented / golden_count) | pct }}) |
+
+## Modelo de consumo
+
+```mermaid
+graph LR
+  crm[CRM] --> hub
+  ecom[E-commerce] --> hub
+  pos[Tarjetas de tienda] --> hub
+  hub["Hub de datos primarios<br>pdm.customer_golden"] --> dim["curated.dim_customer<br>(sin PII directa)"]
+  hub -.->|golden id por customer_xref| crm
+  hub -.-> ecom
+  hub -.-> pos
+  dim --> bi[Analítica y marketplace]
+```
+
+- **Operación:** los sistemas reciben su golden id desde `pdm.customer_xref` (integración bidireccional).
+- **Analítica:** consume `curated.dim_customer`, que no tiene nombre, email, teléfono ni fecha de nacimiento (solo un tramo de edad).
+- Los datos personales del cliente unificado están en un solo lugar autorizado: `pdm.customer_golden`.
+
+## CRM frente a PDM
+
+| | CRM | PDM |
+|---|---|---|
+| Propósito | Gestionar la relación con el cliente (ventas, marketing, servicio) | Gestionar los datos primarios de toda la empresa |
+| Capacidades | Contactos, oportunidades, campañas | Deduplicación, enriquecimiento, calidad y jerarquías |
+| Usuarios | Marketing, ventas, atención al cliente | Equipo de datos, gobierno de datos, analítica |
+
+No compiten: el CRM consume el golden record.
+
+## Valor
+
+| Beneficio | Supuestos | Valor anual |
+|---|---|---:|
+| Envíos duplicados evitados | {{ dup_contacts | num }} contactos duplicados × {{ cfg.value.campaigns_per_year }} campañas × {{ cfg.value.cost_per_contact | money(2) }} | {{ campaign_saving | money }} |
+| Depuración manual eliminada | {{ cfg.value.hours_manual_dedup | num }} h × {{ cfg.value.automation_share | pct }} × {{ cfg.value.cost_per_hour | money }}/h | {{ hours_saving | money }} |
+| **Total** | Pendiente de validar con Marketing | **{{ (campaign_saving + hours_saving) | money }}** |

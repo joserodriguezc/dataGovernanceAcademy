@@ -11,8 +11,8 @@ def client(tmp_path):
 
 def test_lesson_1_is_available(client):
     lessons = client.get("/api/lessons").json()["lessons"]
-    assert lessons[0]["status"] == "available" and lessons[5]["status"] == "planned"
-    assert client.get("/api/lessons/6/content").status_code == 404
+    assert lessons[0]["status"] == "available" and lessons[11]["status"] == "planned"
+    assert client.get("/api/lessons/12/content").status_code == 404
 
 
 def test_content_has_ideas_and_challenges(client):

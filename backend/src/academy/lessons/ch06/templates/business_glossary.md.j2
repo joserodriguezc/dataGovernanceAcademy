@@ -1,0 +1,32 @@
+# Glosario de negocio de {{ company }}
+
+> Un lenguaje común: los términos clave, lo que significan y dónde están en los datos. Las columnas que implementan cada término llevan su definición como comentario en el warehouse.
+
+**{{ terms | length }} términos:** {% for s, n in status_counts %}{{ status_labels[s] }} {{ n }}{{ " · " if not loop.last }}{% endfor %}
+
+
+{% for domain, items in by_domain %}
+## {{ domain_names[domain] }}
+
+{% for t in items %}
+### {{ t.term }} · {{ status_labels[t.status] }}
+
+{{ t.definition }}
+
+| | |
+|---|---|
+{% if t.synonyms %}| **Sinónimos** | {{ t.synonyms | join(", ") }} |
+{% endif %}
+{% if t.antonyms %}| **Antónimos** | {{ t.antonyms | join(", ") }} |
+{% endif %}
+{% if t.examples %}| **Ejemplos** | {{ t.examples | join("; ") }} |
+{% endif %}
+| **Fuente autorizada** | {{ t.authorized_source or "⚠️ sin definir" }} |
+| **Steward de negocio** | {{ stewards[t.domain].business | join(", ") if stewards.get(t.domain) and stewards[t.domain].business else "⚠️ sin asignar" }} |
+| **Steward técnico** | {{ stewards[t.domain].technical | join(", ") if stewards.get(t.domain) and stewards[t.domain].technical else "⚠️ sin asignar" }} |
+| **Columnas** | {{ t.columns | join("<br>") if t.columns else "⚠️ sin vincular" }} |
+{% if t.notes %}| **Notas** | {{ t.notes }} |
+{% endif %}
+
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,26 @@
+# Catálogo de datos de {{ company }}
+
+> Qué datos tenemos, quién responde de ellos, de dónde vienen, si son de confianza y dónde encontrarlos. Los metadatos técnicos se extraen del warehouse en cada ejecución.
+
+Búsqueda desde la terminal: `uv run python -m academy.lessons.ch06.marketplace "texto"`
+
+## Activos
+
+| Activo | Formato | Dominio | Descripción | Steward de negocio | Steward técnico | Filas | Columnas sensibles |
+|---|---|---|---|---|---|---:|---:|
+{% for t in tables %}
+| `{{ t.fqn }}` | {{ format_labels.get(t.annotation.format, "—") if t.annotation else "—" }} | {{ domain_names[t.domain] if t.domain else "—" }} | {{ t.annotation.description if t.annotation else "⚠️ sin documentar" }} | {{ t.business_stewards | join(", ") or "⚠️" }} | {{ t.technical_stewards | join(", ") or "⚠️" }} | {{ t.rows | num }} | {{ sensitive[t.fqn] }} |
+{% endfor %}
+
+## Columnas
+
+{% for t in tables %}
+### `{{ t.fqn }}`
+
+| Columna | Tipo | % nulos | Término del glosario | Clasificación |
+|---|---|---:|---|---|
+{% for c in t.columns %}
+| `{{ c.name }}` | {{ c.data_type }} | {{ c.null_rate | pct(1) }} | {{ c.term or "—" }} | {{ level_names[c.level] }} |
+{% endfor %}
+
+{% endfor %}

@@ -1,5 +1,7 @@
 """Fixtures compartidos: un espacio de trabajo pequeño con el warehouse ya construido."""
 
+import shutil
+
 import pytest
 
 from academy.core.synthetic import Scale, SyntheticConfig, generate, write_dataset
@@ -30,11 +32,21 @@ def compute_lesson(small_workspace):
 
     `stored` simula lo que el alumno ha editado en otras lecciones: (lección, spec) -> datos.
     """
-    def run(lesson, stored=None):
+    def run(lesson, stored=None, workspace=None):
+        ws = workspace or small_workspace
         inputs = {s.id: s.model.model_validate(s.default()) for s in lesson.inputs}
-        ctx = LessonContext(small_workspace.db_path, small_workspace.raw_dir, stored)
+        ctx = LessonContext(ws.db_path, ws.raw_dir, stored)
         return lesson.compute(inputs, ctx)
     return run
+
+
+@pytest.fixture
+def workspace_copy(small_workspace, tmp_path) -> Workspace:
+    """Copia propia del warehouse pequeño, para las lecciones que escriben en él."""
+    ws = Workspace(tmp_path / "copy")
+    shutil.copytree(small_workspace.raw_dir, ws.raw_dir)
+    shutil.copy(small_workspace.db_path, ws.db_path)
+    return ws
 
 
 def docs(sections) -> dict[str, str]:

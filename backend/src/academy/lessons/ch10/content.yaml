@@ -1,0 +1,78 @@
+# Contenido de la lección 10. Texto propio: el libro se referencia, no se reproduce.
+
+intro: >-
+  El mismo cliente de NovaMercado aparece en el CRM, en el e-commerce y en las tarjetas de
+  tienda, y a veces dos veces en el mismo sistema. En esta lección construyes el registro
+  único de cliente: encuentras los duplicados con reglas exactas y difusas, decides qué valor
+  sobrevive de cada atributo y por qué, lo enriqueces con datos de referencia y lo publicas en
+  el warehouse. Como los datos son sintéticos, puedes medir cuánto aciertas.
+
+ideas:
+  - idea: "Primero hay que acordar qué es un cliente."
+    application: "La definición la aprueba la ejecutiva del dominio, y es la misma que la del glosario de la lección 6."
+  - idea: "Deduplicar combina algoritmos, lógica difusa y revisión humana."
+    application: "Reglas exactas (email y teléfono), coincidencia difusa de nombre dentro del mismo código postal, cola de revisión para los casos dudosos y agrupación transitiva."
+  - idea: "La deduplicación se mide."
+    application: "Precisión y recall por parejas frente al solucionario de los datos sintéticos."
+  - idea: "Cada atributo tiene su lógica de confianza: fuente, antigüedad y completitud."
+    application: "Por atributo, un orden de fuentes; gana el valor válido más reciente."
+  - idea: "Cada valor del registro único dice de dónde salió."
+    application: "Se guarda el sistema y el registro de origen de cada atributo."
+  - idea: "Los datos de referencia cambian poco y se gestionan de forma central."
+    application: "Provincias por prefijo de código postal y regiones comerciales propias."
+  - idea: "Sobre la misma base caben varias jerarquías."
+    application: "Una geográfica (código postal, provincia, comunidad) y una comercial (comunidad, región de ventas)."
+  - idea: "La integración va en los dos sentidos y el consumo es estricto."
+    application: "Cada registro de origen guarda su identificador único para devolverlo a su sistema; la analítica consume curated.dim_customer, sin datos personales directos."
+
+takeaways:
+  - "Hay casi el doble de registros que de clientes: la mitad eran duplicados."
+  - "La deduplicación acierta casi siempre, y la cola de revisión enseña por qué hace falta una persona: dos clientes distintos pueden llamarse igual."
+  - "El registro único es mejor que cualquier sistema por separado: recupera emails y códigos postales válidos de otras fuentes."
+  - "Al ejecutarla, la lección 4 deja de limitar la madurez de datos maestros y la 5 da por logrado el objetivo de duplicados."
+
+challenges:
+  - title: Empareja con más alegría
+    steps:
+      - "En Entradas → Datos primarios, baja «auto_match_score» a 70."
+      - "Guarda y ejecuta de nuevo."
+    look_for: "Cae la precisión: se unen personas distintas. Un umbral bajo da menos trabajo al steward, pero mezcla clientes."
+  - title: Cambia quién manda en el email
+    steps:
+      - "En Entradas → Datos primarios → Atributos, cambia el orden de fuentes del email para que el e-commerce vaya primero."
+      - "Ejecuta de nuevo y mira la supervivencia."
+    look_for: "Cambia de qué sistema sale cada email. La lógica de confianza es una decisión del steward, no un detalle técnico."
+  - title: Cierra el círculo
+    steps:
+      - "Ejecuta esta lección y después la 4 y la 5."
+    look_for: "En la lección 4 desaparece el límite de datos maestros, y en la 5 el resultado «Duplicados de cliente por debajo del 0,5 %» pasa a estar logrado."
+
+labels:
+  customer_definition: Definición de cliente
+  sources: Sistemas de origen
+  Source: Sistema
+  table: Tabla
+  key: Clave
+  label: Etiqueta
+  matching: Emparejamiento
+  name_scorer: Algoritmo de similitud de nombres
+  auto_match_score: Similitud para unir automáticamente (0-100)
+  review_score: Similitud para mandar a revisión (0-100)
+  review_if_postal_differs: Revisar si el código postal no coincide
+  attributes: Atributos y reglas de supervivencia
+  Attribute: Atributo
+  PdmConfig.sources: Sistemas de origen
+  Attribute.sources: Orden de fuentes (de más a menos confianza)
+  validate: Patrón de validación
+  default: Valor por defecto
+  steward: Steward
+  definition: Definición
+  value: Supuestos de valor
+  campaigns_per_year: Campañas al año
+  cost_per_contact: Coste por contacto (US$)
+  hours_manual_dedup: Horas de deduplicación manual al año
+  automation_share: Parte que se automatiza (0 a 1)
+  cost_per_hour: Coste de una hora (US$)
+  source: Fuente
+  provinces: Provincias
+  sales_regions: Regiones de venta

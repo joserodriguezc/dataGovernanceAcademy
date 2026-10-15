@@ -1,0 +1,161 @@
+# Glosario de negocio de NovaMercado.
+# status: approved | in_review | draft
+# columns: columnas del warehouse que implementan el término (esquema.tabla.columna)
+# Los stewards del término salen del dominio (roles funcionales del capítulo 3).
+terms:
+  - term: Cliente
+    domain: customer
+    definition: >-
+      Persona registrada en el programa de fidelización o que ha comprado al menos una vez en
+      cualquier canal. Una misma persona es un único cliente aunque aparezca en varios sistemas.
+    synonyms: [Comprador, Consumidor]
+    antonyms: [Prospecto, Lead]
+    examples: ["Un socio del programa que compra en tienda y online es un solo cliente."]
+    notes: "La unificación entre sistemas llega con el golden record del capítulo 10."
+    authorized_source: CRM
+    status: approved
+    columns: [staging.stg_crm_customers.customer_id, staging.stg_ecom_customers.ecom_user_id, staging.stg_pos_loyalty_cards.card_id]
+  - term: Cliente activo
+    domain: customer
+    definition: >-
+      Cliente con al menos una compra en los últimos 12 meses (propuesta de Ventas). Marketing
+      propone 6 meses e incluir también interacciones con campañas.
+    synonyms: []
+    antonyms: [Cliente inactivo]
+    examples: []
+    notes: "Conflicto abierto entre Marketing y Ventas (hallazgo del capítulo 4). Lo resuelve el consejo empresarial de datos."
+    authorized_source: null
+    status: in_review
+    columns: []
+  - term: Email de contacto
+    domain: customer
+    definition: Dirección de correo electrónico que el cliente autoriza para comunicarse con él.
+    synonyms: [Correo electrónico]
+    antonyms: []
+    examples: ["maria.lopez@correo.es"]
+    notes: "Obligatorio en el alta del CRM."
+    authorized_source: CRM
+    status: approved
+    columns: [staging.stg_crm_customers.email, staging.stg_ecom_customers.email]
+  - term: Teléfono de contacto
+    domain: customer
+    definition: Móvil del cliente, normalizado a 9 dígitos sin prefijo ni separadores.
+    synonyms: [Móvil]
+    antonyms: []
+    examples: ["612345678"]
+    notes: null
+    authorized_source: CRM
+    status: approved
+    columns: [staging.stg_crm_customers.phone, staging.stg_ecom_customers.phone, staging.stg_pos_loyalty_cards.phone]
+  - term: Código postal
+    domain: customer
+    definition: Código postal de 5 dígitos de la dirección principal del cliente o de envío.
+    synonyms: [CP]
+    antonyms: []
+    examples: ["28013"]
+    notes: null
+    authorized_source: CRM
+    status: approved
+    columns: [staging.stg_crm_customers.postal_code, staging.stg_ecom_customers.postal_code, staging.stg_ecom_orders.shipping_postal_code]
+  - term: Consentimiento de marketing
+    domain: customer
+    definition: Autorización expresa del cliente para recibir comunicaciones comerciales.
+    synonyms: [Opt-in]
+    antonyms: [Opt-out]
+    examples: []
+    notes: "Sin consentimiento no se puede incluir al cliente en campañas."
+    authorized_source: CRM
+    status: approved
+    columns: [staging.stg_crm_customers.consent_marketing]
+  - term: Venta neta
+    domain: sales
+    definition: >-
+      Importe vendido en todos los canales, excluyendo los pedidos online cancelados y
+      devueltos. Es la cifra de ventas oficial del comité de dirección.
+    synonyms: [Cifra de ventas, Revenue]
+    antonyms: [Venta bruta]
+    examples: ["Ventas netas del canal online en septiembre de 2026."]
+    notes: "Las regiones usaban la venta bruta, por eso sus cifras no cuadraban (capítulo 2)."
+    authorized_source: curated.agg_sales_daily_channel
+    status: approved
+    columns: [curated.agg_sales_daily_channel.revenue]
+  - term: Importe de línea
+    domain: sales
+    definition: Cantidad por precio unitario de una línea de ticket o de pedido, antes de excluir cancelaciones.
+    synonyms: []
+    antonyms: []
+    examples: []
+    notes: null
+    authorized_source: curated.fct_sales
+    status: approved
+    columns: [curated.fct_sales.net_amount, staging.stg_pos_sales.amount, staging.stg_ecom_orders.amount]
+  - term: Canal de venta
+    domain: sales
+    definition: "Vía por la que se realiza la venta: tienda física u online."
+    synonyms: [Canal]
+    antonyms: []
+    examples: ["tienda", "online"]
+    notes: null
+    authorized_source: curated.fct_sales
+    status: approved
+    columns: [curated.fct_sales.channel, curated.agg_sales_daily_channel.channel]
+  - term: Transacción
+    domain: sales
+    definition: Un ticket de tienda o un pedido online, con una o varias líneas.
+    synonyms: [Ticket, Pedido]
+    antonyms: []
+    examples: []
+    notes: null
+    authorized_source: curated.fct_sales
+    status: approved
+    columns: [curated.fct_sales.transaction_id, staging.stg_pos_sales.ticket_id, staging.stg_ecom_orders.order_id]
+  - term: Producto
+    domain: product
+    definition: Artículo que vende NovaMercado, identificado por su SKU.
+    synonyms: [Artículo, Referencia, SKU]
+    antonyms: []
+    examples: ["SKU-00042"]
+    notes: null
+    authorized_source: ERP
+    status: approved
+    columns: [curated.dim_product.sku, curated.fct_sales.sku, staging.stg_products.sku]
+  - term: Categoría de producto
+    domain: product
+    definition: Familia comercial a la que pertenece un producto (Alimentación, Hogar, etc.).
+    synonyms: [Familia]
+    antonyms: []
+    examples: ["Electrónica"]
+    notes: "Obligatoria en el alta de producto."
+    authorized_source: ERP
+    status: approved
+    columns: [curated.dim_product.category, curated.fct_sales.category]
+  - term: Precio de lista
+    domain: product
+    definition: Precio de venta al público vigente de un producto, en USD.
+    synonyms: [PVP]
+    antonyms: []
+    examples: []
+    notes: null
+    authorized_source: ERP
+    status: draft
+    columns: [curated.dim_product.list_price]
+  - term: Proveedor
+    domain: supplier
+    definition: Empresa que suministra productos a NovaMercado.
+    synonyms: [Suministrador]
+    antonyms: []
+    examples: []
+    notes: null
+    authorized_source: ERP
+    status: draft
+    columns: [curated.dim_product.supplier_id, staging.stg_suppliers.supplier_id]
+  - term: Tienda
+    domain: store
+    definition: Punto de venta físico de NovaMercado.
+    synonyms: [Punto de venta]
+    antonyms: [Canal online]
+    examples: ["T001"]
+    notes: null
+    authorized_source: ERP
+    status: approved
+    columns: [curated.dim_store.store_id, curated.fct_sales.store_id, staging.stg_stores.store_id]
